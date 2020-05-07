@@ -58,7 +58,7 @@ class BarcodeTest extends TestCase
                      $test->assertEquals($barcodeText, $barcode->getText());
                      $test->assertEquals($fontPath, $barcode->getFont());
                      $test->assertEquals($fontSize, $barcode->getFontSize());
-                     $test->assertEquals(hexdec($color), $barcode->getForeColor());
+                     $test->assertEquals(hexdec(str_replace('#', '', $color)), $barcode->getForeColor());
                      $test->assertEquals($drawText, $barcode->getDrawText());
                      $test->assertEquals($barHeight, $barcode->getBarHeight());
                      $test->assertEquals($withChecksum, $barcode->getWithChecksum());

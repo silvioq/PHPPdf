@@ -348,8 +348,12 @@ class Page extends Container
     public function getHeight()
     {
         $verticalMargins = $this->getMarginTop() + $this->getMarginBottom();
-
-        return (parent::getHeight() - $verticalMargins);
+        $height = parent::getHeight();
+        $height = str_replace(['px', 'pt', '%'], '', $height);
+        if($height === ''){
+            $height = 0;
+        }
+        return ($height - $verticalMargins);
     }
 
     /**
@@ -358,8 +362,12 @@ class Page extends Container
     public function getWidth()
     {
         $horizontalMargins = $this->getMarginLeft() + $this->getMarginRight();
-
-        return (parent::getWidth() - $horizontalMargins);
+        $width = parent::getWidth();
+        $width = str_replace(['px', 'pt', '%'], '', $width);
+        if($width === ''){
+            $width = 0;
+        }
+        return ($width - $horizontalMargins);
     }
 
     public function getMaxHeight()

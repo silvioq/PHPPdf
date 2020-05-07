@@ -50,7 +50,7 @@ class StylesheetParserTest extends \PHPPdf\PHPUnit\Framework\TestCase
 XML;
         $constraintContainer = $this->parser->parse($xml);
 
-        $this->assertEquals(1, count($constraintContainer->count()));
+        $this->assertEquals(1, $constraintContainer->count());
         $this->assertTrue($this->hasConstraint($constraintContainer, 'tag'));
         $constraint = $this->getConstraint($constraintContainer, 'tag');
         $this->assertEquals(array('someName' => 'someValue'), $constraint->getAll());

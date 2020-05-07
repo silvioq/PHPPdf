@@ -396,8 +396,9 @@ class PageTest extends \PHPPdf\PHPUnit\Framework\TestCase
     {
         $this->page->setAttribute('page-size', $pageSize);
 
-        list($expectedWidth, $expectedHeight) = explode(':', $expectedSize);
-
+        [$expectedWidth, $expectedHeight] = explode(':', $expectedSize);
+        $expectedWidth = (int) $expectedWidth;
+        $expectedHeight = (int) $expectedHeight;
         $this->assertEquals($expectedWidth, $this->page->getWidth());
         $this->assertEquals($expectedHeight, $this->page->getHeight());
     }

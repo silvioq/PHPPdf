@@ -114,7 +114,7 @@ class Font extends AbstractFont
 
         if ($index < $len)
         {
-            $h = ord($text{$index});
+            $h = ord($text[$index]);
 
             if($h <= 0x7F)
             {
@@ -128,20 +128,20 @@ class Font extends AbstractFont
             elseif ($h <= 0xDF && $index < $len - 1)
             {
                 $bytes = 2;
-                $char = ($h & 0x1F) <<  6 | (ord($text{$index + 1}) & 0x3F);
+                $char = ($h & 0x1F) <<  6 | (ord($text[$index + 1]) & 0x3F);
             }
             elseif($h <= 0xEF && $index < $len - 2)
             {
                 $bytes = 3;
-                $char = ($h & 0x0F) << 12 | (ord($text{$index + 1}) & 0x3F) << 6
-                                         | (ord($text{$index + 2}) & 0x3F);
+                $char = ($h & 0x0F) << 12 | (ord($text[$index + 1]) & 0x3F) << 6
+                                         | (ord($text[$index + 2]) & 0x3F);
             }
             elseif($h <= 0xF4 && $index < $len - 3)
             {
                 $bytes = 4;
-                $char = ($h & 0x0F) << 18 | (ord($text{$index + 1}) & 0x3F) << 12
-                                         | (ord($text{$index + 2}) & 0x3F) << 6
-                                         | (ord($text{$index + 3}) & 0x3F);
+                $char = ($h & 0x0F) << 18 | (ord($text[$index + 1]) & 0x3F) << 12
+                                         | (ord($text[$index + 2]) & 0x3F) << 6
+                                         | (ord($text[$index + 3]) & 0x3F);
             }
         }
 
