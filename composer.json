@@ -13,7 +13,7 @@
     ],
     "require": {
         "zendframework/zendpdf":  "~2.0.0",
-        "laminas/laminas-cache":  "^2.9"
+        "laminas/laminas-cache":  "^2.13.0"
     },
     "require-dev": {
         "laminas/laminas-barcode": "~2.8.0",
