@@ -1,0 +1,379 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj 
+<</Type /Catalog /Version /1.4 /Pages 2 0 R /Names 6 0 R >>
+endobj
+2 0 obj 
+<</Type /Pages /Kids [7 0 R 10 0 R 13 0 R ] /Count 3 >>
+endobj
+3 0 obj 
+<</Producer (PHPPdf 1.3.0-DEV) >>
+endobj
+4 0 obj 
+[]
+endobj
+5 0 obj 
+<</Names 4 0 R >>
+endobj
+6 0 obj 
+<</Dests 5 0 R >>
+endobj
+7 0 obj 
+<</Type /Page /LastModified (D:20211223055747+00'00') /Resources <</ProcSet [/Text /PDF ] /Font <</F1 9 0 R >> >> /MediaBox [0 0 595 842 ] 
+/Contents [8 0 R ] /Parent 2 0 R >>
+endobj
+8 0 obj 
+<</Length 940 >>
+stream
+/F1 9 Tf
+0 g
+0 G
+ q
+39 52.875 m
+556 52.875 l
+556 39 l
+39 39 l
+39 52.875 l
+ h
+ f
+ Q
+ q
+39 803 m
+556 803 l
+556 789.125 l
+39 789.125 l
+39 803 l
+ h
+ f
+ Q
+ q
+/F1 9 Tf
+1 g
+BT
+39 43.875 Td
+(footer ) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+1 g
+BT
+39 794 Td
+(header ) Tj
+ET
+ Q
+ q
+1 0 0 RG
+1 0 0 rg
+39 779.375 m
+556 779.375 l
+556 679.625 l
+39 679.625 l
+39 779.375 l
+ h
+ f
+ Q
+ q
+0.5020000000000000 G
+0.5020000000000000 g
+39 669.875 m
+284 669.875 l
+284 52.875 l
+39 52.875 l
+39 669.875 l
+ h
+ f
+ Q
+ q
+0.5020000000000000 G
+0.5020000000000000 g
+311 669.875 m
+556 669.875 l
+556 550.625 l
+311 550.625 l
+311 669.875 l
+ h
+ f
+ Q
+ q
+0 0.5020000000000000 0 RG
+0 0.5020000000000000 0 rg
+311 550.625 m
+556 550.625 l
+556 52.875 l
+311 52.875 l
+311 550.625 l
+ h
+ f
+ Q
+ q
+/F1 9 Tf
+1 g
+BT
+39 770.375 Td
+(Column with "equals-columns" attribute off ) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+39 660.875 Td
+(Some long container ) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+311 541.625 Td
+(Some another long container ) Tj
+ET
+ Q
+
+endstream
+endobj
+9 0 obj 
+<</Type /Font /Encoding /WinAnsiEncoding /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+10 0 obj 
+<</Type /Page /LastModified (D:20211223055747+00'00') /Resources <</ProcSet [/Text /PDF ] /Font <</F1 9 0 R >> >> /MediaBox [0 0 595 842 ] 
+/Contents [11 0 R ] /Parent 2 0 R >>
+endobj
+11 0 obj 
+<</Length 1367 >>
+stream
+/F1 9 Tf
+0 g
+0 G
+ q
+39 52.875 m
+556 52.875 l
+556 39 l
+39 39 l
+39 52.875 l
+ h
+ f
+ Q
+ q
+39 803 m
+556 803 l
+556 789.125 l
+39 789.125 l
+39 803 l
+ h
+ f
+ Q
+ q
+/F1 9 Tf
+1 g
+BT
+39 43.875 Td
+(footer ) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+1 g
+BT
+39 794 Td
+(header ) Tj
+ET
+ Q
+ q
+1 0 0 RG
+1 0 0 rg
+39 540.875 m
+556 540.875 l
+556 530.875 l
+39 530.875 l
+39 540.875 l
+ h
+ f
+ Q
+ q
+1 0 0 RG
+1 0 0 rg
+39 202.875 m
+556 202.875 l
+556 192.875 l
+39 192.875 l
+39 202.875 l
+ h
+ f
+ Q
+ q
+0 0.5020000000000000 0 RG
+0 0.5020000000000000 0 rg
+39 789.125 m
+284 789.125 l
+284 550.625 l
+39 550.625 l
+39 789.125 l
+ h
+ f
+ Q
+ q
+0.5020000000000000 G
+0.5020000000000000 g
+39 521.125 m
+284 521.125 l
+284 212.625 l
+39 212.625 l
+39 521.125 l
+ h
+ f
+ Q
+ q
+0.5020000000000000 G
+0.5020000000000000 g
+311 521.125 m
+556 521.125 l
+556 430.625 l
+311 430.625 l
+311 521.125 l
+ h
+ f
+ Q
+ q
+0 0 1 RG
+0 0 1 rg
+39 183.125 m
+284 183.125 l
+284 173.125 l
+39 173.125 l
+39 183.125 l
+ h
+ f
+ Q
+ q
+0 0 1 RG
+0 0 1 rg
+311 183.125 m
+556 183.125 l
+556 52.875 l
+311 52.875 l
+311 183.125 l
+ h
+ f
+ Q
+ q
+/F1 9 Tf
+1 g
+BT
+39 531.875 Td
+(Column with "equals-columns" attribute on ) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+39 512.125 Td
+(Some container ) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+1 g
+BT
+39 193.875 Td
+(Use break tag inside column ) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+1 g
+BT
+39 174.125 Td
+(Before break ) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+1 g
+BT
+311 174.125 Td
+(Very long container after break. ) Tj
+ET
+ Q
+
+endstream
+endobj
+13 0 obj 
+<</Type /Page /LastModified (D:20211223055747+00'00') /Resources <</ProcSet [/Text /PDF ] /Font <</F1 9 0 R >> >> /MediaBox [0 0 595 842 ] 
+/Contents [14 0 R ] /Parent 2 0 R >>
+endobj
+14 0 obj 
+<</Length 346 >>
+stream
+/F1 9 Tf
+0 g
+0 G
+ q
+39 52.875 m
+556 52.875 l
+556 39 l
+39 39 l
+39 52.875 l
+ h
+ f
+ Q
+ q
+39 803 m
+556 803 l
+556 789.125 l
+39 789.125 l
+39 803 l
+ h
+ f
+ Q
+ q
+/F1 9 Tf
+1 g
+BT
+39 43.875 Td
+(footer ) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+1 g
+BT
+39 794 Td
+(header ) Tj
+ET
+ Q
+ q
+0 0 1 RG
+0 0 1 rg
+39 789.125 m
+284 789.125 l
+284 183.125 l
+39 183.125 l
+39 789.125 l
+ h
+ f
+ Q
+
+endstream
+endobj
+xref
+0 12 
+0000000000 65535 f 
+0000000015 00000 n 
+0000000091 00000 n 
+0000000163 00000 n 
+0000000213 00000 n 
+0000000232 00000 n 
+0000000266 00000 n 
+0000000300 00000 n 
+0000000492 00000 n 
+0000001483 00000 n 
+0000001580 00000 n 
+0000001774 00000 n 
+13 2 
+0000003194 00000 n 
+0000003388 00000 n 
+trailer
+<</ID [<61313132373938376164613262626335> <64386636396561623066663966333132> ] /Size 16 /Root 1 0 R /Info 3 0 R >>
+startxref
+3786
+%%EOF

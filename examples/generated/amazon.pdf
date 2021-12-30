@@ -1,0 +1,3183 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj 
+<</Type /Catalog /Version /1.4 /Pages 2 0 R /Names 6 0 R >>
+endobj
+2 0 obj 
+<</Type /Pages /Kids [7 0 R 14 0 R ] /Count 2 >>
+endobj
+3 0 obj 
+<</Producer (PHPPdf 1.3.0-DEV) >>
+endobj
+4 0 obj 
+[]
+endobj
+5 0 obj 
+<</Names 4 0 R >>
+endobj
+6 0 obj 
+<</Dests 5 0 R >>
+endobj
+7 0 obj 
+<</Type /Page /LastModified (D:20211223110758+00'00') /Resources <</ProcSet [/Text /PDF ] /Font <</F1 9 0 R /F2 11 0 R /F3 12 0 R /F4 13 0 R >> /XObject <</X1 10 0 R >> >> 
+/MediaBox [0 0 820 620 ] /Contents [8 0 R ] /Parent 2 0 R >>
+endobj
+8 0 obj 
+<</Length 21680 >>
+stream
+/F1 9 Tf
+0 g
+0 G
+q
+1 0 0 1 11 559.75 cm
+137.1825 0 0 50.25 0 0 cm
+/X1 Do
+Q
+ q
+/F1 21.75 Tf
+BT
+154.0575 579.25 Td
+(Amazon Simple Storage service ) Tj
+ET
+ Q
+ q
+/F1 15.75 Tf
+BT
+469.54125 577.25 Td
+(\(Version 2006-03-01\)) Tj
+ET
+ Q
+ q
+/F1 12 Tf
+BT
+154.0575 558.125 Td
+(Quick Reference Card) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+732.456 601 Td
+(Revised: 04/1/2010) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+773.973 591 Td
+(Page ) Tj
+ET
+ Q
+ q
+0.973 0.961 0.8470000000000000 RG
+0.973 0.961 0.8470000000000000 rg
+10 555.25 m
+276.66666666666669 555.25 l
+276.66666666666669 519.25 l
+10 519.25 l
+10 555.25 l
+ h
+ f
+ Q
+ q
+0.973 0.961 0.8470000000000000 RG
+0.973 0.961 0.8470000000000000 rg
+10 519.25 m
+276.66666666666669 519.25 l
+276.66666666666669 431.625 l
+10 431.625 l
+10 519.25 l
+ h
+ f
+ Q
+ q
+0.973 0.961 0.8470000000000000 RG
+0.973 0.961 0.8470000000000000 rg
+10 431.625 m
+276.66666666666669 431.625 l
+276.66666666666669 395.625 l
+10 395.625 l
+10 431.625 l
+ h
+ f
+ Q
+ q
+0.973 0.961 0.8470000000000000 RG
+0.973 0.961 0.8470000000000000 rg
+10 395.625 m
+276.66666666666669 395.625 l
+276.66666666666669 258 l
+10 258 l
+10 395.625 l
+ h
+ f
+ Q
+ q
+0.973 0.961 0.8470000000000000 RG
+0.973 0.961 0.8470000000000000 rg
+10 258 m
+276.66666666666669 258 l
+276.66666666666669 150.375 l
+10 150.375 l
+10 258 l
+ h
+ f
+ Q
+ q
+0.973 0.961 0.8470000000000000 RG
+0.973 0.961 0.8470000000000000 rg
+10 150.375 m
+276.66666666666669 150.375 l
+276.66666666666669 62.75 l
+10 62.75 l
+10 150.375 l
+ h
+ f
+ Q
+ q
+0.973 0.961 0.8470000000000000 RG
+0.973 0.961 0.8470000000000000 rg
+10 62.75 m
+276.66666666666669 62.75 l
+276.66666666666669 10 l
+10 10 l
+10 62.75 l
+ h
+ f
+ Q
+ q
+0.973 0.961 0.8470000000000000 RG
+0.973 0.961 0.8470000000000000 rg
+276.66666666666669 555.25 m
+543.3333333333334 555.25 l
+543.3333333333334 518.5 l
+276.66666666666669 518.5 l
+276.66666666666669 555.25 l
+ h
+ f
+ Q
+ q
+0.973 0.961 0.8470000000000000 RG
+0.973 0.961 0.8470000000000000 rg
+276.66666666666669 518.5 m
+543.3333333333334 518.5 l
+543.3333333333334 474.625 l
+276.66666666666669 474.625 l
+276.66666666666669 518.5 l
+ h
+ f
+ Q
+ q
+0.973 0.961 0.8470000000000000 RG
+0.973 0.961 0.8470000000000000 rg
+276.66666666666669 474.625 m
+543.3333333333334 474.625 l
+543.3333333333334 438.625 l
+276.66666666666669 438.625 l
+276.66666666666669 474.625 l
+ h
+ f
+ Q
+ q
+0.973 0.961 0.8470000000000000 RG
+0.973 0.961 0.8470000000000000 rg
+276.66666666666669 438.625 m
+543.3333333333334 438.625 l
+543.3333333333334 301 l
+276.66666666666669 301 l
+276.66666666666669 438.625 l
+ h
+ f
+ Q
+ q
+0.973 0.961 0.8470000000000000 RG
+0.973 0.961 0.8470000000000000 rg
+276.66666666666669 301 m
+543.3333333333334 301 l
+543.3333333333334 113.375 l
+276.66666666666669 113.375 l
+276.66666666666669 301 l
+ h
+ f
+ Q
+ q
+0.973 0.961 0.8470000000000000 RG
+0.973 0.961 0.8470000000000000 rg
+276.66666666666669 113.375 m
+543.3333333333334 113.375 l
+543.3333333333334 10 l
+276.66666666666669 10 l
+276.66666666666669 113.375 l
+ h
+ f
+ Q
+ q
+0.973 0.961 0.8470000000000000 RG
+0.973 0.961 0.8470000000000000 rg
+543.3333333333334 555.25 m
+810 555.25 l
+810 468.5 l
+543.3333333333334 468.5 l
+543.3333333333334 555.25 l
+ h
+ f
+ Q
+ q
+0.973 0.961 0.8470000000000000 RG
+0.973 0.961 0.8470000000000000 rg
+543.3333333333334 468.5 m
+810 468.5 l
+810 380.875 l
+543.3333333333334 380.875 l
+543.3333333333334 468.5 l
+ h
+ f
+ Q
+ q
+0.973 0.961 0.8470000000000000 RG
+0.973 0.961 0.8470000000000000 rg
+543.3333333333334 380.875 m
+810 380.875 l
+810 293.25 l
+543.3333333333334 293.25 l
+543.3333333333334 380.875 l
+ h
+ f
+ Q
+ q
+0.973 0.961 0.8470000000000000 RG
+0.973 0.961 0.8470000000000000 rg
+543.3333333333334 293.25 m
+810 293.25 l
+810 95.625 l
+543.3333333333334 95.625 l
+543.3333333333334 293.25 l
+ h
+ f
+ Q
+ q
+0.8 0.4 0 RG
+0.8 0.4 0 rg
+[] 0 d
+1.5 w
+9.25 555.25 m
+276.66666666666669 555.25 l
+276.66666666666669 519.25 l
+10 519.25 l
+10 556 l
+ S
+ Q
+ q
+0.8 0.4 0 RG
+0.8 0.4 0 rg
+[] 0 d
+1.5 w
+9.25 519.25 m
+276.66666666666669 519.25 l
+276.66666666666669 431.625 l
+10 431.625 l
+10 520 l
+ S
+ Q
+ q
+0.8 0.4 0 RG
+0.8 0.4 0 rg
+[] 0 d
+1.5 w
+9.25 431.625 m
+276.66666666666669 431.625 l
+276.66666666666669 395.625 l
+10 395.625 l
+10 432.375 l
+ S
+ Q
+ q
+0.8 0.4 0 RG
+0.8 0.4 0 rg
+[] 0 d
+1.5 w
+9.25 395.625 m
+276.66666666666669 395.625 l
+276.66666666666669 258 l
+10 258 l
+10 396.375 l
+ S
+ Q
+ q
+0.8 0.4 0 RG
+0.8 0.4 0 rg
+[] 0 d
+1.5 w
+9.25 258 m
+276.66666666666669 258 l
+276.66666666666669 150.375 l
+10 150.375 l
+10 258.75 l
+ S
+ Q
+ q
+0.8 0.4 0 RG
+0.8 0.4 0 rg
+[] 0 d
+1.5 w
+9.25 150.375 m
+276.66666666666669 150.375 l
+276.66666666666669 62.75 l
+10 62.75 l
+10 151.125 l
+ S
+ Q
+ q
+0.8 0.4 0 RG
+0.8 0.4 0 rg
+[] 0 d
+1.5 w
+9.25 62.75 m
+276.66666666666669 62.75 l
+276.66666666666669 10 l
+10 10 l
+10 63.5 l
+ S
+ Q
+ q
+0.8 0.4 0 RG
+0.8 0.4 0 rg
+[] 0 d
+1.5 w
+275.91666666666669 555.25 m
+543.3333333333334 555.25 l
+543.3333333333334 518.5 l
+276.66666666666669 518.5 l
+276.66666666666669 556 l
+ S
+ Q
+ q
+0.8 0.4 0 RG
+0.8 0.4 0 rg
+[] 0 d
+1.5 w
+275.91666666666669 518.5 m
+543.3333333333334 518.5 l
+543.3333333333334 474.625 l
+276.66666666666669 474.625 l
+276.66666666666669 519.25 l
+ S
+ Q
+ q
+0.8 0.4 0 RG
+0.8 0.4 0 rg
+[] 0 d
+1.5 w
+275.91666666666669 474.625 m
+543.3333333333334 474.625 l
+543.3333333333334 438.625 l
+276.66666666666669 438.625 l
+276.66666666666669 475.375 l
+ S
+ Q
+ q
+0.8 0.4 0 RG
+0.8 0.4 0 rg
+[] 0 d
+1.5 w
+275.91666666666669 438.625 m
+543.3333333333334 438.625 l
+543.3333333333334 301 l
+276.66666666666669 301 l
+276.66666666666669 439.375 l
+ S
+ Q
+ q
+0.8 0.4 0 RG
+0.8 0.4 0 rg
+[] 0 d
+1.5 w
+275.91666666666669 301 m
+543.3333333333334 301 l
+543.3333333333334 113.375 l
+276.66666666666669 113.375 l
+276.66666666666669 301.75 l
+ S
+ Q
+ q
+0.8 0.4 0 RG
+0.8 0.4 0 rg
+[] 0 d
+1.5 w
+275.91666666666669 113.375 m
+543.3333333333334 113.375 l
+543.3333333333334 10 l
+276.66666666666669 10 l
+276.66666666666669 114.125 l
+ S
+ Q
+ q
+0.8 0.4 0 RG
+0.8 0.4 0 rg
+[] 0 d
+1.5 w
+542.5833333333334 555.25 m
+810 555.25 l
+810 468.5 l
+543.3333333333334 468.5 l
+543.3333333333334 556 l
+ S
+ Q
+ q
+0.8 0.4 0 RG
+0.8 0.4 0 rg
+[] 0 d
+1.5 w
+542.5833333333334 468.5 m
+810 468.5 l
+810 380.875 l
+543.3333333333334 380.875 l
+543.3333333333334 469.25 l
+ S
+ Q
+ q
+0.8 0.4 0 RG
+0.8 0.4 0 rg
+[] 0 d
+1.5 w
+542.5833333333334 380.875 m
+810 380.875 l
+810 293.25 l
+543.3333333333334 293.25 l
+543.3333333333334 381.625 l
+ S
+ Q
+ q
+0.8 0.4 0 RG
+0.8 0.4 0 rg
+[] 0 d
+1.5 w
+542.5833333333334 293.25 m
+810 293.25 l
+810 95.625 l
+543.3333333333334 95.625 l
+543.3333333333334 294 l
+ S
+ Q
+ q
+/F2 10.5 Tf
+BT
+95.47958333333335 532.75 Td
+(Service Operations) Tj
+ET
+ Q
+ q
+/F2 10.875 Tf
+BT
+13 505.375 Td
+(GET Service) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+13 489.375 Td
+(Returns a list of all buckets owned by the authenticated ) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+13 479.375 Td
+(request sender.) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+13 469.375 Td
+(GET / HTTP/1.1) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+13 459.375 Td
+(Host: s3.amazonaws.com) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+13 449.375 Td
+(Date: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+45.4 449.375 Td
+(date) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+13 439.375 Td
+(zzAuthorization: AWS ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+126.4 439.375 Td
+(AWSAccessKeyId:signature) Tj
+ET
+ Q
+ q
+/F2 10.5 Tf
+BT
+96.65558333333334 409.125 Td
+(Bucket Operations) Tj
+ET
+ Q
+ q
+/F2 10.875 Tf
+BT
+13 381.75 Td
+(PUT Bucket) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+13 365.75 Td
+(Creates a new bucket belonging to the account of the ) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+13 355.75 Td
+(authenticated request sender. Optionally, you can specify a EU ) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+13 345.75 Td
+(\(Ireland\) or US-West \(N. California\) location constraint.) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+13 335.75 Td
+(PUT / HTTP/1.1) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+13 325.75 Td
+(Host: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+45.4 325.75 Td
+(destinationBucket) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+137.2 325.75 Td
+(.s3.amazonaws.com) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+13 315.75 Td
+(Date: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+45.4 315.75 Td
+(date) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+13 305.75 Td
+(Authorization: AWS ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+115.6 305.75 Td
+(AWSAccessKeyId:signature) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+13 295.75 Td
+(Content-Length: {0 | ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+126.4 295.75 Td
+(length) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+158.79999999999998 295.75 Td
+(}) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+13 285.75 Td
+([) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+18.4 285.75 Td
+(<CreateBucketConfiguration> ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+13 275.75 Td
+(†<LocationConstraint>EU</LocationConstraint> ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+13 265.75 Td
+(</CreateBucketConfiguration>) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+164.2 265.75 Td
+(]) Tj
+ET
+ Q
+ q
+/F2 10.875 Tf
+BT
+13 244.125 Td
+(GET Bucket) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+13 228.125 Td
+(Lists information about the objects in a bucket for a user that ) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+13 218.125 Td
+(has read access to the bucket.) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+13 208.125 Td
+(GET ?prefix=) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+77.8 208.125 Td
+(prefix) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+110.2 208.125 Td
+(&marker=) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+153.39999999999998 208.125 Td
+(marker) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+185.79999999999998 208.125 Td
+(&max-keys=) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+13 198.125 Td
+(maxkeys) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+50.8 198.125 Td
+(&) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+13 188.125 Td
+(delimiter=) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+67 188.125 Td
+(delimiter) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+115.6 188.125 Td
+( HTTP/1.1) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+13 178.125 Td
+(Host: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+45.4 178.125 Td
+(destinationBucket) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+137.2 178.125 Td
+(.s3.amazonaws.com) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+13 168.125 Td
+(Date: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+45.4 168.125 Td
+(date) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+13 158.125 Td
+(Authorization: AWS ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+115.6 158.125 Td
+(AWSAccessKeyId:signature) Tj
+ET
+ Q
+ q
+/F2 10.875 Tf
+BT
+13 136.5 Td
+(GET Bucket location) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+13 120.5 Td
+(Lists the location constraint of the bucket for the bucketm ) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+13 110.5 Td
+(owner.) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+13 100.5 Td
+(GET /?location HTTP/1.1) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+13 90.5 Td
+(Host: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+45.4 90.5 Td
+(destinationBucket) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+137.2 90.5 Td
+(.s3.amazonaws.com) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+13 80.5 Td
+(Date: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+45.4 80.5 Td
+(date) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+13 70.5 Td
+(Authorization: AWS ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+115.6 70.5 Td
+(AWSAccessKeyId:signature) Tj
+ET
+ Q
+ q
+/F2 10.875 Tf
+BT
+13 48.875 Td
+(DELETE Bucket) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+13 32.875 Td
+(Deletes the specified bucket. All objects in the bucket must be ) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+13 22.875 Td
+(deleted before the bucket itself can be deleted.) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+13 12.875 Td
+(DELETE / HTTP/1.1) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 546.25 Td
+(Host: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+312.0666666666667 546.25 Td
+(destinationBucket) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+403.86666666666667 546.25 Td
+(.s3.amazonaws.com) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 536.25 Td
+(Date: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+312.0666666666667 536.25 Td
+(date) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 526.25 Td
+(Authorization: AWS ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+382.26666666666665 526.25 Td
+(AWSAccessKeyId:signature) Tj
+ET
+ Q
+ q
+/F2 10.875 Tf
+BT
+279.66666666666669 504.625 Td
+(POST Object) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+279.66666666666669 488.625 Td
+(For more information about POST, refer to the Amazon Simple ) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+279.66666666666669 478.625 Td
+(Storage Service Developer Guide.) Tj
+ET
+ Q
+ q
+/F2 10.5 Tf
+BT
+364.48775 452.125 Td
+(Object Operations) Tj
+ET
+ Q
+ q
+/F2 10.875 Tf
+BT
+279.66666666666669 424.75 Td
+(GET Object) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+279.66666666666669 408.75 Td
+(Gets an object for a user that has read access to the object.) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 398.75 Td
+(GET /) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+306.66666666666669 398.75 Td
+(destinationObject) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+398.46666666666670 398.75 Td
+( HTTP/1.1) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 388.75 Td
+(Host: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+312.0666666666667 388.75 Td
+(destinationBucket) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+403.86666666666667 388.75 Td
+(.s3.amazonaws.com) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 378.75 Td
+(Date: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+312.0666666666667 378.75 Td
+(date) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 368.75 Td
+(Authorization: AWS AWSAccessKeyId:signature) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 358.75 Td
+([Range:bytes=) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+349.86666666666667 358.75 Td
+(byte_range) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+403.86666666666667 358.75 Td
+(]) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 348.75 Td
+([x-amz-metadata-directive: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+425.4666666666667 348.75 Td
+(metadata_directive) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+522.6666666666667 348.75 Td
+(]) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 338.75 Td
+([x-amz-if-match: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+371.46666666666670 338.75 Td
+(etag) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+393.06666666666666 338.75 Td
+(]) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 328.75 Td
+([x-amz-if-none-match: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+398.46666666666670 328.75 Td
+(etag) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+420.0666666666667 328.75 Td
+(]) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 318.75 Td
+([x-amz-if-unmodified-since: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+430.8666666666667 318.75 Td
+(time_stamp) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+484.8666666666667 318.75 Td
+(]) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 308.75 Td
+([x-amz-if-modified-since: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+420.0666666666667 308.75 Td
+(time_stamp) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+474.0666666666667 308.75 Td
+(]) Tj
+ET
+ Q
+ q
+/F2 10.875 Tf
+BT
+279.66666666666669 287.125 Td
+(PUT Object) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+279.66666666666669 271.125 Td
+(Adds an object to a bucket for a user that has write access to ) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+279.66666666666669 261.125 Td
+(the bucket. A success response indicates the object was ) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+279.66666666666669 251.125 Td
+(successfully stored; if the object already exists, it will be ) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+279.66666666666669 241.125 Td
+(overwritten.) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 231.125 Td
+(PUT /destinationObject HTTP/1.1) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 221.125 Td
+(Host: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+312.0666666666667 221.125 Td
+(destinationBucket) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+403.86666666666667 221.125 Td
+(.s3.amazonaws.com) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 211.125 Td
+(Date: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+312.0666666666667 211.125 Td
+(date) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 201.125 Td
+(Authorization: AWS ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+382.26666666666665 201.125 Td
+(AWSAccessKeyId:signature) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 191.125 Td
+(Content-Length: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+366.06666666666666 191.125 Td
+(length) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 181.125 Td
+(Content-MD5: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+349.86666666666667 181.125 Td
+(md5_digest) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 171.125 Td
+(Content-Type: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+355.26666666666671 171.125 Td
+(type) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 161.125 Td
+(Content-Disposition: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+393.06666666666666 161.125 Td
+(object_information) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 151.125 Td
+(Content-Encoding: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+376.86666666666667 151.125 Td
+(encoding) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 141.125 Td
+(Cache-Control: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+360.66666666666669 141.125 Td
+(caching) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 131.125 Td
+(Expires: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+328.26666666666671 131.125 Td
+(expiration) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+279.66666666666669 121.125 Td
+(<request metadata>) Tj
+ET
+ Q
+ q
+/F2 10.875 Tf
+BT
+279.66666666666669 99.5 Td
+(COPY Object) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+279.66666666666669 83.5 Td
+(Copies an object for a user that has write access to the bucket ) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+279.66666666666669 73.5 Td
+(and read access to the object. All headers prefixed with x-amz- ) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+279.66666666666669 63.5 Td
+(must be signed, including x-amz-copy-source.) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 53.5 Td
+(PUT /) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+306.66666666666669 53.5 Td
+(destinationObject) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+398.46666666666670 53.5 Td
+( HTTP/1.1) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 43.5 Td
+(Host: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+312.0666666666667 43.5 Td
+(destinationBucket) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+403.86666666666667 43.5 Td
+(.s3.amazonaws.com) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 33.5 Td
+(Date: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+312.0666666666667 33.5 Td
+(date) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 23.5 Td
+(Authorization: AWS ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+382.26666666666665 23.5 Td
+(AWSAccessKeyId:signature) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 13.5 Td
+(x-amz-copy-source: /) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+387.66666666666669 13.5 Td
+(source_bucket) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+457.8666666666667 13.5 Td
+(/) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+463.2666666666667 13.5 Td
+(sourceObject) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+546.3333333333334 546.25 Td
+([x-amz-metadata-directive: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+692.1333333333333 546.25 Td
+(metadata_directive) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+789.3333333333334 546.25 Td
+(]) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+546.3333333333334 536.25 Td
+([x-amz-copy-source-if-match: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+702.9333333333334 536.25 Td
+(etag) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+724.5333333333333 536.25 Td
+(]) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+546.3333333333334 526.25 Td
+([x-amz-copy-source-if-none-match: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+729.9333333333334 526.25 Td
+(etag) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+751.5333333333333 526.25 Td
+(]) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+546.3333333333334 516.25 Td
+([x-amz-copy-source-if-unmodified-since:) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+546.3333333333334 506.25 Td
+(time_stamp) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+600.3333333333334 506.25 Td
+(]) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+546.3333333333334 496.25 Td
+([x-amz-copy-source-if-modified-since: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+546.3333333333334 486.25 Td
+(time_stamp) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+600.3333333333334 486.25 Td
+(]) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+546.3333333333334 476.25 Td
+(<request metadata>) Tj
+ET
+ Q
+ q
+/F2 10.875 Tf
+BT
+546.3333333333334 454.625 Td
+(HEAD Object) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+546.3333333333334 438.625 Td
+(Retrieves information about an object for a user with read ) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+546.3333333333334 428.625 Td
+(access without fetching the object.) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+546.3333333333334 418.625 Td
+(HEAD /) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+578.7333333333333 418.625 Td
+(destinationObject) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+670.5333333333333 418.625 Td
+( HTTP/1.1) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+546.3333333333334 408.625 Td
+(Host: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+578.7333333333333 408.625 Td
+(destinationBucket) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+670.5333333333333 408.625 Td
+(.s3.amazonaws.com) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+546.3333333333334 398.625 Td
+(Date: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+578.7333333333333 398.625 Td
+(date) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+546.3333333333334 388.625 Td
+(Authorization: AWS ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+648.9333333333334 388.625 Td
+(AWSAccessKeyId:signature) Tj
+ET
+ Q
+ q
+/F2 10.875 Tf
+BT
+546.3333333333334 367 Td
+(DELETE Object) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+546.3333333333334 351 Td
+(Deletes the specified object. Once deleted, there is no method ) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+546.3333333333334 341 Td
+(to restore or undelete an object.) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+546.3333333333334 331 Td
+(DELETE / HTTP/1.1) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+546.3333333333334 321 Td
+(Host: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+578.7333333333333 321 Td
+(destinationBucket) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+670.5333333333333 321 Td
+(.s3.amazonaws.com) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+546.3333333333334 311 Td
+(Date: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+578.7333333333333 311 Td
+(date) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+546.3333333333334 301 Td
+(Authorization: AWS ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+648.9333333333334 301 Td
+(AWSAccessKeyId:signature) Tj
+ET
+ Q
+ q
+/F2 10.875 Tf
+BT
+546.3333333333334 279.375 Td
+(POST Object) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+546.3333333333334 263.375 Td
+(Adds an object to a bucket using forms.) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+546.3333333333334 253.375 Td
+(POST / HTTP/1.1) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+546.3333333333334 243.375 Td
+(Host: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+578.7333333333333 243.375 Td
+(destinationBucket) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+670.5333333333333 243.375 Td
+(.s3.amazonaws.com) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+546.3333333333334 233.375 Td
+(User-Agent: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+611.1333333333333 233.375 Td
+(browser_data) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+546.3333333333334 223.375 Td
+(Accept: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+589.5333333333334 223.375 Td
+(file_types) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+546.3333333333334 213.375 Td
+(Accept-Language: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+638.1333333333333 213.375 Td
+(locales) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+546.3333333333334 203.375 Td
+(Accept-Encoding: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+638.1333333333333 203.375 Td
+(encoding) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+546.3333333333334 193.375 Td
+(Accept-Charset: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+632.7333333333333 193.375 Td
+(character_set) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+546.3333333333334 183.375 Td
+(Keep-Alive: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+611.1333333333333 183.375 Td
+(300) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+546.3333333333334 173.375 Td
+(Connection: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+611.1333333333333 173.375 Td
+(keep-alive) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+546.3333333333334 163.375 Td
+(Content-Type: multipart/form-data; ) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+546.3333333333334 153.375 Td
+(boundary=----------ID) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+546.3333333333334 143.375 Td
+(Content-Length: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+632.7333333333333 143.375 Td
+(length) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+546.3333333333334 133.375 Td
+(<multiform_data>) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+546.3333333333334 123.375 Td
+(Note: For more information about the ) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+546.3333333333334 113.375 Td
+(multiform data, refer to the Amazon Simple ) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+546.3333333333334 103.375 Td
+(Storage Service Developer Guide.) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+797.49 591 Td
+(1.) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+797.49 591 Td
+(1.) Tj
+ET
+ Q
+
+endstream
+endobj
+9 0 obj 
+<</Type /Font /Encoding /WinAnsiEncoding /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+10 0 obj 
+<</Length 10812 /Type /XObject /Subtype /Image /Width 273 /Height 100 /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode >>
+stream
+ˇÿˇ· Exif  II*            ˇÏ Ducky     <  ˇ·)http://ns.adobe.com/xap/1.0/ <?xpacket begin="Ôªø" id="W5M0MpCehiHzreSzNTczkc9d"?> <x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="Adobe XMP Core 5.0-c060 61.134777, 2010/02/12-17:32:00        "> <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"> <rdf:Description rdf:about="" xmlns:xmp="http://ns.adobe.com/xap/1.0/" xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/" xmlns:stRef="http://ns.adobe.com/xap/1.0/sType/ResourceRef#" xmp:CreatorTool="Adobe Photoshop CS5 Windows" xmpMM:InstanceID="xmp.iid:19CD0E13CB6111E0AF97E929D0389EF2" xmpMM:DocumentID="xmp.did:19CD0E14CB6111E0AF97E929D0389EF2"> <xmpMM:DerivedFrom stRef:instanceID="xmp.iid:19CD0E11CB6111E0AF97E929D0389EF2" stRef:documentID="xmp.did:19CD0E12CB6111E0AF97E929D0389EF2"/> </rdf:Description> </rdf:RDF> </x:xmpmeta> <?xpacket end="r"?>ˇÓ Adobe d¿   ˇ€ Ñ 		
+
+
+
+ˇ¿  d ˇƒ «             	              	    !1AQ"2aqÅBë°Rí≤#s±br¢3c≥4¥5u7¡É$t&6—Ç¬CS√îV“ì£ÑF 	
+      !1qAQÅ¡"2aë°±—Ç¬#3Br4b¢“‚%·ÒRíCS5ˇ⁄   ? ’0   |mËÙ∆µßÜ¥n_8pëÜê≥eT,Ê
+è—éóßr%È· }ª¥üXQ´9ª ¬©	÷â{8ëL«^Ãt˜é±˜:	º5º+tKOºG”]V Æzãâ˙LF/§Ωÿé¿_≈∑Ú4?w§ÎƒY≥ÆÁO@ÈKqrê3*∆lí±ÑpüÒ{1x¿›≈∆5ƒhˇ o¬WÒ0µΩÚ˙zI/ß‹Oüãn.ÃÁ-Ò"Ò∂°oºì—±Ï>‘´B2®µŒiûí-ïC’G¯MŸàÏ¬ˆ/˛á‚:0—≥^øO@ôQu[Dµ)æIÒøÍ˙±FÃq™”¸$˛Õùv˙I
+;´¿“ôß'Z¡àü8Ò%ób3üMÔ/qzŒ\E¨"◊Øﬁöør›ÒÖ€&±• LD>î\¨‚en?™¸˛¢¬Ø™KƒëÒ Ä Ä Ä Ä Ä Ä Ä Ä Ä Ä Ä Ä>6}ÿ≈4±WR§\LWk	bò6≤nÙx›…57F\≠≈n*¢NõtWQ4sÛì1äS›Æ˜ﬂw¢kû‚c8∆N±óÿq‚2˚T{™èü⁄M]ußÙ◊)∂b$I3ìÑ⁄ƒ&öœÛI·Á⁄–ﬂ4peÿ8^Æ˜§·”∑#5’QQ¸·±E2˛.Â⁄ÔøB'-X∑mQ/X√/ˇ ;ˇ 2,ùoÈÌë1”åßBÛgNõ€™¢F˚√aäﬁrÃ´oG)-zÃn∫I∂ùj°StvØDä¶Bc(â{Xä`ã∂Aö›ƒOvÁGB Û,$-$‚B‘Æä”Éù<Ïî cHˆ{æ^Ù@c≥‹E◊DËπΩá}¨æ ZtæiÅå£§ÑÊ1écóç⁄7z"-ÕŒZtùçn«QoG≤–Ä Ä Ä Ä Ä Ä Ä Ä Ä Ä Ä Ä‰`cê®ù~¥∑⁄ÈGãﬂ˙èiuµ©÷ë˚B˝(⁄«n;L›ÏHaø{#ˆÌXºWıñœaî}9m‚∞ân1õˇ ¡[ˇ :-ãˇ á˝Ñ2˝gAf*Kàò,ﬁÎ}áÙÑZº%ı•∞âŒ;(^q˙¬ﬂho•õ˝πm%mˆA∑Î)}¢J©¶.ˆK~=†• @ @ @ @ @ @ @ @ @b	F6|
+Ö(L∆êuåÉÓ∆≤öé∂ñ”*Øà‡´¶~·¿ˇ Ç 1¨/B}ó]Üeµ¶}Œ7´F+Pû»À£–(qà}]01¶ºGRã¶BˆŒüIÑ c„v¸"ör^sx≈æ!£i÷UUíL¶s¿)bC>È•}é˝ÍªêÎ¶ˇ _©ï∂íuLàM%xäjîƒS0Ωì Ä˜∫∑ƒ?€‹µr;—kO#;Æ]ãã£^r~˘ÆëJcd… ®∞x¢Ãß~*)ΩDnW%roî≤µ+nÜy˘KáÊÜÿ‡√‰õù®ÓÛ5–t›Ã≠≈ç>ÃüŸﬂ
+œ˙ÃXÛpåßãË∑ºù˝á€Òˇ 5y:_Ω˘€‚ª€R∂◊h!ûOîàâød1Nƒx{gM7∂UÙ6≥+SZË{,P9+î‡$6F·X"K¬÷ÁØy8Ë„T9Û[ëïµªßI∫r°[¢¢Üõ∫>∑¡vıŒ§eÊdîo€Ç“… eïU:â™‰‰nRò¶√¥∆ŸÒDﬁ√7‹ìïü¯H¸FkQ“?G°ï„ò Ä Ä Ä Ä Ä Ä Ä Ä Ä ›?r˝∏‚Ω`0õ–√“XÑƒc%yS;m˛o·:„cu¸»…s{E
+ª[õh‘AeX&d˛-üS±ˆs˙ŒoÚÔ–ô√À÷äs–Ú“€÷åb¯i/ﬂ'àèf>[Xˆ˛[π˚ÙÙ{Ú√•÷›Ùt≈+mÃ¨º@®ÜP@ß˘¡Ñø\∞wÔ€èœù∏˚Õ?ﬁ .B-7ÃI¯≥≤+—X©áb£9mK˝ÂÆÔºﬁéÁ-VÕg;µ*Ó§ÍD’çq:)ï£º@Õ«∫	Àœe¯¢y“ƒÌÓÌ	◊f›®:\ROõ§L®°W)ÒTSX „´à¡Óä^*÷9ióy˚ƒÂóák´ªË$(ÕÓ±Ï®•—é`ü¿iƒÜ÷cU∫Ê£˚{Ù9±+µ”›†‘
+¢ìb']U™™àÄ ªgÈú«Õò\∑ßÓ]á/'Û.2m˜j[º9	|§EL¡!D‡»“ÍúLª0nÆ+Ãr)JîÆÉ∂A(˙ö–S∫uSO-U≤+ıÊ¨úJ|0òTX%“)§?≈(\àÜ§Û£ïg%j÷ÊlEL8@V≈¸5àô>8«kãŒej”+c}z@S·±RÄ ;§`ﬁÚVa]’_"6ﬁmR§b¸∞-◊|Z∑O•ª¬
+p´¨ö' 6·Ü¯B≈∏=	/1ÜÂ-l˚©ÍóK¢!\®V⁄7•: 3WfT¢EBrörüoT}ö1°6¶¶ÿWb«FﬁÆ6®8Oæ›3	U êL¯L!Â Ä;.ùG±ÌA!n”jz™mML"®Ä˛lòèÒ@õ^˜¥Óñ«soUõ‘íOÚô'1£#“Ï °tÍ÷ú⁄ÀzÌ}´7AﬁkàUX%–)¢
+>2áØ˙AZrY\Õäπ«
+ep
+6ƒ>A\âÑ ˛SÅ¿Q(»@¡∏@w@µ›H±-˜ºræ∆ö˜)√π\âú
+m¬%Ä#˝ıi7˝›Kˇ ©O˝0™ó™∫oV~ï>ôr”û=\p†Ÿ)ôCõ®9Œ hñ— LF~M˚`ä∆∑iEŸô?∫ë“cÖD»qTJ?|)‡òäﬁª-ªëôù–jmÍM 8L£eJ¶Í4∂Ä˘‡{Íã*{%ûøpõVhNªÖL!
+"aê	E‘k∫¯)ÙkÅÖA˘ä'+fÓUL%	òpî√∏7¿u}m“öEDÙÍÖŒ…©éRLÍ1àS=0m:¶¬§Õ‘Á)ªhπ@»∏D‡¢g∞0Ü ı¿NîDÜêpúΩ”¡0«ã[ø8Wq /…†ªN‹e⁄IÌ&h∑dè[¢wY!™-Üî;b{,ŒÔ´ëÑû˝’W“F‚‹rZ6ë#uW*ç*"Õ¢Ÿ	
+i†€Âëœs;ño;V˙äö’Wëú∏nGzZEuUUcÊ,s(†˙Á0¸#+òõ≥ÌJR⁄€&ïàE÷).a±–∞«ß±∑˙»∏^_⁄∆C⁄˝c·ƒ)¢∫»5ë˙»"Q¯¢£gv	n KchòùòJ≠≈>a∫—¨‘üªU≥µs»T±ê∆( Œ`e,É2û*ni-’«ß÷Ÿòa#i'È Í7i¬™\òâî¬ D˚!∞“ﬁbù‚.6îú7xìk§ë±Ä¥ímVº¥ˆÕ∂ºH√ﬁô∫{—fÏß4‰€⁄t‹ÑcEB›(∑G≤Á¨Øµ÷ÔÆZ∫oQ®–íUZ∫¢õV¶DÇ†¢e{ â@C	@vèL†q•zOrÍuŒÈ±ùô°[TÍn@Í(aê	ÑuÁÄG≥[t)ˆò+OX*%™Sj"r$æ^JÑQ01N\JpÃ ]¸ôﬁuJ•ªY∑_,e—£‚&1_9å˚%˚!—8£Ê„˘ Ô˚ìO° G€:[™∫£o6}MM3QËIxu8ã´íQ¡ıá@BBc›£ye=ê´\¥nfÔ⁄òÏÎá3êÏ¬¢'Ì&pÈ( Fò¬®i&±^¥w˙îÒ®8IÒU~ ¢†ùäÇdQ˝YC∏^≠–Êç]ï+kR®/ô¨d ≥ƒ[;Ld¢ú9LﬁÏöa>ògs	z\6¶ú∫uo§±™ØU+4DÇ°ê
+c^œw	`(è≠(#È&ç\ü]zëû¨Ä©TW!ï>%E D¢cà é”lÄ9÷›¶ÈÂ5@µ*}LÆÅ<ìÅ—√òSì îç h.O/*•fÀ©QÍô¿PóHåŒqpS	Sêd∆]A xı«ñÀ∂˝æ’∏i5õ*Ÿrù
+¿|IlÏ&§ü5OG™ön´F’z£ØﬁéVlÃ©éöEŸò|ií@aÿÔ,v]^‡‘ÍeM±îÎ|¸kÁ"Ä p&fPﬂ˙Ç ∂π∏’öÖ(YG&nª¥xä∫…JpH∆¶àcàõ…(¨“[kZáo≠]5LîñáEëåâñ2«L;Gêí …ı¿
+¨™WñèÍ3ÑêXQ™R…vëDŸ.ÿ8N± Ã'∫ ÿzõq≤πyy≠Wÿ⁄‘Ë‚·0ÂÅD≈7î£2˘‡GdVÆ]l=ü)ÕX®"≠=ûTÛ@Ô&iKn-≤Ëﬂ OÍàﬂˆ1≠NºÇ"…“Äò™›\‡"¬`"õ§a ‹‰™Í~ä›¨™∆;6Ìë0àÅ"ÖML ;à	À|≠` ßcƒÎ≠≤Ó§û≥—I˝Ë”Ì”˙Q€ñ≈}ƒtÒú¯ù6û¬R˜˝˙≥N%ºMUão»ΩG6VórA≈y*ÆBOEÁ?‰·¯§ãïÁ˝ùp¸d™<k·ƒ(≈/vJ+A4õuTÏﬁÀ˝á˚Aü
+F∑•ßàäŒ%Xƒ_q˙ ﬂho•ªﬂR[IHÍà5˝i*âœÁFpøR)ÚãΩÜ[Ä#∞#Ÿ‘Rk•ë]◊DµhÎµ•¡≥Eƒ°Ñ&a0åäBIåm¡2≈õ´ÚµT=úIƒçÊâû>T@q	ÿ≈”á	ºØ‘5›˝6ú∂§§·*vq∆úE–lÄ∏{@D§?wÂ@g#€j7oÿ≤˙K@‹‹ˇ 9]ri˙8Jr∫íd—+|JP8∫1•“<Rõ`e´≈)uJÏÑÉ≈^l*∆úø-¥ìOLÈd)@J3p)CpI©`œ¸Òog˚A —ãŒÚ°YˆÎöım|ñ-C¥  cúÊÓ&òtú√∫ À5ûm5"‡™¯uëCEôú
+	ï=z†Œ@8C±Á  ˘‡
+ˇ XüÎ{‘)KjYWM2ﬁU—nÄ éŸ ¸ûÙpÚ=˙ù›ˆåæä–ÄæØjMôjæ∏j∆ìfdMêeM˘4I=òémüËÛÚ´Q∫ı2˝3ìÅûVÎéJöG	&8SLΩI¶Yz6¿ÀJt‚óßˆ{Z2îŒd
+‘ù$e‹à3å˙XK‰Ä1w2ès≠w(™"9J¢â z
+FÈÄ≠˘lnäZ)l`(v“\Áó 3ï`πÕä$OZjg EfÕ<∫MêRÌÙiXÔs…≠häàò ˝ÁÚsÒÑΩ'Ä)n[õ¶æµ⁄‰P ≈*À( ;@F ò£Ë1@`=Õ—J:6‰¬æh%°à}¡Ä).LD}Ëæ	Ï•∂\åµ‡ ØﬁXıD∂∂9®Gæ9ÑyÊ+¬∑`æ[ﬁÛ/\ãúﬁZßÑc&N⁄’öÑNàÇ‰ÿ`î˚[Á¥"/Ñπguq‘t›ªñõOàëºY{ÄƒI3(aM0¬Râæ‰H¯ä√πä{äØG®¯eÛÑlıé¶ñ}a~“†F©ı®3Ä?”,/á1ﬂ{´õ⁄mw3Ñ{:xl'ïBí•¥2‘RÃ  Ê l]Ÿˇ LY.a¨‹¬¨*ûï˚/ñº4ëPƒI^Ôi†Ä{hVZÜ$”)ı§!ãÊö_v+xØb-¥ó^<À‚%aô€ükAÎ±”U*∫ÂPÇC2òxÉÆ:º-fPΩ-Âƒ|sI)B-Öbı€Öxd§‘0Ã°Ÿñ.±àEÇΩz„¢ı•º… uèPÃMWJ"ê@¯€6Õ°‘=Å≈’5)Ω[?àéΩößT∏zê	EÒÒ"	»Œ<Îª|ù°o∂L¬VkøPŒ aéö_VÁ0ÌçåÁ'ï+iÖÛTÒUëA˙ÃÄî≈W0n0JS`J IÛá®TÀ⁄=µItì’)fY≈AdL!TP ÑOl@De◊ tÚarS)◊eféÈR†ÓÆ›cå@C∑1ƒ…ñ~∞ïLAÊÄ˘π˛r∫˛‰”ÙpñÂÉ˘%nˇ ˆøjR ∆:¡¸”ª?äª˝1†˚@€¶‘ﬂ‡Ë˛ Áuã˛x∑â≥˝†êöÁm€‚Rmfƒ0É%Wt¢¿ÖT»ò“1• *ÚgT∂‹µ‚‘ñEΩQf»Ö8Îú•ö`cäÂ ö[{êO7˙ÅB∏n
+Eê·7ÅE"«z·ê\He0l6ß1ó\+…U«LiV∏-ı’™7r»¶êf∏(
+î&;LÄ2Ä[öÕG®‹Îãh¢)R-„äDF{r%˙≈MÂ€ÑæHL59˛û÷’¨Si¨ü>:bäjº*¶ )á∑ñ	úíJSÄ4Üösx ·Æ±°\4ouPY6≠ù¥>bY™ò@9ÑÂ(òz–[ÕÕ¶Ω+TMY¿ Œº›%»§Ê»îT°Â )G” \ú´Í-∏¶ó£EQnÕ˝Uà™n"SEER(\BﬁDõ5ÍÓawj•fØMPß„#Vãh(FÈï<aªaå%Ä4òZN-^R“ùêHÙ‘ïù:L{≈U—≈l#¯ p/¢ œ<≥ˇ ;mü¥q˚*–öÊÁ˘4Û»ıßÈ 
+GìÊìÔ·K~ôk¿¿î¢0’NäFñ"Ä BÚmç\Uk∆e:*Õ)´£¥UphË‰ƒ≥$E‚≥+Ó89Ó\~F˙(u⁄√ŒQ≠+¢ıNﬂÆ>.j ©";ª`_≈ÃW1ŸN.ˇ Z3ÔWÂåzN¸.2≈Ωq›ÁlÉ
+dÀdïöπõGpa€˜›ﬂé+´)ƒJ[™m´⁄Iºu™vΩ`ß—k4“œ*Ö`ào(úç"≈óñ‚0¨ÓwKÚ©tëWÒVg°CyÌh`¶’ÈèúÍÎ§@™ úø¢,X,«~.[“ÿ◊≠˜“äÎ-âHÅ"
+–#jAœ7]gfÍçö®9êA™ÅORÙÍç⁄´–*Çd sVŒà:K`≥ÚË»2√æM517¢ìZç1fÄ3M¡’U3aÎ¡#z ±Ì~O-∂vÕA≠yÒûWü#Åª‘@JìCÄÅädìò	ÕŸBnç–¶ârÃ∆«®˚ApÆïJºâƒ)˘"lÜÂÓÊ (ùC ÙÏ'\9kªoÎÒ[äóR`Ÿ™ç—G)—ñ)Êêa˙¥‘∞µ§V[˚#OiV’Atú;b
+ÊÆÜ,°V:ÄÅG`h@˜ MÔpﬁï™„:µ56µ7ãªD™ôr®R™q8ä	ú6O¨`3M£¨“’kF2•[±#3*ŸKº˚`∑nry}“Ó:eM≈^òfÃ^ ‰‡ò∏DTåä)h·ÎÄ46™ÈçQ-c–Í'2
+&~!ã¬Œí¿ itî¿i ¬∑&ZúWbö
+ZçÄ{eà8(D>«†ryl7≥_1´?w+¬ÜEQ 1QjråÀîêàcıÑ›Óå0÷ár›O∞›~∏™uò¢bµ:X∏v≈9D¢)‚âébòCÓ–eSïã>Ω|V.{âÛóÖ©.+'NFH&LE :ÅàÁ⁄®Ñ ¿^ZÙLÂ{2êóÂg9«Û≥g ,) eê Ë§◊≠◊Æ©ûÒJ28Ò)(®
+a)å °gÜ[L0ç©onÍ∂•ÆYv≥<N@´uB` ÌÍ1G`¿f≥…Œ¶6vbS”Í dö∆PÌœám3¿_ú0â§|¶∑∑Íç´∑ã¥*OZà(÷òﬂõ@î ò‡QS…√(Î‘[e’”b÷≠Êã6«A%ïòê¶6ŸéåDÈ+óçó®Tõñ•Sß¨“ú*ôD[ôc(lƒNêKiÜ¡<‡w[¥˙ßÿk€¥◊∂t™Ë,U\	≤ƒ<ƒ v¿ÓÅÚÒti’‡ÊπW®2rÇÃé’4ö
+∆6#®Cb6aór –0  Wó»J∂˘í∆1Êﬁ)Ib˝‘Yrçπ»’Y#íPÈò7	%˚ënÙ†Íâñ‘’‡Í•P1`πÅ áôPîƒ1ò:∫Ç.◊Ûﬂ”c{{≠'MKïÆB
+X<K∑¯Pú¢ä*|jú ÂD√åR.ﬁî›^≤r£CFüÑÍºâÈEß¬?Zkí$^p∫ë⁄<·ø%Bæs x´5∫=û•F∞ı{d
+∫r°RL∏Ñ
+Yò¬¥FA Î4w4†¨7xÇ¥£$+ï˘(†) LOòá m¿4ZÌ∫¿µ3‰*,N"Rπl°ULLQêÜ"àÑ¿`=>Ïµ*D~´
+ªGD•òIRQ%»b∑ÃD4â,#æ Kc¥T’?ô‹X3≤◊Ûü¸lrÚŒP?4Ô‹çEÀ5¶öÎ2,ë¶LÀî@@≈ﬁóIu[OÌ≠(¥ô‹∑fUY„»XÊ:†QT‡S
+ÜÕò• \î⁄ù:®≈Ù◊)<d‡∏–rÅ¡DŒQÈ)ä" y´◊Ωo±’ Ézc2åÅw*ï"âá†¢a	èê €kQÏ+ù¡õP+Ã™.HÖ∫*îUêo0&24º≤Ä&Í5*m1íØ™.Rf… ƒ≥ïŒT” uò∆ Ä≠˝P”õç˜á—n/ﬁÌìd÷√ o¬Qêü—8u›^é—€vnﬁ†›„±¬’∫™êä¨;§ô cÔËÄ"ì‘[EÍ·ßôZQ3*E)}A ¿Aä c|˚ 	zU^ïWbõ˙Sƒ_1VyNõ®US4ÜC#êDBÄ!.j•ªRgXµÇ‡BùW;≥≤◊L5LÈqA0†BõˆlÄyrµ€∂s¥›H›i,∆‚Z)ç∫ À/h‚Òº˛ë≠MZ”™ﬁ•—M%@ñ(Ñˆv4ÅºìÄ J%†;@B S¨ÍŒô—jCK™‹¥ˆØ 8Tn¢ÂƒCu))‡¬î Œ—€Gçìt—b8l±@ËÆëÄ‰9GqäbàÄáö \∏5KNmÁ‹j‚b≈Ëwõ(±s?ñRÃKÈÄ$—∫mw_J™—J6ˇ *Èãpò·⁄§Ü”K|ÀÆÿáÅ´≥uåä*Lï“<”D@8a0Ã§C— x=ÂÈ◊˝—Iˇ ≠oˇ Æ dÄΩæø~ÿìÓö<ﬂ≈_´˜≠ñ\ßËÛ±z+Dò‘Ô¸Ç”ÌCÙÜã~#ˇ õ‚d=ø÷ÀgBb†L:}˚¡ﬂŸÈEª¬Zó§àŒ;⁄=E¸Ø @	:◊l˚I•ó%(§¨fg]±wési.úº¢dÂ f˚_Q∏~QÎ‘—Px∆ÆÕGD≥€î¯‡Ø–2øÎÂõQBﬁ”˝´Éâ¢"j´DÕ∞q,ê• ¸Íi¸0bˆ•P†Ë•=äJ%ozãóµ@D£Jxïì0ÙîÀôCèö ≥Gî¿”s–R®§kÑ≠IZ·ﬁqÙ	0>,π`6`Ó·¯`zE⁄˛´ ’ÀCx®™ì hcàïªï@≈OoANCÀœ XZÀuèqiöu€ù‘kÖPÕ"ßOÖD¶”¿¢ '&.‘√pK¨ÆSÎ5[~˛∫tŸÍÊU≥C.´rˆJªEÅDÅ—òS èö ÉÊ›5ˇ 1 ]ÓÂvˆkdõ”≈"†© †PÌ-Ÿ9äêy 	◊˙`◊ktjŒä]Liıkéá\≈vä™dô÷§bõ`áWHƒ›’Î.¿™÷	JµÈf@*éÃl¥Åe
+¨±¶2ƒTƒò·Û¿z…khE&ÿkY”J˚tÆ*Z»˝CwáUU…äYÅà¬%Q3H”,∂O… Cku”UºöÈ≠pÜJ 1“i;21D%ÑL°&xÛµπZ∑-˚"≤ÃŒ{rVÈ*1tπÃPnEOÖR‰¶∞≤dëå";: M.¨ª~„µ™ Ré„é)≥j ë`ÛÈL|æñ¢•‹ˇ X5!…q&•:†Ÿâá†$°§Ääd/¶ QµozÖØÀmij∆nˆª^…éï5àn†Oı†2É u∞˚Hx¶yØGÃ˚w%PA2,¢y©7 Ó	vÅL#∂{g yZﬂ⁄ìcr‘ÒΩu´∫ey'æDpÏ¢ö¿›bc∆\]Ø™((R£gT•ñ7.Æ¨R:æn&ßπ™•:´bxdîgàGJPS÷0únÕ–∑óK⁄±Fˆ…¶>
+ö4ˆ/™‚…é2f”&$wˆVƒC·ÎÛ¿
+öH–Í˚z≤öôR¡^p„˚1ù∏U∫fMBÃ Ç•Åîgå›[ ªE4b•jTnE)ó:µèYED©Õ“8∏>Ã•TÜPÑ)∞œí a®Ë´ÁhP
+ïE´R)-ËÎ*ífQ!#‡.ÈË	ä i ìˇ âiˇ ≈¶ˇ Ï) hË Än+Ljé8§‹e,`1fQ ·¥7≈o8»>Ó}‰eª*SJ–I`≥Ê;≠U
+o≠z€0∏™òºG∂ væ(ß‚≤]ù.;Àñ:«–L⁄Ã,œS£ÚíŒäq∞⁄
+"|– 9Êd¢b¸[  ©ß{‚ë«mØºñŒÑF1¥În‰99	èÆ∞·¸^˜≈8_bÔi›‹\≤—Ë÷u›Ãl√éªÎrŸÉ®±óŒURÅL \% ûÕ„<õ#˚6‰ÂΩ)*j–B„q›ı(ë;‰x@Ú¢dU3&°@…úß(ÓêÑ˘ŸT°Vò^’.@D9Ø§ê$òòäL•Á OÎ´ñ&•]tJP´Ö≤îPêsô5§YKr»y†Na,'ﬁüiö¬àù´Ff¸ª@¬ÿò£-ÿÃ*|≤ûöræk/CR⁄¯(6‚®;qà≈9ﬂï≈Ÿ¡æ{ 
+ﬁ‰ß5N\ÆzïëmØo7R¶≈•\ÊW8È(SH°é§¿†¶ÌíÄ.ÆZ.*SÌ¢ÇN§¶´jÅD¿&MCûgütÇòÙ@7.í∏˘ÑºÓ∆[ie„ö†ë‚›OŒ!hÔRì–ÌI‘"ÿ5—r⁄ÔdAMΩIÇ ®7O2©06"îH!æC8ò÷y£!K∫≠´ôcG@ä0ì9J*ÄHl*≥#vCL‡vüGØÎΩ›ÚC6£›ÕiÔúß@¢Òâ
+Q˙•ê˘ oP¥'ó[
+ﬁ5rºïDf$QE–ùeT8˜S â@d°€∫ Æu-•§⁄‚“2ZI¨ù∫¢h¨ƒÆ±gaZ§'0üŸâÑ|ù[ ≠ aÀ˛¶˚IµÜ¯AÅV◊IµåÄ•©"ÅˆJ‚ Û@.ë⁄Å@Âz™≤Ñ¬ÍµL®‘óŸ∑
+≠ŒT¯àQÙ¿ƒ)Æ\rÙ“(ô&7A ‚^®.≈0)á…àíÙ¿B’øh(Ë›:Ó:‰s*Bk. `	(›)—¸<¬‡ ÎÄ(M\ø™:Ø†ä\‰£ûñç∏ög +ûS¶(â@6˚ß\•ê÷ër˝¢◊ûù“kÎ èîGS-Ÿä	πOb†bÀ±¥1 u@›*sÀ•∑^πÎ©*"‚€døà<_Ë®(R®t0âÄ¯åPñ 	Ü›–Üü†⁄'´l∫,ßÔhÄ™ √ *f"JÄœksòÄi‚(IKt†-V‰∞uÌÊö¯ßâ“$‡©à‰Å”Cà"≈ â≤Œ¿pÎ≤]¿ @ @»é«ì~œ<c@9åÄÄ Ä Ä2ı{ÿ¸øßÊq^%òÜvÆé·~™sÌÓ¡?æÄ>π¢ˆﬁ}ô„úOÖ>7á ¡¬q]åÃ{{Ÿõ∫ √U}ÉˆßÌŒ_≥yaüäxÒœÍ≤pˆ≥qKæà
+'Ów«~≥⁄fÛ˙8LÏ3Èıgá” içP˜aˇ å°ÏÊ?dqµ·89πúAqfÊÌ«éyòªSÄ3ïÌÏ7ã∫˜u„>√•‚¯gì‹sñ‹ß<Õòß-íÄ5,Ó=ﬁˇ É3ssC∆¯º<_áffŒ?ì√≤^\P]Õﬂª?hZ‡‚ΩæÀO3Å√É+˝œãng»¡⁄ñ˝ò`
+~ﬂØk)ûˆ|w¬f8å…‡òoŒÌÂ|¨Ω≤› h.l=”˚)HÒ~;ì˛Ï∏iÂ1vx}ÿzg›ı†ÎnxO¥yæ7ÏﬁŒ9dÃ;ôªræVVŸnÄ.ﬁa}ù˜ù¶¸7)ß¬`…·∏≤ee˘0ÓÚ@≤ …|Â˚%Ìmª∆q'¬ä·≤ˇ UÕ˙π„ı±fJ –µØ˜J˚Ü«‡^ÆNNŒÉ8'Ÿ≈ó∫{ 
+7C}ÿ˚ÅªºsâˆgåS≈8ººÃY(Â‰ez¯∞‡È« g3Xî·¸gÿ~,1O^ÃR˛œùÜ ‹∂ü∫_ri^Ô∏xÆ#Ωó∑?>[s±œ∂‚ÓÙ@ä°ë‚aºoŸ\Fœû)‰Leƒdˆ%-ÿ‡UÀO∫vµO≈ã ˚[‚x3peõÚò{>xe≥|ˆŒ Ã’œ
+ˆ≤£Óü«|6c˘ÃysŸ?YïÚs6À|tÚÉÓÁ∆™≠˚}ñ||v9É7áñ‹x•ôèµ’≤p´ÄˇŸ
+endstream
+endobj
+11 0 obj 
+<</Type /Font /Encoding /WinAnsiEncoding /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+12 0 obj 
+<</Type /Font /Encoding /WinAnsiEncoding /Subtype /Type1 /BaseFont /Courier >>
+endobj
+13 0 obj 
+<</Type /Font /Encoding /WinAnsiEncoding /Subtype /Type1 /BaseFont /Courier-Oblique >>
+endobj
+14 0 obj 
+<</Type /Page /LastModified (D:20211223110758+00'00') /Resources <</ProcSet [/Text /PDF ] /Font <</F1 9 0 R /F2 11 0 R /F3 12 0 R /F4 13 0 R /F5 21 0 R >> /XObject <</X1 10 0 R >> >> 
+/MediaBox [0 0 820 620 ] /Contents [15 0 R ] /Parent 2 0 R >>
+endobj
+15 0 obj 
+<</Length 11227 >>
+stream
+/F1 9 Tf
+0 g
+0 G
+q
+1 0 0 1 11 559.75 cm
+137.1825 0 0 50.25 0 0 cm
+/X1 Do
+Q
+ q
+/F1 21.75 Tf
+BT
+154.0575 579.25 Td
+(Amazon Simple Storage service ) Tj
+ET
+ Q
+ q
+/F1 15.75 Tf
+BT
+469.54125 577.25 Td
+(\(Version 2006-03-01\)) Tj
+ET
+ Q
+ q
+/F1 12 Tf
+BT
+154.0575 558.125 Td
+(Quick Reference Card) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+732.456 601 Td
+(Revised: 04/1/2010) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+773.973 591 Td
+(Page ) Tj
+ET
+ Q
+ q
+0.973 0.961 0.8470000000000000 RG
+0.973 0.961 0.8470000000000000 rg
+10 555.25 m
+276.6666666666666 555.25 l
+276.6666666666666 519.25 l
+10 519.25 l
+10 555.25 l
+ h
+ f
+ Q
+ q
+0.973 0.961 0.8470000000000000 RG
+0.973 0.961 0.8470000000000000 rg
+10 519.25 m
+276.6666666666666 519.25 l
+276.6666666666666 375.375 l
+10 375.375 l
+10 519.25 l
+ h
+ f
+ Q
+ q
+0.973 0.961 0.8470000000000000 RG
+0.973 0.961 0.8470000000000000 rg
+10 375.375 m
+276.6666666666666 375.375 l
+276.6666666666666 208.875 l
+10 208.875 l
+10 375.375 l
+ h
+ f
+ Q
+ q
+0.973 0.961 0.8470000000000000 RG
+0.973 0.961 0.8470000000000000 rg
+276.66666666666669 555.25 m
+543.3333333333333 555.25 l
+543.3333333333333 519.25 l
+276.66666666666669 519.25 l
+276.66666666666669 555.25 l
+ h
+ f
+ Q
+ q
+0.973 0.961 0.8470000000000000 RG
+0.973 0.961 0.8470000000000000 rg
+276.66666666666669 519.25 m
+543.3333333333333 519.25 l
+543.3333333333333 41.875 l
+276.66666666666669 41.875 l
+276.66666666666669 519.25 l
+ h
+ f
+ Q
+ q
+0.8 0.4 0 RG
+0.8 0.4 0 rg
+[] 0 d
+1.5 w
+9.25 555.25 m
+276.6666666666666 555.25 l
+276.6666666666666 519.25 l
+10 519.25 l
+10 556 l
+ S
+ Q
+ q
+0.8 0.4 0 RG
+0.8 0.4 0 rg
+[] 0 d
+1.5 w
+9.25 519.25 m
+276.6666666666666 519.25 l
+276.6666666666666 375.375 l
+10 375.375 l
+10 520 l
+ S
+ Q
+ q
+0.8 0.4 0 RG
+0.8 0.4 0 rg
+[] 0 d
+1.5 w
+9.25 375.375 m
+276.6666666666666 375.375 l
+276.6666666666666 208.875 l
+10 208.875 l
+10 376.125 l
+ S
+ Q
+ q
+0.8 0.4 0 RG
+0.8 0.4 0 rg
+[] 0 d
+1.5 w
+275.91666666666669 555.25 m
+543.3333333333333 555.25 l
+543.3333333333333 519.25 l
+276.66666666666669 519.25 l
+276.66666666666669 556 l
+ S
+ Q
+ q
+0.8 0.4 0 RG
+0.8 0.4 0 rg
+[] 0 d
+1.5 w
+275.91666666666669 519.25 m
+543.3333333333333 519.25 l
+543.3333333333333 41.875 l
+276.66666666666669 41.875 l
+276.66666666666669 520 l
+ S
+ Q
+ q
+/F2 10.5 Tf
+BT
+107.44433333333333 532.75 Td
+(Miscellaneous) Tj
+ET
+ Q
+ q
+/F2 10.875 Tf
+BT
+13 505.375 Td
+(Bucket Name Restrictions) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+13 489.375 Td
+(Amazon S3 bucket names must:) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+28.524999999999977 479.375 Td
+(Only contain lowercase letters, numbers, periods \(.\), and ) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+28.524999999999977 469.375 Td
+(dashes \(-\)) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+28.524999999999977 459.375 Td
+(Start with a number or letter) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+28.524999999999977 449.375 Td
+(Be between 3 and 63 characters long) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+28.524999999999977 439.375 Td
+(Not be in an IP address style \(e.g., "192.168.5.4"\)) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+28.524999999999977 429.375 Td
+(Not end with a dash) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+28.524999999999977 419.375 Td
+(Not contain dashes next to periods \(e.g., ) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+28.524999999999977 409.375 Td
+("my-.bucket.com" and "my.-bucket" are invalid\)) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+17.874999999999979 479.375 Td
+(ï) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+17.874999999999979 459.375 Td
+(ï) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+17.874999999999979 449.375 Td
+(ï) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+17.874999999999979 439.375 Td
+(ï) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+17.874999999999979 429.375 Td
+(ï) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+17.874999999999979 419.375 Td
+(ï) Tj
+ET
+ Q
+ q
+/F2 9 Tf
+BT
+13 399.375 Td
+(Note:) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+35.995 399.375 Td
+( Although legacy bucket names can be up to 255 ) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+13 389.375 Td
+(characters, include underscores, and end with a dash, they ) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+13 379.375 Td
+(are not recommended.) Tj
+ET
+ Q
+ q
+/F2 10.875 Tf
+BT
+13 361.5 Td
+(REST Request Signature) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+13 345.5 Td
+(Construct a signature by making an RFC2104 HMAC-SHA1 of ) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+13 335.5 Td
+(the following and converting it to Base64.) Tj
+ET
+ Q
+ q
+/F2 10.875 Tf
+BT
+13 323.625 Td
+(Item) Tj
+ET
+ Q
+ q
+/F3 8 Tf
+BT
+13 308.625 Td
+(HTTP-Verb + "\\n" + ) Tj
+ET
+ Q
+ q
+/F3 8 Tf
+BT
+13 299.625 Td
+([Content-MD5] + "\\n" + ) Tj
+ET
+ Q
+ q
+/F3 8 Tf
+BT
+13 290.625 Td
+([Content-Type] + "\\n" + ) Tj
+ET
+ Q
+ q
+/F3 8 Tf
+BT
+13 281.625 Td
+(Date + "\\n" + ) Tj
+ET
+ Q
+ q
+/F3 8 Tf
+BT
+13 272.625 Td
+([CanonicalizedAmzHeaders ) Tj
+ET
+ Q
+ q
+/F3 8 Tf
+BT
+13 263.625 Td
+(+/n] ) Tj
+ET
+ Q
+ q
+/F3 8 Tf
+BT
+13 254.625 Td
+([CanonicalizedResource]) Tj
+ET
+ Q
+ q
+/F2 10.875 Tf
+BT
+142.26666666666677 323.625 Td
+(Example) Tj
+ET
+ Q
+ q
+/F3 8 Tf
+BT
+142.26666666666677 308.625 Td
+(GET\\n) Tj
+ET
+ Q
+ q
+/F3 8 Tf
+BT
+142.26666666666677 299.625 Td
+(4gJE4saaMU4BqNR0kLY+lw==\\n ) Tj
+ET
+ Q
+ q
+/F3 8 Tf
+BT
+142.26666666666677 290.625 Td
+(or \\n) Tj
+ET
+ Q
+ q
+/F3 8 Tf
+BT
+142.26666666666677 281.625 Td
+(image/jpeg\\n or \\n) Tj
+ET
+ Q
+ q
+/F3 8 Tf
+BT
+142.26666666666677 272.625 Td
+(Tue, 6 Mar 2007 19:42:41 ) Tj
+ET
+ Q
+ q
+/F3 8 Tf
+BT
+142.26666666666677 263.625 Td
+(+0000\\n) Tj
+ET
+ Q
+ q
+/F3 8 Tf
+BT
+142.26666666666677 254.625 Td
+(x-amz-acl:public-read\\n) Tj
+ET
+ Q
+ q
+/F3 8 Tf
+BT
+142.26666666666677 245.625 Td
+(x-amz-meta-checksum:crc32\\n) Tj
+ET
+ Q
+ q
+/F3 8 Tf
+BT
+142.26666666666677 236.625 Td
+(/mybucket/photos/lolcatz.jpg) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+13 222.875 Td
+(The content cannot contain whitespaces and \\n represents ) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+13 212.875 Td
+(Unicode code point U+000A.) Tj
+ET
+ Q
+ q
+/F2 10.5 Tf
+BT
+382.868 532.75 Td
+(Versioning) Tj
+ET
+ Q
+ q
+/F2 10.875 Tf
+BT
+279.66666666666669 505.375 Td
+(GET Bucket Object versions) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 489.375 Td
+(Lists metadata about all of the versions of ) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 479.375 Td
+(objects in a bucket.) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 469.375 Td
+(GET /?) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+312.0666666666667 469.375 Td
+(versions) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+355.26666666666665 469.375 Td
+( HTTP/1.1) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 459.375 Td
+(Host: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+312.0666666666667 459.375 Td
+(BucketName) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+366.06666666666672 459.375 Td
+(.s3.amazonaws.com) Tj
+ET
+ Q
+ q
+/F2 10.875 Tf
+BT
+279.66666666666669 443.75 Td
+(GET Bucket versioning) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 427.75 Td
+(Returns the versioning state of a bucket.) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 417.75 Td
+(GET /?) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+312.0666666666667 417.75 Td
+(versioning) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+366.06666666666672 417.75 Td
+( HTTP/1.1) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 407.75 Td
+(Host: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+312.0666666666667 407.75 Td
+(myBucket) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+355.26666666666665 407.75 Td
+(.s3.amazonaws.com) Tj
+ET
+ Q
+ q
+/F2 10.875 Tf
+BT
+279.66666666666669 392.125 Td
+(PUT Bucket versioning) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 376.125 Td
+(Sets the versioning state of an existing ) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 366.125 Td
+(bucket.) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 356.125 Td
+(PUT /?) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+312.0666666666667 356.125 Td
+(versioning) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+366.06666666666672 356.125 Td
+( HTTP/1.1) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 346.125 Td
+(Host: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+312.0666666666667 346.125 Td
+(bucket) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+344.46666666666670 346.125 Td
+(.s3.amazonaws.com) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+279.66666666666669 336.125 Td
+(<VersioningConfiguration ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+279.66666666666669 326.125 Td
+(xmlns="http://s3.amazonaws.com/ ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+279.66666666666669 316.125 Td
+(doc/2006-03-01/"> <Status>Enabled</Status> ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+279.66666666666669 306.125 Td
+(</VersioningConfiguration>) Tj
+ET
+ Q
+ q
+/F2 10.875 Tf
+BT
+279.66666666666669 290.5 Td
+(DELETE Object versionId) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 274.5 Td
+(Removes a specific object version.) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 264.5 Td
+(DELETE /) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+322.86666666666667 264.5 Td
+(my-third-image.jpg) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+420.0666666666667 264.5 Td
+(?) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 254.5 Td
+(Host: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+312.0666666666667 254.5 Td
+(bucket) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+344.46666666666670 254.5 Td
+(.s3.amazonaws.com) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 244.5 Td
+(versionId=<) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+339.06666666666672 244.5 Td
+(versionID) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+387.66666666666669 244.5 Td
+(>) Tj
+ET
+ Q
+ q
+/F2 10.875 Tf
+BT
+279.66666666666669 228.875 Td
+(GET Object versionId) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 212.875 Td
+(Returns a specific object version.) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 202.875 Td
+(GET /) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+306.66666666666669 202.875 Td
+(myObject) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+349.86666666666667 202.875 Td
+(?) Tj
+ET
+ Q
+ q
+/F5 9 Tf
+BT
+355.26666666666665 202.875 Td
+(versionId) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+403.86666666666667 202.875 Td
+(=<) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+414.66666666666669 202.875 Td
+(versionID) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+463.2666666666667 202.875 Td
+(>) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 192.875 Td
+(Host: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+312.0666666666667 192.875 Td
+(bucket) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+344.46666666666670 192.875 Td
+(.s3.amazonaws.com) Tj
+ET
+ Q
+ q
+/F2 10.875 Tf
+BT
+279.66666666666669 177.25 Td
+(HEAD Object versionId) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 161.25 Td
+(Returns metadata of a specific object ) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 151.25 Td
+(version.) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 141.25 Td
+(HEAD /) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+312.0666666666667 141.25 Td
+(myObject) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+355.26666666666665 141.25 Td
+(?) Tj
+ET
+ Q
+ q
+/F5 9 Tf
+BT
+360.66666666666669 141.25 Td
+(versionId) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+409.26666666666665 141.25 Td
+(=<) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+420.0666666666667 141.25 Td
+(versionID) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+468.6666666666667 141.25 Td
+(>) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 131.25 Td
+(Host: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+312.0666666666667 131.25 Td
+(bucket) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+344.46666666666670 131.25 Td
+(.s3.amazonaws.com) Tj
+ET
+ Q
+ q
+/F2 10.875 Tf
+BT
+279.66666666666669 115.625 Td
+(PUT Object copy versionId) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 99.625 Td
+(Copies a specific object version.) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 89.625 Td
+(PUT /) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+306.66666666666669 89.625 Td
+(my-second-image.jpg) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+409.26666666666671 89.625 Td
+( HTTP/1.1) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 79.625 Td
+(Host: ) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+312.0666666666667 79.625 Td
+(bucket) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+344.46666666666670 79.625 Td
+(.s3.amazonaws.com) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 69.625 Td
+(Date: Wed, 28 Oct 2009 22:32:00 GMT) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 59.625 Td
+(x-amz-copy-source: /bucket/myimage.) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+279.66666666666669 49.625 Td
+(jpg?) Tj
+ET
+ Q
+ q
+/F5 9 Tf
+BT
+301.2666666666667 49.625 Td
+(versionId) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+349.86666666666667 49.625 Td
+(=<) Tj
+ET
+ Q
+ q
+/F4 9 Tf
+BT
+360.66666666666669 49.625 Td
+(versionID) Tj
+ET
+ Q
+ q
+/F3 9 Tf
+BT
+409.26666666666665 49.625 Td
+(>) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+797.49 591 Td
+(2.) Tj
+ET
+ Q
+ q
+/F1 9 Tf
+BT
+797.49 591 Td
+(2.) Tj
+ET
+ Q
+
+endstream
+endobj
+21 0 obj 
+<</Type /Font /Encoding /WinAnsiEncoding /Subtype /Type1 /BaseFont /Courier-BoldOblique >>
+endobj
+xref
+0 16 
+0000000000 65535 f 
+0000000015 00000 n 
+0000000091 00000 n 
+0000000156 00000 n 
+0000000206 00000 n 
+0000000225 00000 n 
+0000000259 00000 n 
+0000000293 00000 n 
+0000000543 00000 n 
+0000022276 00000 n 
+0000022373 00000 n 
+0000033355 00000 n 
+0000033458 00000 n 
+0000033554 00000 n 
+0000033658 00000 n 
+0000033921 00000 n 
+21 1 
+0000045202 00000 n 
+trailer
+<</ID [<30383663373533366365633865353664> <61646231333664316562636533373662> ] /Size 22 /Root 1 0 R /Info 3 0 R >>
+startxref
+45310
+%%EOF
