@@ -1,197 +1,204 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPPdf\Test\Core\Engine\ZF;
 
 use PHPPdf\Core\Engine\Font;
 
 use PHPPdf\Core\Engine\ZF\Engine;
+use PHPPdf\Exception\InvalidResourceException;
+use PHPPdf\PHPUnit\Framework\TestCase;
+use ZendPdf\PdfDocument;
+use PHPPdf\Core\Engine\ZF\Image;
+use PHPPdf\Core\Engine\ZF\GraphicsContext;
+use PHPPdf\Core\UnitConverter;
 
-class EngineTest extends \PHPPdf\PHPUnit\Framework\TestCase
+class EngineTest extends TestCase
 {
-    private $engine;
-    private $zendPdf;
-    
-    public function setUp()
+    private Engine      $engine;
+    private PdfDocument $zendPdf;
+
+    public function setUp(): void
     {
-        if(!class_exists('ZendPdf\PdfDocument', true))
-        {
+        if (!class_exists(PdfDocument::class, true)) {
             $this->fail('Zend Framework 2 library is missing. You have to download dependencies, for example by using "vendors.php" file.');
         }
-        
-        $this->zendPdf = new \ZendPdf\PdfDocument();
-        $this->engine = new Engine($this->zendPdf);
+
+        $this->zendPdf = new PdfDocument();
+        $this->engine  = new Engine($this->zendPdf);
     }
-    
+
     /**
      * @test
      */
-    public function createImage()
+    public function createImage(): void
     {
         $image = $this->engine->createImage(TEST_RESOURCES_DIR.'/domek.png');
-        
-        $this->assertInstanceOf('PHPPdf\Core\Engine\ZF\Image', $image);
+
+        $this->assertInstanceOf(Image::class, $image);
     }
-    
+
     /**
      * @test
      * @dataProvider fontProvider
      */
-    public function createFont($fontData)
+    public function createFont($fontData): void
     {
         $font = $this->engine->createFont($fontData);
-        
-        $this->assertInstanceOf('PHPPdf\Core\Engine\ZF\Font', $font);
-        
-        foreach($fontData as $style => $data)
-        {
+
+        $this->assertInstanceOf(\PHPPdf\Core\Engine\ZF\Font::class, $font);
+
+        foreach ($fontData as $style => $data) {
             $this->assertTrue($font->hasStyle($style));
         }
     }
-    
-    public function fontProvider()
+
+    public function fontProvider(): array
     {
         $resourcesDir = TEST_RESOURCES_DIR.'/resources';
-        return array(
-            array(
-                array(
+
+        return [
+            [
+                [
                     Font::STYLE_NORMAL => $resourcesDir.'/font-judson/normal.ttf',
-                    Font::STYLE_BOLD => $resourcesDir.'/font-judson/bold.ttf',
-                ),
-            ),
-            array(
-                array(
+                    Font::STYLE_BOLD   => $resourcesDir.'/font-judson/bold.ttf',
+                ],
+            ],
+            [
+                [
                     Font::STYLE_NORMAL => 'courier',
-                    Font::STYLE_BOLD => 'courier-bold',
-                ),
-            ),
-        );
+                    Font::STYLE_BOLD   => 'courier-bold',
+                ],
+            ],
+        ];
     }
-    
+
     /**
      * @test
      */
-    public function createGraphicsContext()
+    public function createGraphicsContext(): void
     {
         $size = '1:1';
-        
+
         $gc = $this->engine->createGraphicsContext($size, 'utf-8');
-        
-        $this->assertInstanceOf('PHPPdf\Core\Engine\ZF\GraphicsContext', $gc);
-        
-        $this->assertEquals(array(), $this->zendPdf->pages);
-        
+
+        $this->assertInstanceOf(GraphicsContext::class, $gc);
+
+        $this->assertEquals([], $this->zendPdf->pages);
+
         $this->engine->attachGraphicsContext($gc);
-        
-        $this->assertEquals(array($gc->getPage()), $this->zendPdf->pages);
+
+        $this->assertEquals([$gc->getPage()], $this->zendPdf->pages);
     }
-    
+
     /**
      * @test
      */
-    public function delegateRenderingToZendPdf()
+    public function delegateRenderingToZendPdf(): void
     {
         $content = '123';
-        
-        $zendPdf = $this->getMockBuilder('ZendPdf\PdfDocument')
-                        ->setMethods(array('render'))
+
+        $zendPdf = $this->getMockBuilder(PdfDocument::class)
+                        ->onlyMethods(['render'])
                         ->getMock();
 
         $zendPdf->expects($this->once())
                 ->method('render')
-                ->will($this->returnValue($content));
-        
+                ->willReturn($content);
+
         $engine = new Engine($zendPdf);
-        
+
         $this->assertEquals($content, $engine->render());
-    }
-    
-    /**
-     * @test
-     */    
-    public function successfullEngineLoading()
-    {
-        $file = TEST_RESOURCES_DIR.'/test.pdf';
-        
-        $engine = new Engine();
-        
-        $loadedEngine = $engine->loadEngine($file, 'utf-8');
-        
-        $this->assertFalse($loadedEngine === $engine);
-        $this->assertInstanceOf('PHPPdf\Core\Engine\ZF\Engine', $loadedEngine);
-        $this->assertEquals(2, count($loadedEngine->getAttachedGraphicsContexts()));
     }
 
     /**
      * @test
-     * @expectedException PHPPdf\Exception\InvalidResourceException
      */
-    public function throwExceptionIfFileIsInvalidWhileEngineLoading()
+    public function successfullEngineLoading(): void
     {
-        $file = 'some/invalid/filename.pdf';
-        
+        $file = TEST_RESOURCES_DIR.'/test.pdf';
+
         $engine = new Engine();
-        
+
+        $loadedEngine = $engine->loadEngine($file, 'utf-8');
+
+        $this->assertNotSame($loadedEngine, $engine);
+        $this->assertInstanceOf(Engine::class, $loadedEngine);
+        $this->assertCount(2, $loadedEngine->getAttachedGraphicsContexts());
+    }
+
+    /**
+     * @test
+     *
+     */
+    public function throwExceptionIfFileIsInvalidWhileEngineLoading(): void
+    {
+        $this->expectException(InvalidResourceException::class);
+        $file = 'some/invalid/filename.pdf';
+
+        $engine = new Engine();
+
         $engine->loadEngine($file, 'utf-8');
     }
-    
+
     /**
      * @test
      * @dataProvider metadataProvider
      */
-    public function setMetadataValues($name, $value, $shouldBeSet, $expectedValue = null)
+    public function setMetadataValues($name, $value, $shouldBeSet, $expectedValue = null): void
     {
-        $zendPdf = new \ZendPdf\PdfDocument();
-        $engine = new Engine($zendPdf);
-        
+        $zendPdf = new PdfDocument();
+        $engine  = new Engine($zendPdf);
+
         $engine->setMetadataValue($name, $value);
-        
-        if($shouldBeSet)
-        {
+
+        if ($shouldBeSet) {
             $this->assertEquals($expectedValue, $zendPdf->properties[$name]);
-        }
-        else
-        {
+        } else {
             $this->assertFalse(isset($zendPdf->properties[$name]));
         }
     }
-    
-    public function metadataProvider()
+
+    public function metadataProvider(): array
     {
-        return array(
-            array('Trapped', 'true', true, true),
-            array('Trapped', 'false', true, false),
-            array('Trapped', true, true, true),
-            array('Trapped', 'null', true, null),
-            array('Author', 'Author', true, 'Author'),
-            array('InvalidProperty', 'value', false),
-        );
+        return [
+            ['Trapped', 'true', true, true],
+            ['Trapped', 'false', true, false],
+            ['Trapped', true, true, true],
+            ['Trapped', 'null', true, null],
+            ['Author', 'Author', true, 'Author'],
+            ['InvalidProperty', 'value', false],
+        ];
     }
-    
+
     /**
      * @test
      */
-    public function delegateConvertUnitInvocationToConverter()
+    public function delegateConvertUnitInvocationToConverter(): void
     {
-        $converter = $this->getMock('PHPPdf\Core\UnitConverter');
-        
+        $converter = $this->createMock(UnitConverter::class);
+
         $engine = new Engine(null, $converter);
-        
-        $value = 123;
-        $unit = 'abc';
+
+        $value      = 123;
+        $unit       = 'abc';
         $percentage = '100%';
-        $result = 321;
-        
-        $converter->expects($this->at(0))
+        $result     = 321;
+
+        $converter->expects($this->once())
+                  ->id('1')
                   ->method('convertUnit')
                   ->with($value, $unit)
-                  ->will($this->returnValue($result));
-                  
-        $converter->expects($this->at(1))
+                  ->willReturn($result);
+
+        $converter->expects($this->once())
+                  ->after('1')
                   ->method('convertPercentageValue')
                   ->with($percentage, $value)
-                  ->will($this->returnValue($result));
-                  
-        $this->assertEquals($result, $engine->convertUnit($value, $unit));        
+                  ->willReturn($result);
+
+        $this->assertEquals($result, $engine->convertUnit($value, $unit));
         $this->assertEquals($result, $engine->convertPercentageValue($percentage, $value));
     }
 }

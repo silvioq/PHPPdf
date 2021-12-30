@@ -4,6 +4,7 @@ namespace PHPPdf\Test\Core\Node\Paragraph;
 
 use PHPPdf\Core\DrawingTaskHeap;
 
+use PHPPdf\Core\Engine\GraphicsContext;
 use PHPPdf\Core\Node\Paragraph\Line;
 use PHPPdf\Core\Node\Paragraph;
 use PHPPdf\Core\Node\Text;
@@ -11,16 +12,17 @@ use PHPPdf\Core\Node\Node;
 use PHPPdf\Core\Document;
 use PHPPdf\Core\Point;
 use PHPPdf\Core\Node\Paragraph\LinePart;
+use PHPPdf\Core\Engine\Font;
 
 class LinePartTest extends \PHPPdf\PHPUnit\Framework\TestCase
 {
-    const ENCODING = 'utf-16';
-    const COLOR = '#654321';
-    const WORDS = 'some words';
+    const ENCODING      = 'utf-16';
+    const COLOR         = '#654321';
+    const WORDS         = 'some words';
     const X_TRANSLATION = 5;
-    const WIDTH = 100;
-    const ALPHA = 0.5;
-    const LINE_HEIGHT = 18;
+    const WIDTH         = 100;
+    const ALPHA         = 0.5;
+    const LINE_HEIGHT   = 18;
 
     /**
      * @test
@@ -28,55 +30,51 @@ class LinePartTest extends \PHPPdf\PHPUnit\Framework\TestCase
      */
     public function drawLinePartUsingTextNodeAttributes($fontSize, $lineHeightOfText, $textDecoration, $expectedLineDecorationYCoord, $wordSpacing)
     {
-        $fontStub = $this->createFontStub();
+        $fontStub   = $this->createFontStub();
         $startPoint = Point::getInstance(100, 120);
 
         $documentStub = $this->createDocumentStub();
 
-        $linePartWidthGross = self::WIDTH +  ($this->getWordsCount() - 1)*$wordSpacing;
+        $linePartWidthGross = self::WIDTH + ($this->getWordsCount() - 1) * $wordSpacing;
 
-	    $expectedXCoord = $startPoint->getX() + self::X_TRANSLATION;
-	    $expectedYCoord = $startPoint->getY() - $fontSize - (self::LINE_HEIGHT - $lineHeightOfText);
-	    
-	    $expectedWordSpacing = $wordSpacing !== null ? $wordSpacing : 0;
+        $expectedXCoord = $startPoint->getX() + self::X_TRANSLATION;
+        $expectedYCoord = $startPoint->getY() - $fontSize - (self::LINE_HEIGHT - $lineHeightOfText);
 
-        $gc = $this->getMock('PHPPdf\Core\Engine\GraphicsContext');
+        $expectedWordSpacing = $wordSpacing !== null ? $wordSpacing : 0;
+
+        $gc = $this->createMock('PHPPdf\Core\Engine\GraphicsContext');
 
         $this->expectDrawText($gc, Point::getInstance($expectedXCoord, $expectedYCoord), $fontStub, $fontSize, $expectedWordSpacing);
-           
-        if($expectedLineDecorationYCoord === false)
-        {
+
+        if ($expectedLineDecorationYCoord === false) {
             $gc->expects($this->never())
                ->method('drawLine');
-        }
-        else
-        {
+        } else {
             $expectedYCoord = $expectedYCoord + $expectedLineDecorationYCoord;
             $this->expectDrawLine($gc, self::COLOR,
-                Point::getInstance($expectedXCoord, $expectedYCoord),
-                Point::getInstance($expectedXCoord + $linePartWidthGross, $expectedYCoord)
+                                  Point::getInstance($expectedXCoord, $expectedYCoord),
+                                  Point::getInstance($expectedXCoord + $linePartWidthGross, $expectedYCoord)
             );
         }
 
-        $text = $this->createTextStub($fontStub, $gc, array(
-            'alpha' => self::ALPHA,
-            'font-size' => $fontSize,
-            'color' => self::COLOR,
-            'line-height' => $lineHeightOfText,
+        $text = $this->createTextStub($fontStub, $gc, [
+            'alpha'           => self::ALPHA,
+            'font-size'       => $fontSize,
+            'color'           => self::COLOR,
+            'line-height'     => $lineHeightOfText,
             'text-decoration' => $textDecoration,
-        ));
+        ]);
 
         $line = $this->createLineStub($startPoint, self::LINE_HEIGHT);
-        
+
         $linePart = new LinePart(self::WORDS, self::WIDTH, self::X_TRANSLATION, $text);
         $linePart->setWordSpacing($wordSpacing);
         $linePart->setLine($line);
-        
+
         $tasks = new DrawingTaskHeap();
         $linePart->collectOrderedDrawingTasks($documentStub, $tasks);
-        
-        foreach($tasks as $task)
-        {
+
+        foreach ($tasks as $task) {
             $task->invoke();
         }
     }
@@ -105,131 +103,133 @@ class LinePartTest extends \PHPPdf\PHPUnit\Framework\TestCase
     {
 
         $gc->expects($this->once())
-            ->method('drawText')
-            ->with(self::WORDS, $startPoint->getX(), $startPoint->getY(), self::ENCODING, $wordSpacing);
+           ->method('drawText')
+           ->with(self::WORDS, $startPoint->getX(), $startPoint->getY(), self::ENCODING, $wordSpacing);
 
 
         $gc->expects($this->once())
-            ->method('setFont')
-            ->with($font, $fontSize);
+           ->method('setFont')
+           ->with($font, $fontSize);
 
         $gc->expects($this->once())
-            ->method('setFillColor')
-            ->with(self::COLOR);
+           ->method('setFillColor')
+           ->with(self::COLOR);
         $gc->expects($this->once())
-            ->method('setAlpha')
-            ->with(self::ALPHA);
+           ->method('setAlpha')
+           ->with(self::ALPHA);
 
         $gc->expects($this->once())
-            ->method('saveGs');
+           ->method('saveGs');
         $gc->expects($this->once())
-            ->method('restoreGS');
+           ->method('restoreGS');
     }
 
     private function expectDrawLine($gc, $color, Point $startPoint, Point $endPoint)
     {
         $gc->expects($this->once())
-            ->method('setLineColor')
-            ->id('color')
-            ->with($color);
+           ->method('setLineColor')
+           ->id('color')
+           ->with($color);
 
         $gc->expects($this->once())
-            ->method('setLineWidth')
-            ->id('line')
-            ->with(0.5);
+           ->method('setLineWidth')
+           ->id('line')
+           ->with(0.5);
 
         $gc->expects($this->once())
-            ->after('color')
-            ->method('drawLine')
-            ->with($startPoint->getX(), $startPoint->getY(), $endPoint->getX(), $endPoint->getY());
+           ->after('color')
+           ->method('drawLine')
+           ->with($startPoint->getX(), $startPoint->getY(), $endPoint->getX(), $endPoint->getY());
     }
-    
-    public function drawingDataProvider()
+
+    public function drawingDataProvider(): array
     {
-        return array(
-            array(11, 15, Node::TEXT_DECORATION_NONE, false, null),
-            array(11, 15, Node::TEXT_DECORATION_UNDERLINE, -1, null),
-            array(18, 15, Node::TEXT_DECORATION_LINE_THROUGH, 6, null),
-            array(12, 15, Node::TEXT_DECORATION_OVERLINE, 11, 13),
-        );
+        return [
+            [11, 15, Node::TEXT_DECORATION_NONE, false, null],
+            [11, 15, Node::TEXT_DECORATION_UNDERLINE, -1, null],
+            [18, 15, Node::TEXT_DECORATION_LINE_THROUGH, 6, null],
+            [12, 15, Node::TEXT_DECORATION_OVERLINE, 11, 13],
+        ];
     }
-    
+
     /**
      * @test
      */
-    public function heightOfLinePartIsLineHeightOfText()
+    public function heightOfLinePartIsLineHeightOfText(): void
     {
         $lineHeight = 123;
-        
-        $text = $this->getMockBuilder('PHPPdf\Core\Node\Text')
-                     ->setMethods(array('getLineHeightRecursively'))
+
+        $text = $this->getMockBuilder(Text::class)
+                     ->onlyMethods(['getLineHeightRecursively'])
                      ->getMock();
-                     
+
         $text->expects($this->once())
              ->method('getLineHeightRecursively')
-             ->will($this->returnValue($lineHeight));
-        
+             ->willReturn($lineHeight);
+
         $linePart = new LinePart('', 0, 0, $text);
-        
+
         $this->assertEquals($lineHeight, $linePart->getHeight());
     }
-    
+
     /**
      * @test
      */
-    public function addLinePartToTextOnLinePartCreation()
+    public function addLinePartToTextOnLinePartCreation(): void
     {
-        $text = $this->getMockBuilder('PHPPdf\Core\Node\Text')
-                     ->setMethods(array('addLinePart', 'removeLinePart'))
+        $text = $this->getMockBuilder(Text::class)
+                     ->onlyMethods(['addLinePart', 'removeLinePart'])
                      ->getMock();
-                     
-        $text->expects($this->at(0))
+
+        $text->expects($this->once())
+             ->id('1')
              ->method('addLinePart')
-             ->with($this->isInstanceOf('PHPPdf\Core\Node\Paragraph\LinePart'));
-             
-        $text->expects($this->at(1))
+             ->with($this->isInstanceOf(LinePart::class));
+
+        $text->expects($this->once())
+             ->after('1')
              ->method('removeLinePart')
-             ->with($this->isInstanceOf('PHPPdf\Core\Node\Paragraph\LinePart'));
+             ->with($this->isInstanceOf(LinePart::class));
 
         $linePart = new LinePart('', 0, 0, $text);
 
-        $newText = $this->getMockBuilder('PHPPdf\Core\Node\Text')
-                        ->setMethods(array('addLinePart'))
+        $newText = $this->getMockBuilder(Text::class)
+                        ->onlyMethods(['addLinePart'])
                         ->getMock();
-        $newText->expects($this->at(0))
+        $newText->expects($this->once())
                 ->method('addLinePart')
-                ->with($this->isInstanceOf('PHPPdf\Core\Node\Paragraph\LinePart'));
-                
+                ->with($this->isInstanceOf(LinePart::class));
+
         $linePart->setText($newText);
     }
-    
+
     /**
      * @test
      */
-    public function getNumberOfWords()
+    public function getNumberOfWords(): void
     {
-        $words = 'some words';
+        $words    = 'some words';
         $linePart = new LinePart($words, 0, 0, new Text());
-        
+
         $this->assertEquals(2, $linePart->getNumberOfWords());
-        
+
         $linePart->setWords('some more words');
         $this->assertEquals(3, $linePart->getNumberOfWords());
     }
-    
+
     /**
      * @test
      */
-    public function wordSpacingHasAnImpactOnWidth()
+    public function wordSpacingHasAnImpactOnWidth(): void
     {
-        $words = 'some more words';
-        $width = 100;
+        $words    = 'some more words';
+        $width    = 100;
         $linePart = new LinePart($words, $width, 0, new Text());
-        
+
         $wordSpacing = 5;
         $linePart->setWordSpacing($wordSpacing);
-        
-        $expectedWidth = $width + ($linePart->getNumberOfWords()-1)*$wordSpacing;
+
+        $expectedWidth = $width + ($linePart->getNumberOfWords() - 1) * $wordSpacing;
         $this->assertEquals($expectedWidth, $linePart->getWidth());
     }
 
@@ -238,9 +238,9 @@ class LinePartTest extends \PHPPdf\PHPUnit\Framework\TestCase
      */
     private function createFontStub()
     {
-        return $this->getMockBuilder('PHPPdf\Core\Engine\Font')
-            ->disableOriginalConstructor()
-            ->getMock();
+        return $this->getMockBuilder(Font::class)
+                    ->disableOriginalConstructor()
+                    ->getMock();
     }
 }
 
@@ -293,7 +293,7 @@ class LinePartTest_Text extends Text
         $this->graphicsContext = $graphicsContext;
     }
 
-    public function getGraphicsContext()
+    public function getGraphicsContext(): ?GraphicsContext
     {
         return $this->graphicsContext;
     }

@@ -24,16 +24,16 @@ use PHPPdf\Core\Node\Node;
  */
 class Background extends ComplexAttribute
 {
-    const REPEAT_NONE = 0;
-    const REPEAT_X = 1;
-    const REPEAT_Y = 2;
-    const REPEAT_ALL = 3;
+    public const REPEAT_NONE = 0;
+    public const REPEAT_X = 1;
+    public const REPEAT_Y   = 2;
+    public const REPEAT_ALL = 3;
     
-    const POSITION_LEFT = 'left';
-    const POSITION_RIGHT = 'right';
-    const POSITION_TOP = 'top';
-    const POSITION_BOTTOM = 'bottom';
-    const POSITION_CENTER = 'center';
+    public const POSITION_LEFT  = 'left';
+    public const POSITION_RIGHT = 'right';
+    public const POSITION_TOP    = 'top';
+    public const POSITION_BOTTOM = 'bottom';
+    public const POSITION_CENTER = 'center';
 
     private $image = null;
     private $repeat;
@@ -57,13 +57,13 @@ class Background extends ComplexAttribute
     private function setPosition($positionX, $positionY)
     {
         $allowedXPositions = array(self::POSITION_LEFT, self::POSITION_CENTER, self::POSITION_RIGHT);
-        if(!in_array($positionX, $allowedXPositions) && !$this->isNumeric($positionX))
+        if(!in_array($positionX, $allowedXPositions, true) && !$this->isNumeric($positionX))
         {
             throw new InvalidArgumentException(sprintf('Invalid x position "%s" for background, allowed values: %s or numeric value.', $positionX, implode(', ', $allowedXPositions)));
         }
 
         $allowedYPositions = array(self::POSITION_TOP, self::POSITION_CENTER, self::POSITION_BOTTOM);
-        if(!in_array($positionY, $allowedYPositions) && !$this->isNumeric($positionY))
+        if(!in_array($positionY, $allowedYPositions, true) && !$this->isNumeric($positionY))
         {
             throw new InvalidArgumentException(sprintf('Invalid y position "%s" for background, allowed values: %s or numeric value.', $positionY, implode(', ', $allowedYPositions)));
         }
@@ -198,7 +198,7 @@ class Background extends ComplexAttribute
             default:
                 $value = $converter->convertUnit($converter->convertPercentageValue($this->positionX, $node->getWidth()));
                 $value = str_replace(['px', 'pt', '%'], '', $value);
-                return $x + $value;
+                return $x + (float) $value;
         }
     }
     
@@ -217,7 +217,7 @@ class Background extends ComplexAttribute
             default:
                 $value = $converter->convertUnit($converter->convertPercentageValue($this->positionY, $node->getHeight()));
                 $value = str_replace(['px', 'pt', '%'], '', $value);
-                return $y - $value;
+                return $y - (float) $value;
         }
     }
     

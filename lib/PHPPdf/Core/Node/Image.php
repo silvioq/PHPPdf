@@ -179,7 +179,7 @@ class Image extends Node
         return $this->getWidth() + $this->getMarginLeft() + $this->getMarginRight();
     }
     
-    public function isLeaf()
+    public function isLeaf(): bool
     {
         return true;
     }

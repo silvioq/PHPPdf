@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace PHPPdf\Test\Core\Engine\Imagine\GraphicsContextTest;
 
@@ -10,12 +11,13 @@ class RotationTest extends AbstractGraphicsContextTest
     /**
      * @test
      */
-    public function givenImage_rotateBy180Deg_drawRectangleInRightBottomCorner_rectShouldBeInLeftUpperCorner()
+    public function givenImage_rotateBy180Deg_drawRectangleInRightBottomCorner_rectShouldBeInLeftUpperCorner(): void
     {
         //given
 
-        $width = 100; $height = 50;
-        $color = '#000000';
+        $width  = 100;
+        $height = 50;
+        $color  = '#000000';
 
         //when
 
@@ -24,7 +26,6 @@ class RotationTest extends AbstractGraphicsContextTest
             ->rotate(180)
             ->drawRectangleInRightBottomCorner($width, $height, $color)
             ->ok();
-
         //then
 
         $this->assertDrewRectInLeftUpperCorner($width, $height, $color);
@@ -33,12 +34,13 @@ class RotationTest extends AbstractGraphicsContextTest
     /**
      * @test
      */
-    public function givenImage_rotateDiagonally_rotationShouldSucceed()
+    public function givenImage_rotateDiagonally_rotationShouldSucceed(): void
     {
         //given
 
-        $width = 100; $height = 50;
-        $color = '#000000';
+        $width  = 100;
+        $height = 50;
+        $color  = '#000000';
 
         //when
 
@@ -51,7 +53,7 @@ class RotationTest extends AbstractGraphicsContextTest
         //then
 
         $this->assertImage($this->gcImage)
-            ->colorAt(self::GC_WIDTH/2, self::GC_HEIGHT/2, $color);
+             ->colorAt(self::GC_WIDTH / 2, self::GC_HEIGHT / 2, $color);
     }
 
     private function gc()
@@ -62,49 +64,49 @@ class RotationTest extends AbstractGraphicsContextTest
 
 class RotationTest_GcWrapper
 {
-    private $gc;
-    private $width;
-    private $height;
+    private GraphicsContext $gc;
+    private                 $width;
+    private                 $height;
 
-    function __construct(GraphicsContext $gc, $width, $height)
+    public function __construct(GraphicsContext $gc, $width, $height)
     {
-        $this->gc = $gc;
-        $this->width = $width;
+        $this->gc     = $gc;
+        $this->width  = $width;
         $this->height = $height;
     }
 
-    public function rotate($deg)
+    public function rotate($deg): static
     {
-        $this->gc->rotate($this->width/2, $this->height/2, deg2rad($deg));
+        $this->gc->rotate($this->width / 2, $this->height / 2, deg2rad($deg));
 
         return $this;
     }
 
-    public function drawRectangleInRightBottomCorner($width, $height, $color)
+    public function drawRectangleInRightBottomCorner($width, $height, $color): static
     {
         $this->gc->setFillColor($color);
         $this->gc->drawPolygon(
-            array($this->width-$width, $this->width, $this->width, $this->width - $width),
-            array(0, 0, $height, $height),
+            [$this->width - $width, $this->width, $this->width, $this->width - $width],
+            [0, 0, $height, $height],
             GraphicsContext::SHAPE_DRAW_FILL
         );
 
         return $this;
     }
 
-    public function drawRectangleInCenter($width, $height, $color)
+    public function drawRectangleInCenter($width, $height, $color): static
     {
         $this->gc->setFillColor($color);
         $this->gc->drawPolygon(
-            array($this->width/2-$width/2, $this->width/2 + $width/2, $this->width/2 + $width/2, $this->width/2-$width/2),
-            array($this->height/2-$height/2, $this->height/2-$height/2, $this->height/2+$height/2, $this->height/2+$height/2),
+            [$this->width / 2 - $width / 2, $this->width / 2 + $width / 2, $this->width / 2 + $width / 2, $this->width / 2 - $width / 2],
+            [$this->height / 2 - $height / 2, $this->height / 2 - $height / 2, $this->height / 2 + $height / 2, $this->height / 2 + $height / 2],
             GraphicsContext::SHAPE_DRAW_FILL
         );
 
         return $this;
     }
 
-    public function ok()
+    public function ok(): void
     {
         $this->gc->restoreGS();
         $this->gc->commit();

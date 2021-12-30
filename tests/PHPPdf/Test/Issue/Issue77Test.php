@@ -1,40 +1,40 @@
 <?php
 
+declare(strict_types=1);
+
 
 namespace PHPPdf\Test\Issue;
 
+use PHPPdf\Core\Configuration\LoaderImpl;
 use PHPPdf\Core\Facade;
+use PHPPdf\Core\FacadeBuilder;
 use PHPPdf\PHPUnit\Framework\TestCase;
 
 //https://github.com/psliwa/PHPPdf/issues/77
 class Issue77Test extends TestCase
 {
-    /**
-     * @var Facade
-     */
-    private $facade;
+    private Facade $facade;
 
-    protected function setUp()
+    protected function setUp(): void
     {
-        $loader = new \PHPPdf\Core\Configuration\LoaderImpl();
-        $builder = \PHPPdf\Core\FacadeBuilder::create($loader);
+        $loader = new LoaderImpl();
+        $builder = FacadeBuilder::create($loader);
         $this->facade = $builder->build();
     }
 
     /**
-     * @test
      * @dataProvider booleanProvider
      */
-    public function testFooterRender($useTemplate)
+    public function testFooterRender($useTemplate): void
     {
         $this->renderDocumentWithFooter('Document 1', $useTemplate);
         $content = $this->renderDocumentWithFooter('Document 2', $useTemplate);
 
-        $this->assertContains('Document 2', $content);
-        $this->assertNotContains('Document 1', $content);
+        $this->assertStringContainsString('Document 2', $content);
+        $this->assertStringNotContainsString('Document 1', $content);
     }
 
-    public function booleanProvider()
+    public function booleanProvider(): array
     {
         return array(
             array(true),
@@ -42,7 +42,7 @@ class Issue77Test extends TestCase
         );
     }
 
-    private function renderDocumentWithFooter($footer, $useTemplate)
+    private function renderDocumentWithFooter($footer, $useTemplate): string
     {
         $template = $useTemplate ? 'document-template="'.__DIR__.'/../../Resources/test.pdf"' : '';
         return $this->facade->render('<pdf>

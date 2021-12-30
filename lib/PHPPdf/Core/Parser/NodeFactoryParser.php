@@ -110,8 +110,8 @@ class NodeFactoryParser extends XmlParser
         $this->currentAliases = array();
         $root = $this->getLastElementFromStack();
 
-        $name = trim($reader->getAttribute('name'));
-        $class = trim($reader->getAttribute('class'));
+        $name = trim((string) $reader->getAttribute('name'));
+        $class = trim((string) $reader->getAttribute('class'));
 
         if(!$name || !$class)
         {

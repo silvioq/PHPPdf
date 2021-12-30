@@ -9,7 +9,7 @@ class BoundaryTest extends \PHPPdf\PHPUnit\Framework\TestCase
 {
     private $boundary;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->boundary = new Boundary();
     }
@@ -31,20 +31,22 @@ class BoundaryTest extends \PHPPdf\PHPUnit\Framework\TestCase
 
     /**
      * @test
-     * @expectedException PHPPdf\Exception\LogicException
+     *
      */
     public function invalidCreation()
     {
+        $this->expectException(\PHPPdf\Exception\LogicException::class);
         $this->boundary->setNext(10, 10);
         $this->boundary->close();
     }
 
     /**
      * @test
-     * @expectedException PHPPdf\Exception\LogicException
+     *
      */
     public function invalidStateException()
     {
+        $this->expectException(\PHPPdf\Exception\LogicException::class);
         $this->boundary->setNext(10, 10)
                        ->setNext(20, 10)
                        ->setNext(20, 5)
@@ -163,10 +165,11 @@ class BoundaryTest extends \PHPPdf\PHPUnit\Framework\TestCase
 
     /**
      * @test
-     * @expectedException PHPPdf\Exception\OutOfBoundsException
+     *
      */
     public function arrayAccessInvalidIndex()
     {
+        $this->expectException(\PHPPdf\Exception\OutOfBoundsException::class);
         $this->boundary->setNext(10, 10)
                ->setNext(20, 10);
 
@@ -175,10 +178,11 @@ class BoundaryTest extends \PHPPdf\PHPUnit\Framework\TestCase
 
     /**
      * @test
-     * @expectedException PHPPdf\Exception\BadMethodCallException
+     *
      */
     public function arrayAccessInvalidOperation()
     {
+        $this->expectException(\PHPPdf\Exception\BadMethodCallException::class);
         $this->boundary->setNext(10, 10)
                ->setNext(20, 10);
 

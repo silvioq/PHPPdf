@@ -8,10 +8,11 @@ class FileDataSourceTest extends \PHPPdf\PHPUnit\Framework\TestCase
 {
     /**
      * @test
-     * @expectedException \InvalidArgumentException
+     *
      */
     public function throwExceptionIfFileDosntExist()
     {
+        $this->expectException(\InvalidArgumentException::class);
         new FileDataSource('some file');
     }
 

@@ -1,32 +1,50 @@
 {
-    "name": "psliwa/php-pdf",
-    "description": "Pdf and graphic files generator library for PHP.",
-    "keywords": ["PDF", "PHPPdf"],
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-            "name":     "Piotr Śliwa",
-            "homepage": "http://ohey.pl",
-            "email":    "peter.pl7@gmail.com"
-        }
-    ],
-    "require": {
-        "zendframework/zendpdf":  "~2.0.0",
-        "laminas/laminas-cache":  "^2.11.3"
-    },
-    "require-dev": {
-        "laminas/laminas-barcode": "~2.8.0",
-        "laminas/laminas-validator": "~2.10.0",
-        "imagine/Imagine": ">=0.2.0,<0.6.0",
-        "phpunit/phpunit": ">=4,<5.4.0"
-    },
-    "suggest": {
-        "laminas/laminas-barcode":  "If you want to use barcodes",
-        "laminas/laminas-validator": "If you want to use barcodes (required by zend-barcode)",
-        "imagine/Imagine": "If you want to use image generating (required version: >=v0.2.6)"
-    },
-    "autoload": {
-        "psr-0": { "PHPPdf": "lib/", "Imagine": "lib/" }
+  "name": "psliwa/php-pdf",
+  "description": "Pdf and graphic files generator library for PHP.",
+  "keywords": [
+    "PDF",
+    "PHPPdf"
+  ],
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Piotr Śliwa",
+      "homepage": "http://ohey.pl",
+      "email": "peter.pl7@gmail.com"
     }
+  ],
+  "require": {
+    "php": ">=8.0.0",
+    "ext-xmlreader": "*",
+    "ext-libxml": "*",
+    "zendframework/zendpdf": "dev-master#1a81c1c571e67370b1ef9d79e1eddc8d546d24ef",
+    "laminas/laminas-cache": "^3.1",
+    "laminas/laminas-cache-storage-adapter-memory": "^2.0",
+    "laminas/laminas-cache-storage-adapter-filesystem": "^2.0"
+  },
+  "require-dev": {
+    "ext-imagick": "*",
+    "ext-iconv": "*",
+    "laminas/laminas-barcode": "~2.8.0",
+    "laminas/laminas-validator": "~2.10.0",
+    "imagine/imagine": "^1.2.4",
+    "phpunit/phpunit": "9.*"
+  },
+  "suggest": {
+    "laminas/laminas-barcode": "If you want to use barcodes",
+    "laminas/laminas-validator": "If you want to use barcodes (required by zend-barcode)",
+    "imagine/Imagine": "If you want to use image generating (required version: >=v0.2.6)"
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/Armstrong1992/ZendPdf"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "PHPPdf\\": "lib/PHPPdf"
+    }
+  }
 }

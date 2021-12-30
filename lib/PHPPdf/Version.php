@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Copyright 2011 Piotr Śliwa <peter.pl7@gmail.com>
  *
@@ -17,7 +19,7 @@ use PHPPdf\Exception\BadMethodCallException;
  */
 final class Version
 {
-    const VERSION = '1.3.0-DEV';
+    public const VERSION = '1.3.0-DEV';
 
     private function __construct()
     {

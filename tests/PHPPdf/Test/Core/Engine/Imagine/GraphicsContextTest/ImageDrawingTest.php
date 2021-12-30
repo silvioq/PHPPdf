@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace PHPPdf\Test\Core\Engine\Imagine\GraphicsContextTest;
 
@@ -7,21 +8,23 @@ use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\ImagineInterface;
+use Imagine\Image\Palette\Color\ColorInterface;
+use Imagine\Image\Palette\RGB;
 use Imagine\Image\Point;
 use PHPPdf\Core\Engine\Imagine\GraphicsContext;
+use PHPPdf\Core\Engine\Imagine\Image;
 use PHPPdf\PHPUnit\Framework\TestCase;
-use Imagine\Image\Color;
 
 class ImageDrawingTest extends AbstractGraphicsContextTest
 {
-    const WIDTH = 50;
-    const HEIGHT = 100;
+    private const WIDTH  = 50;
+    private const HEIGHT = 100;
 
     /**
      * @test
      * @dataProvider scaleProvider
      */
-    public function givenImage_drawItInLeftUpperCorner($scale)
+    public function givenImage_drawItInLeftUpperCorner($scale): void
     {
         //given
 
@@ -30,7 +33,7 @@ class ImageDrawingTest extends AbstractGraphicsContextTest
 
         $image = $this->imageWithSizeAndTwoVerticalColors(self::WIDTH, self::HEIGHT, $color1, $color2)->get();
 
-        $scaledWidth = self::WIDTH * $scale;
+        $scaledWidth  = self::WIDTH * $scale;
         $scaledHeight = self::HEIGHT * $scale;
 
         //when
@@ -46,7 +49,7 @@ class ImageDrawingTest extends AbstractGraphicsContextTest
      * @test
      * @dataProvider scaleProvider
      */
-    public function givenImage_drawItInBottomRightCorner($scale)
+    public function givenImage_drawItInBottomRightCorner($scale): void
     {
         //given
 
@@ -55,7 +58,7 @@ class ImageDrawingTest extends AbstractGraphicsContextTest
 
         $image = $this->imageWithSizeAndTwoVerticalColors(self::WIDTH, self::HEIGHT, $color1, $color2)->get();
 
-        $scaledWidth = self::WIDTH * $scale;
+        $scaledWidth  = self::WIDTH * $scale;
         $scaledHeight = self::HEIGHT * $scale;
 
         //when
@@ -71,7 +74,7 @@ class ImageDrawingTest extends AbstractGraphicsContextTest
      * @test
      * @dataProvider scaleProvider
      */
-    public function givenImage_drawItPartiallyOutsideOfRightBottomCorner($scale)
+    public function givenImage_drawItPartiallyOutsideOfRightBottomCorner($scale): void
     {
         //given
 
@@ -83,8 +86,8 @@ class ImageDrawingTest extends AbstractGraphicsContextTest
             self::WIDTH, self::HEIGHT, $color1, $color2, $color3
         )->get();
 
-        $scaledWidth = self::WIDTH*$scale;
-        $scaledHeight = self::HEIGHT*$scale;
+        $scaledWidth  = self::WIDTH * $scale;
+        $scaledHeight = self::HEIGHT * $scale;
 
         //when
 
@@ -92,14 +95,14 @@ class ImageDrawingTest extends AbstractGraphicsContextTest
 
         //then
 
-        $this->assertDrewRectWithTwoVerticalColorsInRightBottomCorner($color2, $color3, $scaledWidth/2, $scaledHeight/2);
+        $this->assertDrewRectWithTwoVerticalColorsInRightBottomCorner($color2, $color3, $scaledWidth / 2, $scaledHeight / 2);
     }
 
     /**
      * @test
      * @dataProvider scaleProvider
      */
-    public function givenImage_drawItPartiallyOutsideOfLeftUpperCorner($scale)
+    public function givenImage_drawItPartiallyOutsideOfLeftUpperCorner($scale): void
     {
         //given
 
@@ -111,8 +114,8 @@ class ImageDrawingTest extends AbstractGraphicsContextTest
             self::WIDTH, self::HEIGHT, $color1, $color2, $color3
         )->get();
 
-        $scaledWidth = self::WIDTH*$scale;
-        $scaledHeight = self::HEIGHT*$scale;
+        $scaledWidth  = self::WIDTH * $scale;
+        $scaledHeight = self::HEIGHT * $scale;
 
         //when
 
@@ -120,80 +123,80 @@ class ImageDrawingTest extends AbstractGraphicsContextTest
 
         //then
 
-        $this->assertDrewRectWithTwoVerticalColorsInLeftUpperCorner($color2, $color3, $scaledWidth/2, $scaledHeight/2);
+        $this->assertDrewRectWithTwoVerticalColorsInLeftUpperCorner($color2, $color3, $scaledWidth / 2, $scaledHeight / 2);
     }
 
-    public function scaleProvider()
+    public function scaleProvider(): array
     {
-        return array(
-            array(1),
-            array(0.5),
-            array(2),
-        );
+        return [
+            [1],
+            [0.5],
+            [2],
+        ];
     }
 
-    private function assertDrewRectWithTwoVerticalColorsInLeftUpperCorner($color1, $color2, $width = self::WIDTH, $height = self::HEIGHT)
-    {
-        $this->assertImage($this->gcImage)
-            ->colorAt(1, 1, $color1)
-            ->colorAt($width - 2, $height - 2, $color2)
-            ->colorAt($width - 2, $height / 2 + 3, $color2)
-            ->colorAt($width - 2, $height / 2 - 3, $color1)
-            ->colorAt(1, $height + 2, self::GC_COLOR)
-            ->colorAt($width + 2, 1, self::GC_COLOR);
-    }
-
-    private function assertDrewRectWithTwoVerticalColorsInRightBottomCorner($color1, $color2, $width = self::WIDTH, $height = self::HEIGHT)
+    private function assertDrewRectWithTwoVerticalColorsInLeftUpperCorner($color1, $color2, $width = self::WIDTH, $height = self::HEIGHT): void
     {
         $this->assertImage($this->gcImage)
-            ->colorAt(1, 1, self::GC_COLOR)
-            ->colorAt(self::GC_WIDTH - $width + 2, self::GC_HEIGHT - $height + 2, $color1)
-            ->colorAt(self::GC_WIDTH - 2, self::GC_HEIGHT - 2, $color2)
-            ->colorAt(self::GC_WIDTH - $width + 2, self::GC_HEIGHT - $height / 2 + 2, $color2)
-            ->colorAt(self::GC_WIDTH - $height - 3, self::GC_HEIGHT - $height + 3, self::GC_COLOR)
-            ->colorAt(self::GC_WIDTH - $height + 3, self::GC_HEIGHT - $height - 3, self::GC_COLOR);
+             ->colorAt(1, 1, $color1)
+             ->colorAt($width - 2, $height - 2, $color2)
+             ->colorAt($width - 2, $height / 2 + 3, $color2)
+             ->colorAt($width - 2, $height / 2 - 3, $color1)
+             ->colorAt(1, $height + 2, self::GC_COLOR)
+             ->colorAt($width + 2, 1, self::GC_COLOR);
     }
 
-    private function imageWithSizeAndColor($width, $height, $color)
+    private function assertDrewRectWithTwoVerticalColorsInRightBottomCorner($color1, $color2, $width = self::WIDTH, $height = self::HEIGHT): void
+    {
+        $this->assertImage($this->gcImage)
+             ->colorAt(1, 1, self::GC_COLOR)
+             ->colorAt(self::GC_WIDTH - $width + 2, self::GC_HEIGHT - $height + 2, $color1)
+             ->colorAt(self::GC_WIDTH - 2, self::GC_HEIGHT - 2, $color2)
+             ->colorAt(self::GC_WIDTH - $width + 2, self::GC_HEIGHT - $height / 2 + 2, $color2)
+             ->colorAt(self::GC_WIDTH - $height - 3, self::GC_HEIGHT - $height + 3, self::GC_COLOR)
+             ->colorAt(self::GC_WIDTH - $height + 3, self::GC_HEIGHT - $height - 3, self::GC_COLOR);
+    }
+
+    private function imageWithSizeAndColor($width, $height, $color): ImageDrawingTest_ImageBuilder
     {
         return $this->image()
-            ->withSize($width, $height)
-            ->withColor($color);
+                    ->withSize($width, $height)
+                    ->withColor($color);
     }
 
-    private function image()
+    private function image(): ImageDrawingTest_ImageBuilder
     {
         return new ImageDrawingTest_ImageBuilder($this->imagine);
     }
 
-    private function imageWithSizeAndTwoVerticalColors($width, $height, $color1, $color2)
+    private function imageWithSizeAndTwoVerticalColors($width, $height, $color1, $color2): ImageDrawingTest_ImageBuilder
     {
         return $this->image()
-            ->withSize($width, $height)
-            ->withColor($color1)
-            ->withColorRect($color2, 0, $height / 2, $width, $height);
+                    ->withSize($width, $height)
+                    ->withColor($color1)
+                    ->withColorRect($color2, 0, $height / 2, $width, $height);
     }
 
-    private function imageWithVerticallyColoredRectangleInRightBottomQuater($width, $height, $color1, $color2, $color3)
+    private function imageWithVerticallyColoredRectangleInRightBottomQuater($width, $height, $color1, $color2, $color3): ImageDrawingTest_ImageBuilder
     {
         return $this->imageWithSizeAndColor($width, $height, $color1)
-            ->withColorRect($color2, $width / 2, $height / 2, $width / 2, $height / 4)
-            ->withColorRect($color3, $width / 2, $height / 4 * 3, $width / 2, $height / 4);
+                    ->withColorRect($color2, $width / 2, $height / 2, $width / 2, $height / 4)
+                    ->withColorRect($color3, $width / 2, $height / 4 * 3, $width / 2, $height / 4);
     }
 
-    private function imageWithVerticallyColoredRectangleInLeftUpperQuater($width, $height, $color1, $color2, $color3)
+    private function imageWithVerticallyColoredRectangleInLeftUpperQuater($width, $height, $color1, $color2, $color3): ImageDrawingTest_ImageBuilder
     {
         return $this->imageWithSizeAndColor($width, $height, $color1)
-            ->withColorRect($color2, 0, 0, $width / 2, $height / 4)
-            ->withColorRect($color3, 0, $height / 4, $width / 2, $height / 4);
+                    ->withColorRect($color2, 0, 0, $width / 2, $height / 4)
+                    ->withColorRect($color3, 0, $height / 4, $width / 2, $height / 4);
     }
 
-    private function drawInLeftUpperCorner($image, $width = self::WIDTH, $height = self::HEIGHT)
+    private function drawInLeftUpperCorner($image, $width = self::WIDTH, $height = self::HEIGHT): void
     {
         $this->drawAt($image, 0, 0, $width, $height);
     }
 
-    private function drawInRightBottomCorner($image, $width = self::WIDTH, $height = self::HEIGHT)
+    private function drawInRightBottomCorner($image, $width = self::WIDTH, $height = self::HEIGHT): void
     {
         $this->drawAt(
             $image,
@@ -205,7 +208,7 @@ class ImageDrawingTest extends AbstractGraphicsContextTest
     }
 
 
-    private function drawAt($image, $x, $y, $width, $height)
+    private function drawAt($image, $x, $y, $width, $height): void
     {
         //coordinate system of PHPPdf is different than Imagine,
         //in Imagine left upper corner has (0,0) coordinates
@@ -224,12 +227,12 @@ class ImageDrawingTest extends AbstractGraphicsContextTest
         $this->gc->commit();
     }
 
-    private function drawPartiallyOutsideOfLeftUpperCorner($image, $width = self::WIDTH, $height = self::HEIGHT)
+    private function drawPartiallyOutsideOfLeftUpperCorner($image, $width = self::WIDTH, $height = self::HEIGHT): void
     {
         $this->drawAt($image, -$width / 2, -$height / 2, $width, $height);
     }
 
-    private function drawPartiallyOutsideOfRightBottomCorner($image, $width = self::WIDTH, $height = self::HEIGHT)
+    private function drawPartiallyOutsideOfRightBottomCorner($image, $width = self::WIDTH, $height = self::HEIGHT): void
     {
         $this->drawAt(
             $image,
@@ -243,10 +246,10 @@ class ImageDrawingTest extends AbstractGraphicsContextTest
 
 class ImageDrawingTest_ImageBuilder
 {
-    private $size;
-    private $color;
-    private $imagine;
-    private $colorRects = array();
+    private ?Box             $size       = null;
+    private ?ColorInterface  $color      = null;
+    private ImagineInterface $imagine;
+    private array            $colorRects = [];
 
     public function __construct(ImagineInterface $imagine)
     {
@@ -254,47 +257,47 @@ class ImageDrawingTest_ImageBuilder
     }
 
 
-    public function withSize($width, $height)
+    public function withSize($width, $height): static
     {
         $this->size = new Box($width, $height);
 
         return $this;
     }
 
-    public function withColor($color)
+    public function withColor($color): static
     {
-        $this->color = new Color($color);
+        $this->color = (new RGB())->color($color);
 
         return $this;
     }
 
-    public function withColorRect($color, $x, $y, $width, $height)
+    public function withColorRect($color, $x, $y, $width, $height): static
     {
-        $this->colorRects[] = array(new Color($color), new Point($x, $y), new Box($width, $height));
+        $this->colorRects[] = [(new RGB())->color($color), new Point($x, $y), new Box($width, $height)];
+
         return $this;
     }
 
-    public function get()
+    public function get(): Image
     {
         $image = $this->imagine->create($this->size, $this->color);
 
-        foreach($this->colorRects as $colorRect)
-        {
+        foreach ($this->colorRects as $colorRect) {
             /**
              * @var Point $startPoint
-             * @var Box $box
+             * @var Box   $box
              */
-            list($color, $startPoint, $box) = $colorRect;
+            [$color, $startPoint, $box] = $colorRect;
 
-            $image->draw()->polygon(array(
-                $startPoint,
-                new Point($startPoint->getX(), $startPoint->getY() + $box->getHeight()),
-                new Point($startPoint->getX() + $box->getWidth(), $startPoint->getY() + $box->getHeight()),
-                new Point($startPoint->getX() + $box->getWidth(), $startPoint->getY()),
-            ), $color, true);
+            $image->draw()->polygon([
+                                        $startPoint,
+                                        new Point($startPoint->getX(), $startPoint->getY() + $box->getHeight()),
+                                        new Point($startPoint->getX() + $box->getWidth(), $startPoint->getY() + $box->getHeight()),
+                                        new Point($startPoint->getX() + $box->getWidth(), $startPoint->getY()),
+                                    ], $color, true);
         }
 
-        return new \PHPPdf\Core\Engine\Imagine\Image($image, $this->imagine);
+        return new Image($image, $this->imagine);
     }
 }
 

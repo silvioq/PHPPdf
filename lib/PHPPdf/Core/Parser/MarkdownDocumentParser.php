@@ -47,7 +47,7 @@ class MarkdownDocumentParser implements DocumentParser, FacadeAware
         
         $documentTemplateSource = DataSource::fromFile($this->documentTemplateFilepath ? : __DIR__.'/../../Resources/markdown/document.xml');
         
-        $markdownOutput = str_replace('%MARKDOWN%', $markdownOutput, str_replace('%resources%', $relativePathToResources, $documentTemplateSource->read()));
+        $markdownOutput = str_replace('%MARKDOWN%', (string) $markdownOutput, str_replace('%resources%', (string) $relativePathToResources, $documentTemplateSource->read()));
         
         return $this->documentParser->parse($markdownOutput, $this->getStylesheetConstraint());
     }

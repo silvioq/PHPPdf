@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPPdf\Test\Core\Formatter;
 
 use PHPPdf\Core\Formatter\TableFormatter,
@@ -9,18 +11,19 @@ use PHPPdf\Core\Formatter\TableFormatter,
     PHPPdf\Core\Node\Table,
     PHPPdf\ObjectMother\TableObjectMother,
     PHPPdf\Core\Node\Table\Cell;
+use PHPPdf\PHPUnit\Framework\TestCase;
 
-class TableFormatterTest extends \PHPPdf\PHPUnit\Framework\TestCase
+class TableFormatterTest extends TestCase
 {
-    private $formatter;
-    private $objectMother;
+    private TableFormatter    $formatter;
+    private TableObjectMother $objectMother;
 
-    protected function init()
+    protected function init(): void
     {
         $this->objectMother = new TableObjectMother($this);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->formatter = new TableFormatter();
     }
@@ -29,103 +32,104 @@ class TableFormatterTest extends \PHPPdf\PHPUnit\Framework\TestCase
      * @test
      * @dataProvider cellsWidthProvider
      */
-    public function equalizeCells(array $cellsWidthInRows, array $minWidthsOfColumns, array $columnsWidths, array $columnsMarginsLeft, array $columnsMarginsRight, $tableWidth)
+    public function equalizeCells(array $cellsWidthInRows, array $minWidthsOfColumns, array $columnsWidths, array $columnsMarginsLeft, array $columnsMarginsRight, $tableWidth): void
     {
-        $totalWidth = array_sum($columnsWidths);
+        $totalWidth      = array_sum($columnsWidths);
         $numberOfColumns = count($columnsWidths);
 
-        $rows = array();
-        foreach($cellsWidthInRows as $widths)
-        {
+        $rows = [];
+        foreach ($cellsWidthInRows as $widths) {
             $diffBetweenTableAndColumnsWidths = $tableWidth - $totalWidth - array_sum($columnsMarginsLeft) - array_sum($columnsMarginsRight);
-            $translate = 0;
-            $cells = array();
-            foreach($widths as $column => $width)
-            {
+            $translate                        = 0;
+            $cells                            = [];
+            foreach ($widths as $column => $width) {
                 $bothMargins = $columnsMarginsLeft[$column] + $columnsMarginsRight[$column];
                 $columnWidth = $columnsWidths[$column];
-                $minWidth = $minWidthsOfColumns[$column] + $bothMargins;
+                $minWidth    = $minWidthsOfColumns[$column] + $bothMargins;
                 $widthMargin = $columnWidth - $minWidth;
 
-                if($diffBetweenTableAndColumnsWidths < 0 && -$diffBetweenTableAndColumnsWidths >= $widthMargin)
-                {
-                    $columnWidth = $minWidth;
+                if ($diffBetweenTableAndColumnsWidths < 0 && -$diffBetweenTableAndColumnsWidths >= $widthMargin) {
+                    $columnWidth                      = $minWidth;
                     $diffBetweenTableAndColumnsWidths += $widthMargin;
-                }
-                elseif($diffBetweenTableAndColumnsWidths < 0)
-                {
-                    $columnWidth += $diffBetweenTableAndColumnsWidths;
+                } elseif ($diffBetweenTableAndColumnsWidths < 0) {
+                    $columnWidth                      += $diffBetweenTableAndColumnsWidths;
                     $diffBetweenTableAndColumnsWidths = 0;
                 }
 
                 $translate += $columnsMarginsLeft[$column];
-                $cell = $this->objectMother->getCellMockWithTranslateAndResizeExpectations($width, $columnWidth, $translate);
+                $cell      = $this->objectMother->getCellMockWithTranslateAndResizeExpectations($width, $columnWidth, $translate);
                 $cell->expects($this->atLeastOnce())
                      ->method('getNumberOfColumn')
-                     ->will($this->returnValue($column));
-                $cells[] = $cell;
+                     ->willReturn($column);
+                $cells[]   = $cell;
                 $translate += $columnWidth + $columnsMarginsRight[$column];
             }
 
-            $row = $this->getMock('PHPPdf\Core\Node\Table\Row', array('getChildren'));
+            $row = $this->getMockBuilder(Row::class)
+                        ->enableOriginalConstructor()
+                        ->onlyMethods(['getChildren'])
+                        ->getMock();
             $row->expects($this->atLeastOnce())
                 ->method('getChildren')
-                ->will($this->returnValue($cells));
+                ->willReturn($cells);
             $rows[] = $row;
         }
 
-        $table = $this->getMock('PHPPdf\Core\Node\Table', array('getChildren', 'getWidthsOfColumns', 'getMinWidthsOfColumns', 'getWidth', 'getMarginsLeftOfColumns', 'getMarginsRightOfColumns'));
+        $table = $this->getMockBuilder(Table::class)
+                      ->enableOriginalConstructor()
+                      ->onlyMethods(['getChildren', 'getWidthsOfColumns', 'getMinWidthsOfColumns', 'getWidth', 'getMarginsLeftOfColumns', 'getMarginsRightOfColumns'])
+                      ->getMock();
         $table->expects($this->atLeastOnce())
               ->method('getChildren')
-              ->will($this->returnValue($rows));
+              ->willReturn($rows);
 
         $table->expects($this->atLeastOnce())
               ->method('getWidthsOfColumns')
-              ->will($this->returnValue($columnsWidths));
+              ->willReturn($columnsWidths);
 
         $table->expects($this->atLeastOnce())
               ->method('getMinWidthsOfColumns')
-              ->will($this->returnValue($minWidthsOfColumns));
+              ->willReturn($minWidthsOfColumns);
 
         $table->expects($this->atLeastOnce())
               ->method('getWidth')
-              ->will($this->returnValue($tableWidth));
+              ->willReturn($tableWidth);
 
         $table->expects($this->atLeastOnce())
               ->method('getMarginsLeftOfColumns')
-              ->will($this->returnValue($columnsMarginsLeft));
+              ->willReturn($columnsMarginsLeft);
         $table->expects($this->atLeastOnce())
               ->method('getMarginsRightOfColumns')
-              ->will($this->returnValue($columnsMarginsRight));
+              ->willReturn($columnsMarginsRight);
 
         $this->formatter->format($table, $this->createDocumentStub());
     }
 
-    public function cellsWidthProvider()
+    public function cellsWidthProvider(): array
     {
-        return array(
-            array(
-                array(
-                    array(10, 20, 30),
-                    array(40, 10, 15),
-                ),
-                array(0, 0, 0),
-                array(50, 20, 30),
-                array(0, 0, 0),
-                array(0, 0, 0),
-                100
-            ),
-            array(
-                array(
-                    array(10, 20, 30),
-                    array(40, 10, 15),
-                ),
-                array(5, 10, 0),
-                array(50, 20, 30),
-                array(0, 0, 0),
-                array(2, 2, 2),
-                90
-            ),
-        );
+        return [
+            [
+                [
+                    [10, 20, 30],
+                    [40, 10, 15],
+                ],
+                [0, 0, 0],
+                [50, 20, 30],
+                [0, 0, 0],
+                [0, 0, 0],
+                100,
+            ],
+            [
+                [
+                    [10, 20, 30],
+                    [40, 10, 15],
+                ],
+                [5, 10, 0],
+                [50, 20, 30],
+                [0, 0, 0],
+                [2, 2, 2],
+                90,
+            ],
+        ];
     }
 }

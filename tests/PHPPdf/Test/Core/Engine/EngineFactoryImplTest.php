@@ -1,107 +1,108 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPPdf\Test\Core\Engine;
 
+use Imagine\Exception\RuntimeException;
 use PHPPdf\Core\Engine\EngineFactoryImpl;
+use PHPPdf\Exception\DomainException;
 use PHPPdf\PHPUnit\Framework\TestCase;
+use PHPPdf\Core\Engine\ZF\Engine;
 
 class EngineFactoryImplTest extends TestCase
 {
-    private $factory;
-    
-    public function setUp()
+    private EngineFactoryImpl $factory;
+
+    public function setUp(): void
     {
         $this->factory = new EngineFactoryImpl();
     }
-    
+
     /**
      * @test
      * @dataProvider validTypeProvider
      */
-    public function engineCreationSuccess($type, $expectedClass)
+    public function engineCreationSuccess($type, $expectedClass): void
     {
-        try
-        {
+        try {
             $engine = $this->factory->createEngine($type);
-            
+
             $this->assertInstanceOf($expectedClass, $engine);
-        }
-        catch(\Imagine\Exception\RuntimeException $e)
-        {
+        } catch (RuntimeException $e) {
             $this->markTestSkipped('Exception from Imagine library, propably some graphics library is not installed');
         }
     }
-    
-    public function validTypeProvider()
+
+    public function validTypeProvider(): array
     {
-        return array(
-            array(EngineFactoryImpl::TYPE_IMAGE, 'PHPPdf\Core\Engine\Imagine\Engine'),
-            array(EngineFactoryImpl::TYPE_PDF, 'PHPPdf\Core\Engine\ZF\Engine'),
-        );
+        return [
+            [EngineFactoryImpl::TYPE_IMAGE, \PHPPdf\Core\Engine\Imagine\Engine::class],
+            [EngineFactoryImpl::TYPE_PDF, Engine::class],
+        ];
     }
-    
+
     /**
      * @test
      * @dataProvider invalidTypeProvider
-     * @expectedException PHPPdf\Exception\DomainException
+     *
      */
-    public function engineCreationFailure($type)
+    public function engineCreationFailure($type): void
     {
+        $this->expectException(DomainException::class);
         $this->factory->createEngine($type);
     }
 
-    public function invalidTypeProvider()
+    public function invalidTypeProvider(): array
     {
-        return array(
-            array('some type'),
-        );
+        return [
+            ['some type'],
+        ];
     }
-    
+
     /**
      * @test
      * @dataProvider validImageTypeProvider
      */
-    public function imageEngineCreationSuccess($type)
+    public function imageEngineCreationSuccess($type): void
     {
-        try
-        {
-            $engine = $this->factory->createEngine(EngineFactoryImpl::TYPE_IMAGE, array(
+        try {
+            $engine = $this->factory->createEngine(EngineFactoryImpl::TYPE_IMAGE, [
                 EngineFactoryImpl::OPTION_ENGINE => $type,
-            ));
-            
-            $this->assertInstanceOf('PHPPdf\Core\Engine\Imagine\Engine', $engine);
-        }
-        catch(\Imagine\Exception\RuntimeException $e)
-        {
+            ]);
+
+            $this->assertInstanceOf(\PHPPdf\Core\Engine\Imagine\Engine::class, $engine);
+        } catch (RuntimeException $e) {
             $this->markTestSkipped('Exception from Imagine library, propably some graphics library is not installed');
         }
     }
-    
-    public function validImageTypeProvider()
+
+    public function validImageTypeProvider(): array
     {
-        return array(
-            array(EngineFactoryImpl::ENGINE_GD),
-            array(EngineFactoryImpl::ENGINE_IMAGICK),
-            array(EngineFactoryImpl::ENGINE_GMAGICK),
-        );
+        return [
+            [EngineFactoryImpl::ENGINE_GD],
+            [EngineFactoryImpl::ENGINE_IMAGICK],
+            [EngineFactoryImpl::ENGINE_GMAGICK],
+        ];
     }
-    
+
     /**
      * @test
      * @dataProvider invvalidImageTypeProvider
-     * @expectedException PHPPdf\Exception\DomainException
+     *
      */
-    public function imageEngineCreationFailure($type)
+    public function imageEngineCreationFailure($type): void
     {
-        $engine = $this->factory->createEngine(EngineFactoryImpl::TYPE_IMAGE, array(
+        $this->expectException(DomainException::class);
+        $engine = $this->factory->createEngine(EngineFactoryImpl::TYPE_IMAGE, [
             EngineFactoryImpl::OPTION_ENGINE => $type,
-        ));
+        ]);
     }
-    
-    public function invvalidImageTypeProvider()
+
+    public function invvalidImageTypeProvider(): array
     {
-        return array(
-            array('some'),
-        );
+        return [
+            ['some'],
+        ];
     }
 }

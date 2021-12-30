@@ -4,8 +4,9 @@
 namespace PHPPdf\Test\Helper;
 
 use PHPPdf\Core\Node\Node;
+use PHPUnit\Framework\Assert;
 
-class NodeAssert extends \PHPUnit_Framework_Assert
+class NodeAssert extends Assert
 {
     private $node;
 

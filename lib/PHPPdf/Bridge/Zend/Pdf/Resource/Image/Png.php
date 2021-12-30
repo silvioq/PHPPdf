@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Copyright 2011 Piotr Śliwa <peter.pl7@gmail.com>
  *
@@ -10,6 +12,7 @@ namespace PHPPdf\Bridge\Zend\Pdf\Resource\Image;
 
 use PHPPdf\InputStream\FopenInputStream;
 use PHPPdf\InputStream\StringInputStream;
+use ZendPdf\Resource\Image\AbstractImage;
 use ZendPdf\Resource\Image\Png as BasePng;
 use ZendPdf\Exception;
 use ZendPdf;

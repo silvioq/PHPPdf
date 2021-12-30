@@ -16,10 +16,10 @@ class MarkdownDocumentParserTest extends TestCase
     private $documentParser;
     private $markdownDocumentParser;
     
-    public function setUp()
+    public function setUp(): void
     {
-        $this->markdownParser = $this->getMock('PHPPdf\Parser\Parser');
-        $this->documentParser = $this->getMock('PHPPdf\Core\Parser\DocumentParser');
+        $this->markdownParser = $this->createMock('PHPPdf\Parser\Parser');
+        $this->documentParser = $this->createMock('PHPPdf\Core\Parser\DocumentParser');
         
         $this->markdownDocumentParser = new MarkdownDocumentParser($this->documentParser, $this->markdownParser);
     }
@@ -39,9 +39,9 @@ class MarkdownDocumentParserTest extends TestCase
     public function methodsProvider()
     {
         return array(
-            array('setNodeFactory', $this->getMock('PHPPdf\Core\Node\NodeFactory')),
-            array('setComplexAttributeFactory', $this->getMock('PHPPdf\Core\ComplexAttribute\ComplexAttributeFactory')),
-            array('addListener', $this->getMock('PHPPdf\Core\Parser\DocumentParserListener')),
+            array('setNodeFactory', $this->createMock('PHPPdf\Core\Node\NodeFactory')),
+            array('setComplexAttributeFactory', $this->createMock('PHPPdf\Core\ComplexAttribute\ComplexAttributeFactory')),
+            array('addListener', $this->createMock('PHPPdf\Core\Parser\DocumentParserListener')),
             array('setDocument', $this->createDocumentStub()),
         );
     }
@@ -51,11 +51,11 @@ class MarkdownDocumentParserTest extends TestCase
      */
     public function getNodeManagerInvokesTheSameMethodOfInnerDocumentParser()
     {
-        $nodeManager = $this->getMock('PHPPdf\Core\Node\Manager');
+        $nodeManager = $this->createMock('PHPPdf\Core\Node\Manager');
         
         $this->documentParser->expects($this->once())
                              ->method('getNodeManager')
-                             ->will($this->returnValue($nodeManager));
+                             ->willReturn($nodeManager);
                              
         $this->assertEquals($nodeManager, $this->markdownDocumentParser->getNodeManager());
     }
@@ -72,12 +72,12 @@ class MarkdownDocumentParserTest extends TestCase
         $this->markdownParser->expects($this->once())
                              ->method('parse')
                              ->with($markdown)
-                             ->will($this->returnValue($markdownParserOutput));
+                             ->willReturn($markdownParserOutput);
 
         $this->documentParser->expects($this->once())
                              ->method('parse')
                              ->with($this->stringContains($markdownParserOutput))
-                             ->will($this->returnValue($innerDocumentParserOutput));
+                             ->willReturn($innerDocumentParserOutput);
                              
         $this->assertEquals($innerDocumentParserOutput, $this->markdownDocumentParser->parse($markdown));
     }
@@ -90,7 +90,7 @@ class MarkdownDocumentParserTest extends TestCase
         $stylesheetConstraint = new StylesheetConstraint();
         
         $facade = $this->getMockBuilder('PHPPdf\Core\Facade')
-                       ->setMethods(array('retrieveStylesheetConstraint'))
+                       ->onlyMethods(array('retrieveStylesheetConstraint'))
                        ->disableOriginalConstructor()
                        ->getMock();
                        
@@ -99,7 +99,7 @@ class MarkdownDocumentParserTest extends TestCase
         $facade->expects($this->once())
                ->method('retrieveStylesheetConstraint')
                ->with($this->isInstanceOf('PHPPdf\DataSource\DataSource'))
-               ->will($this->returnValue($stylesheetConstraint));
+               ->willReturn($stylesheetConstraint);
                
         $this->documentParser->expects($this->once())
                              ->method('parse')

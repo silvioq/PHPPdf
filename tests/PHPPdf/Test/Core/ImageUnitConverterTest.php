@@ -15,10 +15,10 @@ class ImageUnitConverterTest extends TestCase
     {
         $converter = new ImageUnitConverter($dpi);
                
-        $this->assertEquals($expected, $converter->convertUnit($value, $unit), 'invalid unit conversion', 0.0001);
+        $this->assertEqualsWithDelta($expected, $converter->convertUnit($value, $unit), 0.0001, 'invalid unit conversion');
     }
 
-    public function unitProvider()
+    public function unitProvider(): array
     {
         return array(
             array('1px', 1, null, 1),

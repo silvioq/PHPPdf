@@ -15,18 +15,17 @@ use PHPPdf\Core\Document,
 
 /**
  * Standard container element
- * 
+ *
  * @author Piotr Śliwa <peter.pl7@gmail.com>
  */
 class Container extends Node
 {
-    private $children = array();
+    private array $children = [];
 
     /**
      * @param Node $node Child node object
-     * @return PHPPdf\Core\Node\Container
      */
-    public function add(Node $node)
+    public function add(Node $node): static
     {
         $node->setParent($this);
         $node->reset();
@@ -36,18 +35,17 @@ class Container extends Node
         return $this;
     }
 
-    public function getChildren()
+    public function getChildren(): array
     {
         return $this->children;
     }
 
-    public function remove(Node $node)
+    public function remove(Node $node): bool
     {
-        foreach($this->children as $key => $child)
-        {
-            if($node === $child)
-            {
+        foreach ($this->children as $key => $child) {
+            if ($node === $child) {
                 unset($this->children[$key]);
+
                 return true;
             }
         }
@@ -55,17 +53,16 @@ class Container extends Node
         return false;
     }
 
-    public function removeAll()
+    public function removeAll(): void
     {
-        $this->children = array();
+        $this->children = [];
     }
 
     public function reset()
     {
         parent::reset();
 
-        foreach($this->children as $child)
-        {
+        foreach ($this->children as $child) {
             $child->reset();
         }
     }
@@ -77,8 +74,7 @@ class Container extends Node
 
     protected function doDraw(Document $document, DrawingTaskHeap $tasks)
     {
-        foreach($this->children as $node)
-        {
+        foreach ($this->children as $node) {
             $node->collectOrderedDrawingTasks($document, $tasks);
         }
     }
@@ -87,9 +83,8 @@ class Container extends Node
     {
         $copy = parent::copy();
 
-        foreach($this->children as $key => $child)
-        {
-            $clonedChild = $child->copy();
+        foreach ($this->children as $key => $child) {
+            $clonedChild          = $child->copy();
             $copy->children[$key] = $clonedChild;
             $clonedChild->setParent($copy);
         }
@@ -99,15 +94,13 @@ class Container extends Node
 
     public function translate($x, $y)
     {
-        if(!$x && !$y)
-        {
+        if (!$x && !$y) {
             return;
         }
-        
+
         parent::translate($x, $y);
 
-        foreach($this->getChildren() as $child)
-        {
+        foreach ($this->getChildren() as $child) {
             $child->translate($x, $y);
         }
     }
@@ -115,64 +108,56 @@ class Container extends Node
     /**
      * Breaks compose node.
      *
+     * @param integer $height
+     *
+     * @return \PHPPdf\Core\Node\Node
      * @todo refactoring
      *
-     * @param integer $height
-     * @return \PHPPdf\Core\Node\Node
      */
     protected function doBreakAt($height)
     {
         $brokenCompose = parent::doBreakAt($height);
 
-        if(!$brokenCompose)
-        {
+        if (!$brokenCompose) {
             return null;
         }
 
-        $childrenToBreak = array();
-        $childrenToMove = array();
+        $childrenToBreak = [];
+        $childrenToMove  = [];
 
         $breakLine = $this->getFirstPoint()->getY() - $height;
 
-        foreach($this->getChildren() as $child)
-        {
+        foreach ($this->getChildren() as $child) {
             $childStart = $child->getFirstPoint()->getY();
-            $childEnd = $child->getDiagonalPoint()->getY();
+            $childEnd   = $child->getDiagonalPoint()->getY();
 
-            if($breakLine < $childStart && $breakLine > $childEnd)
-            {
+            if ($breakLine < $childStart && $breakLine > $childEnd) {
                 $childrenToBreak[] = $child;
-            }
-            elseif($breakLine >= $childStart)
-            {
+            } elseif ($breakLine >= $childStart) {
                 $childrenToMove[] = $child;
             }
         }
 
-        $breakProducts = array();
-        $translates = array(0);    
-        
-        foreach($childrenToBreak as $child)
-        {
-            $childStart = $child->getFirstPoint()->getY();
-            $childEnd = $child->getDiagonalPoint()->getY();
+        $breakProducts = [];
+        $translates    = [0];
+
+        foreach ($childrenToBreak as $child) {
+            $childStart        = $child->getFirstPoint()->getY();
+            $childEnd          = $child->getDiagonalPoint()->getY();
             $childBreakingLine = $childStart - $breakLine;
-            
+
             $originalChildHeight = $child->getHeight();
-            
+
             $breakingProduct = $child->breakAt($childBreakingLine);
 
             $yChildStart = $child->getFirstPoint()->getY();
-            $yChildEnd = $child->getDiagonalPoint()->getY();
-            if($breakingProduct)
-            {
+            $yChildEnd   = $child->getDiagonalPoint()->getY();
+            if ($breakingProduct) {
                 $heightAfterBreaking = $breakingProduct->getHeight() + $child->getHeight();
-                $translate = $heightAfterBreaking - $originalChildHeight;
-                $translates[] = $translate + ($yChildEnd - $breakingProduct->getFirstPoint()->getY());
-                $breakProducts[] = $breakingProduct;
-            }
-            else
-            {
+                $translate           = $heightAfterBreaking - $originalChildHeight;
+                $translates[]        = $translate + ($yChildEnd - $breakingProduct->getFirstPoint()->getY());
+                $breakProducts[]     = $breakingProduct;
+            } else {
                 $translates[] = ($yChildStart - $yChildEnd) - ($child->getHeight() - $childBreakingLine);
                 array_unshift($childrenToMove, $child);
             }
@@ -181,19 +166,18 @@ class Container extends Node
         $brokenCompose->removeAll();
 
         $breakProducts = array_merge($breakProducts, $childrenToMove);
-        
-        foreach($breakProducts as $child)
-        {
+
+        foreach ($breakProducts as $child) {
             $brokenCompose->add($child);
-        }        
-              
+        }
+
         $translate = \max($translates);
 
         $boundary = $brokenCompose->getBoundary();
-        $points = $brokenCompose->getBoundary()->getPoints();
+        $points   = $brokenCompose->getBoundary()->getPoints();
 
         $brokenCompose->setHeight($brokenCompose->getHeight() + $translate);
-        
+
         $boundary->reset();
         $boundary->setNext($points[0])
                  ->setNext($points[1])
@@ -201,11 +185,10 @@ class Container extends Node
                  ->setNext($points[3]->translate(0, $translate))
                  ->close();
 
-        foreach($childrenToMove as $child)
-        {
+        foreach ($childrenToMove as $child) {
             $child->translate(0, $translate);
         }
-        
+
         return $brokenCompose;
     }
 
@@ -213,22 +196,19 @@ class Container extends Node
     {
         $minWidth = $this->getAttributeDirectly('min-width');
 
-        foreach($this->getChildren() as $child)
-        {
-            $minWidth = max(array($minWidth, $child->getMinWidth()));
+        foreach ($this->getChildren() as $child) {
+            $minWidth = max([$minWidth, $child->getMinWidth()]);
         }
 
         return $minWidth + $this->getPaddingLeft() + $this->getPaddingRight() + $this->getMarginLeft() + $this->getMarginRight();
     }
-    
-    public function hasLeafDescendants($bottomYCoord = null)
-    {
-        foreach($this->getChildren() as $child)
-        {
-            $hasValidPosition = $bottomYCoord === null || $child->isAbleToExistsAboveCoord($bottomYCoord);
 
-            if($hasValidPosition && ($child->isLeaf() || $child->hasLeafDescendants()))
-            {
+    public function hasLeafDescendants($bottomYCord = null): bool
+    {
+        foreach ($this->getChildren() as $child) {
+            $hasValidPosition = $bottomYCord === null || $child->isAbleToExistsAboveCoord($bottomYCord);
+
+            if ($hasValidPosition && ($child->isLeaf() || $child->hasLeafDescendants())) {
                 return true;
             }
         }

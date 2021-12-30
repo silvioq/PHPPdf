@@ -9,6 +9,7 @@
 namespace PHPPdf\Core\Engine\Imagine;
 
 use Imagine\Image\BoxInterface;
+use Imagine\Image\Palette\RGB;
 use Imagine\Image\PointInterface;
 use PHPPdf\Bridge\Imagine\Image\Point;
 use Imagine\Image\Box;
@@ -19,7 +20,7 @@ use PHPPdf\Core\Engine\AbstractGraphicsContext;
 use PHPPdf\Core\Engine\GraphicsContext as BaseGraphicsContext;
 use PHPPdf\Core\Engine\Image as BaseImage;
 use PHPPdf\Core\Engine\Font as BaseFont;
-use Imagine\Image\Color as ImagineColor;
+use Imagine\Image\Palette\RGB as ImagineColor;
 use Imagine\Image\FontInterface as ImagineFont;
 use Laminas\Barcode\Object\ObjectInterface as Barcode;
 
@@ -68,7 +69,7 @@ class GraphicsContext extends AbstractGraphicsContext
         }
         else
         {
-            list($width, $height) = explode(':', $imageOrSize);
+            [$width, $height] = explode(':', $imageOrSize);
             $this->image = $imagine->create(new Box($width, $height));
         }
     }
@@ -130,11 +131,11 @@ class GraphicsContext extends AbstractGraphicsContext
         $clips = $this->state['clips'];
         $this->state['clips'] = array();
         
-        list($image, $point) = $this->getCurrentClip();
+        [$image, $point] = $this->getCurrentClip();
         
         foreach($clips as $clip)
         {
-            list($clipImage, $clipPoint, $angle, $p) = $clip;
+            [$clipImage, $clipPoint, $angle, $p] = $clip;
             
             if($angle != 0)
             {
@@ -187,7 +188,7 @@ class GraphicsContext extends AbstractGraphicsContext
         /**
          * @var ImageInterface $image
          */
-        list($image, $basePoint) = $this->getCurrentClip();
+        [$image, $basePoint] = $this->getCurrentClip();
 
         $point = $this->translatePoint($basePoint, $x1, $y);
 
@@ -254,7 +255,7 @@ class GraphicsContext extends AbstractGraphicsContext
 
         if($lineStyle === self::DASHING_PATTERN_SOLID)
         {
-            list($image, $point) = $this->getCurrentClip();
+            [$image, $point] = $this->getCurrentClip();
             $image->draw()->line($this->translatePoint($point, $x1, $this->convertYCoord($y1)), $this->translatePoint($point, $x2, $this->convertYCoord($y2)), $this->createColor($this->state['lineColor']));
         }
         else
@@ -265,7 +266,7 @@ class GraphicsContext extends AbstractGraphicsContext
     
     private function doDrawDottedLine($x1, $y1, $x2, $y2)
     {
-        list($image, $point) = $this->getCurrentClip();
+        [$image, $point] = $this->getCurrentClip();
         
         $lineStyle = $this->state['lineDashingPattern'];
         $color = $this->createColor($this->state['lineColor']);
@@ -332,8 +333,8 @@ class GraphicsContext extends AbstractGraphicsContext
     private function createColor($color)
     {
         $alpha = (int) (100 - $this->state['alpha'] * 100);
-        
-        return new ImagineColor($color, $alpha);
+
+        return (new ImagineColor())->color($color, $alpha);
     }
     
     protected function doSetFillColor($colorData)
@@ -349,7 +350,7 @@ class GraphicsContext extends AbstractGraphicsContext
     //TODO: width of line
     protected function doDrawPolygon(array $x, array $y, $type)
     {
-        list($image, $point) = $this->getCurrentClip();
+        [$image, $point] = $this->getCurrentClip();
         
         $color = $this->createColor($this->state['fillColor']);
         
@@ -376,8 +377,8 @@ class GraphicsContext extends AbstractGraphicsContext
         
         foreach($polygons as $polygon)
         {
-            list($color, $fill) = $polygon;
-            $image->draw()->polygon($coords, $color, $fill);
+            [$color, $fill] = $polygon;
+            $image->draw()->polygon($coords, $image->palette()->color((string) $color), $fill);
         }
     }
     
@@ -393,6 +394,7 @@ class GraphicsContext extends AbstractGraphicsContext
     
     protected function doDrawText($text, $x, $y, $encoding, $wordSpacing = 0, $fillType = self::SHAPE_DRAW_FILL)
     {
+
         $font = $this->state['font'];
         $color = $this->state['fillColor'];
         $size = $this->state['fontSize'];
@@ -400,7 +402,7 @@ class GraphicsContext extends AbstractGraphicsContext
         $font->setStyle($this->state['fontStyle']);
         $imagineFont = $font->getWrappedFont($color, $size);
         
-        list($image, $point) = $this->getCurrentClip();
+        [$image, $point] = $this->getCurrentClip();
         
         $position = $this->translatePoint($point, $x, $this->convertYCoord($y) - $size);
         
@@ -438,7 +440,7 @@ class GraphicsContext extends AbstractGraphicsContext
     
     protected function doDrawRoundedRectangle($x1, $y1, $x2, $y2, $radius, $fillType = self::SHAPE_DRAW_FILL_AND_STROKE)
     {
-        list($image, $point) = $this->getCurrentClip();
+        [$image, $point] = $this->getCurrentClip();
         
         $leftStartPoint = $this->translatePoint($point, $x1, $this->convertYCoord($y1 + $radius));
         $leftEndPoint = $this->translatePoint($point, $x1, $this->convertYCoord($y2 - $radius));
@@ -519,7 +521,7 @@ class GraphicsContext extends AbstractGraphicsContext
     
     protected function doRotate($x, $y, $angle)
     {
-        list($currentImage, $point) = $this->getCurrentClip();
+        [$currentImage, $point] = $this->getCurrentClip();
         $size = $currentImage->getSize();
         $y = $size->getHeight() - $y;
         
@@ -555,7 +557,7 @@ class GraphicsContext extends AbstractGraphicsContext
 
         $clipPoint = new Point(0, 0);
         $rotatePoint = new Point(-$middlePoint->getX() + $x, -$middlePoint->getY() + $y);
-                       
+
         $this->state['clips'][] = array($image, $clipPoint, $angleInDegrees, $rotatePoint);
     }
     
@@ -602,7 +604,7 @@ class GraphicsContext extends AbstractGraphicsContext
         
         $image = $this->imagine->load($image);
         $image = $image->resize(new Box($image->getSize()->getWidth()/2, $image->getSize()->getHeight()/2));
-        list($currentImage, $point) = $this->getCurrentClip();
+        [$currentImage, $point] = $this->getCurrentClip();
         $currentImage->paste($image, $this->translatePoint($point, $x, $this->convertYCoord($y)));
     }
 
@@ -623,7 +625,7 @@ class GraphicsContext extends AbstractGraphicsContext
     
     protected function doDrawEllipse($x, $y, $width, $height, $fillType)
     {
-        list($image, $point) = $this->getCurrentClip();
+        [$image, $point] = $this->getCurrentClip();
         
         $point = $this->translatePoint($point, $x, $this->convertYCoord($y));
         $box = new Box($width, $height);
@@ -643,7 +645,7 @@ class GraphicsContext extends AbstractGraphicsContext
     
     protected function doDrawArc($x, $y, $width, $height, $start, $end, $fillType)
     {
-        list($image, $point) = $this->getCurrentClip();
+        [$image, $point] = $this->getCurrentClip();
 
         $point = $this->translatePoint($point, $x, $this->convertYCoord($y));
         $color = $this->createColor($this->state['fillColor']);

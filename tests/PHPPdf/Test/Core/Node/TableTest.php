@@ -15,22 +15,23 @@ class TableTest extends \PHPPdf\PHPUnit\Framework\TestCase
     private $table = null;
     private $objectMother;
 
-    public function init()
+    public function init(): void
     {
         $this->objectMother = new TableObjectMother($this);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->table = new Table(array(), new PdfUnitConverter());
     }
 
     /**
      * @test
-     * @expectedException \InvalidArgumentException
+     *
      */
     public function addingInvalidChild()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $node = new Nodes\Container();
         $this->table->add($node);
     }
@@ -112,13 +113,16 @@ class TableTest extends \PHPPdf\PHPUnit\Framework\TestCase
             $methods[] = 'translate';
         }
 
-        $mock = $this->getMock('PHPPdf\Core\Node\Table\Row', $methods);
+        $mock = $this->getMockBuilder('PHPPdf\Core\Node\Table\Row')
+        ->enableOriginalConstructor()
+        ->onlyMethods($methods)
+        ->getMock();
 
         if($break)
         {
             $mock->expects($this->once())
                  ->method('breakAt')
-                 ->will($this->returnValue(null));
+                 ->willReturn(null);
         }
 
         $boundary = new Boundary();
@@ -132,10 +136,10 @@ class TableTest extends \PHPPdf\PHPUnit\Framework\TestCase
 
         $mock->expects($this->atLeastOnce())
              ->method('getBoundary')
-             ->will($this->returnValue($boundary));
+             ->willReturn($boundary);
         $mock->expects($this->any())
              ->method('getHeight')
-             ->will($this->returnValue($height));
+             ->willReturn($height);
 
         if($translate)
         {
@@ -160,19 +164,22 @@ class TableTest extends \PHPPdf\PHPUnit\Framework\TestCase
         {
             foreach($cellsWidths as $rowNumber => $width)
             {
-                $cell = $this->getMock('PHPPdf\Core\Node\Table\Cell', array('getWidth', 'getNumberOfColumn', 'getColspan'));
+                $cell = $this->getMockBuilder('PHPPdf\Core\Node\Table\Cell')
+                             ->enableOriginalConstructor()
+                             ->onlyMethods(array('getWidth', 'getNumberOfColumn', 'getColspan'))
+                             ->getMock();
                 $cell->expects($this->atLeastOnce())
                      ->method('getWidth')
-                     ->will($this->returnValue($width));
+                     ->willReturn($width);
                 $cell->expects($this->atLeastOnce())
                      ->method('getNumberOfColumn')
-                     ->will($this->returnValue($columnNumber));
+                     ->willReturn($columnNumber);
 
                 $colspan = $colspans[$columnNumber][$rowNumber];
 
                 $cell->expects($this->atLeastOnce())
                      ->method('getColspan')
-                     ->will($this->returnValue($colspan));
+                     ->willReturn($colspan);
 
                 $rows[$rowNumber][] = $cell;
                 $cells[] = $cell;
@@ -277,21 +284,27 @@ class TableTest extends \PHPPdf\PHPUnit\Framework\TestCase
      */
     public function setColumnsWidthsWhenRowHasBeenAdded($cellWidth, $colspan, $expectedColumnsWidth)
     {
-        $row = $this->getMock('PHPPdf\Core\Node\Table\Row', array('getChildren'));
-        $cell = $this->getMock('PHPPdf\Core\Node\Table\Cell', array('getWidth', 'getNumberOfColumn', 'getColspan'));
+        $row = $this->getMockBuilder('PHPPdf\Core\Node\Table\Row')
+                    ->enableOriginalConstructor()
+                   ->onlyMethods(array('getChildren'))
+           ->getMock();
+        $cell =  $this->getMockBuilder('PHPPdf\Core\Node\Table\Cell')
+                      ->enableOriginalConstructor()
+                      ->onlyMethods(array('getWidth', 'getNumberOfColumn', 'getColspan'))
+                      ->getMock();
 
         $row->expects($this->atLeastOnce())
             ->method('getChildren')
-            ->will($this->returnValue(array($cell)));
+            ->willReturn(array($cell));
         $cell->expects($this->atLeastOnce())
              ->method('getWidth')
-             ->will($this->returnValue($cellWidth));
+             ->willReturn($cellWidth);
         $cell->expects($this->atLeastOnce())
              ->method('getNumberOfColumn')
-             ->will($this->returnValue(0));
+             ->willReturn(0);
         $cell->expects($this->atLeastOnce())
              ->method('getColspan')
-             ->will($this->returnValue($colspan));
+             ->willReturn($colspan);
 
         $this->table->add($row);
 
@@ -339,23 +352,25 @@ class TableTest extends \PHPPdf\PHPUnit\Framework\TestCase
         $expectedMinWidthsOfColumns = array_fill(0, $numberOfColumns, 0);
         foreach($cellsInRowsMinWidths as $rowNumber => $cellsMinWidths)
         {
-            $row = $this->getMock('PHPPdf\Core\Node\Table\Row', array('getChildren'));
+            $row = $this->createPartialMock('PHPPdf\Core\Node\Table\Row', array('getChildren'));
 
             $cells = array();
             foreach ($cellsMinWidths as $columnNumber => $minWidth)
             {
                 $colspan = $colspans[$rowNumber][$columnNumber];
-
-                $cell = $this->getMock('PHPPdf\Core\Node\Table\Cell', array('getMinWidth', 'getNumberOfColumn', 'getColspan'));
+                $cell =  $this->getMockBuilder('PHPPdf\Core\Node\Table\Cell')
+                     ->enableOriginalConstructor()
+                     ->onlyMethods(array('getMinWidth', 'getNumberOfColumn', 'getColspan'))
+                     ->getMock();
                 $cell->expects($this->atLeastOnce())
                      ->method('getMinWidth')
-                     ->will($this->returnValue($minWidth));
+                     ->willReturn($minWidth);
                 $cell->expects($this->atLeastOnce())
                      ->method('getNumberOfColumn')
-                     ->will($this->returnValue($columnNumber));
+                     ->willReturn($columnNumber);
                 $cell->expects($this->atLeastOnce())
                      ->method('getColspan')
-                     ->will($this->returnValue($colspan));
+                     ->willReturn($colspan);
                 $cells[] = $cell;
 
                 $minWidthPerColumn = $minWidth / $colspan;
@@ -367,7 +382,7 @@ class TableTest extends \PHPPdf\PHPUnit\Framework\TestCase
             }
             $row->expects($this->atLeastOnce())
                 ->method('getChildren')
-                ->will($this->returnValue($cells));
+                ->willReturn($cells);
             $this->table->add($row);
         }
 

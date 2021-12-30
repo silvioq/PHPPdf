@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Copyright 2011 Piotr Śliwa <peter.pl7@gmail.com>
  *
@@ -13,40 +15,40 @@ namespace PHPPdf\Exception;
  */
 class InvalidResourceException extends InvalidArgumentException
 {
-    public static function invalidColorException($color, \Exception $previous = null)
+    public static function invalidColorException($color, \Exception $previous = null): InvalidResourceException
     {
         $message = 'Color "%s" is invalid.'.($previous ? ' '.$previous->getMessage() : '');
 
         return new self(sprintf($message, $color), 0, $previous);
     }
 
-    public static function invalidImageException($imagePath, \Exception $previous = null)
+    public static function invalidImageException($imagePath, \Exception $previous = null): InvalidResourceException
     {
         $message = 'Image "%s" can\'t be initialized.'.($previous ? ' '.$previous->getMessage() : '');
 
         return new self(sprintf($message, $imagePath), 0, $previous);
     }
 
-    public static function unsupportetImageTypeException($imagePath)
+    public static function unsupportetImageTypeException($imagePath): InvalidResourceException
     {
         return new self(sprintf('Image type of "%s" is not supported. Supported types: jpeg, png and tiff.', $imagePath));
     }
 
-    public static function invalidFontException($fontData, \Exception $previous = null)
+    public static function invalidFontException($fontData, \Exception $previous = null): InvalidResourceException
     {
         $message = 'Font "%s" is invalid.'.($previous ? ' '.$previous->getMessage() : '');
 
         return new self(sprintf($message, $fontData), 0, $previous);
     }
 
-    public static function invalidPdfFileException($file, \Exception $previous = null)
+    public static function invalidPdfFileException($file, \Exception $previous = null): InvalidResourceException
     {
         $message = 'PDF file "%s" is invalid.'.($previous ? ' '.$previous->getMessage() : '');
 
         return new self(sprintf($message, $file), 0, $previous);
     }
 
-    public static function fileDosntExistException($file)
+    public static function fileDosntExistException($file): InvalidResourceException
     {
         return new self(sprintf('File "%s" dosn\'t exist.', $file));
     }

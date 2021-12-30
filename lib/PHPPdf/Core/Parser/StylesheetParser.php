@@ -15,19 +15,19 @@ use PHPPdf\Parser\Exception\ParseException;
 
 /**
  * Xml stylesheet parser
- * 
+ *
  * @author Piotr Śliwa <peter.pl7@gmail.com>
  */
 class StylesheetParser extends XmlParser
 {
-    const ROOT_TAG = 'stylesheet';
-    const ATTRIBUTE_TAG = 'attribute';
-    const ENHANCEMENT_TAG = 'enhancement';
+    const ROOT_TAG              = 'stylesheet';
+    const ATTRIBUTE_TAG         = 'attribute';
+    const ENHANCEMENT_TAG       = 'enhancement';
     const COMPLEX_ATTRIBUTE_TAG = 'complex-attribute';
-    const ANY_TAG = 'any';
-    const ATTRIBUTE_CLASS = 'class';
-    const STYLE_ATTRIBUTE = 'style';
-    
+    const ANY_TAG               = 'any';
+    const ATTRIBUTE_CLASS       = 'class';
+    const STYLE_ATTRIBUTE       = 'style';
+
     private $throwsExceptionOnConstraintTag = false;
     private $root;
     private $complexAttributeFactory;
@@ -42,7 +42,7 @@ class StylesheetParser extends XmlParser
     {
         $this->root = $root;
     }
-    
+
     public function setThrowsExceptionOnConstraintTag($flag)
     {
         $this->throwsExceptionOnConstraintTag = (boolean) $flag;
@@ -52,7 +52,7 @@ class StylesheetParser extends XmlParser
     {
         $this->complexAttributeFactory = $complexAttributeFactory;
     }
-    
+
     /**
      * @return StylesheetConstraint
      */
@@ -60,7 +60,7 @@ class StylesheetParser extends XmlParser
     {
         return ($this->root ? $this->root : new StylesheetConstraint());
     }
-    
+
     public function parse($content)
     {
         $stylesheetConstraint = parent::parse($content);
@@ -75,16 +75,11 @@ class StylesheetParser extends XmlParser
     {
         $tag = $reader->name;
 
-        if($tag === self::ATTRIBUTE_TAG)
-        {
+        if ($tag === self::ATTRIBUTE_TAG) {
             $this->parseAttribute($reader);
-        }
-        elseif($tag === self::ENHANCEMENT_TAG || $tag === self::COMPLEX_ATTRIBUTE_TAG)
-        {
+        } elseif ($tag === self::ENHANCEMENT_TAG || $tag === self::COMPLEX_ATTRIBUTE_TAG) {
             $this->parseComplexAttribute($reader);
-        }
-        else
-        {
+        } else {
             $this->parseConstraint($reader, $tag);
         }
     }
@@ -95,15 +90,13 @@ class StylesheetParser extends XmlParser
 
         $name = $reader->getAttribute('name');
 
-        if(!$name)
-        {
+        if (!$name) {
             throw new ParseException('Name of attribute is required.');
         }
 
         $value = $reader->getAttribute('value');
 
-        if($value === null)
-        {
+        if ($value === null) {
             throw new ParseException('Value of attribute is required.');
         }
 
@@ -114,22 +107,19 @@ class StylesheetParser extends XmlParser
     {
         $lastConstraint = $this->getLastElementFromStack();
 
-        $attributes = array();
+        $attributes = [];
 
-        while($reader->moveToNextAttribute())
-        {
+        while ($reader->moveToNextAttribute()) {
             $attributes[$reader->name] = $reader->value;
         }
 
-        if(!isset($attributes['name']))
-        {
+        if (!isset($attributes['name'])) {
             throw new ParseException('Name of complex attribute is required.');
         }
 
         $id = $attributes['name'];
-        
-        if(isset($attributes['id']))
-        {
+
+        if (isset($attributes['id'])) {
             $id = $attributes['id'];
             unset($attributes['id']);
         }
@@ -139,110 +129,91 @@ class StylesheetParser extends XmlParser
 
     private function parseConstraint(\XMLReader $reader, $tag)
     {
-        if($this->throwsExceptionOnConstraintTag)
-        {
+        if ($this->throwsExceptionOnConstraintTag) {
             throw new ParseException(sprintf('Unknown tag "%s" in stylesheet section.', $tag));
         }
-        
+
         $isEmptyElement = $reader->isEmptyElement;
-        
+
         $lastConstraint = $this->getLastElementFromStack();
 
         $constraint = new StylesheetConstraint();
 
-        $class = $reader->getAttribute(self::ATTRIBUTE_CLASS);
-        $classes = preg_split('/\s+/', $class);
+        $class   = $reader->getAttribute(self::ATTRIBUTE_CLASS);
+        $classes = preg_split('/\s+/', (string) $class);
 
-        if(!$tag)
-        {
+        if (!$tag) {
             throw new ParseException('You must set tag name.');
         }
 
         $lastConstraint->addConstraint($tag, $constraint);
-        foreach($classes as $class)
-        {
-            if($class)
-            {
+        foreach ($classes as $class) {
+            if ($class) {
                 $constraint->addClass($class);
             }
         }
-        
+
         $this->addConstraintsFromAttributes($constraint, $reader);
-        
+
         $this->pushOnStack($constraint);
-        
-        if($isEmptyElement)
-        {
+
+        if ($isEmptyElement) {
             $this->parseEndElement($reader);
         }
     }
-    
-    public function addConstraintsFromAttributes(BagContainer $constraint, \XMLReader $reader, array $ignoredAttributes = array(self::ATTRIBUTE_CLASS))
+
+    public function addConstraintsFromAttributes(BagContainer $constraint, \XMLReader $reader, array $ignoredAttributes = [self::ATTRIBUTE_CLASS])
     {
-        while($reader->moveToNextAttribute())
-        {
+        while ($reader->moveToNextAttribute()) {
             $attributes = $this->getAttributesFromXmlAttribute($reader);
-            
-            foreach($attributes as $name => $value)
-            {
-                if(!in_array($name, $ignoredAttributes))
-                {
-                    if($complexAttributeName = $this->getComplexAttributeName($name))
-                    {
+
+            foreach ($attributes as $name => $value) {
+                if (!in_array($name, $ignoredAttributes)) {
+                    if ($complexAttributeName = $this->getComplexAttributeName($name)) {
                         $propertyName = substr($name, strlen($complexAttributeName) + 1);
-                        $constraint->add($complexAttributeName, array('name' => $complexAttributeName, $propertyName => $value));
-                    }
-                    else
-                    {
+                        $constraint->add($complexAttributeName, ['name' => $complexAttributeName, $propertyName => $value]);
+                    } else {
                         $constraint->add($name, $value);
                     }
                 }
             }
         }
     }
-    
+
     private function getAttributesFromXmlAttribute(\XMLReader $reader)
     {
         $name = $reader->name;
-        
-        if($name === self::STYLE_ATTRIBUTE)
-        {
-            $attributes = array();
-            
-            if(@preg_match_all('/([a-zA-Z0-9\-\.]+)\s*:\s*(.+)\s*;/U', $reader->value, $matches, \PREG_SET_ORDER))
-            {
-                foreach($matches as $match)
-                {
+
+        if ($name === self::STYLE_ATTRIBUTE) {
+            $attributes = [];
+
+            if (@preg_match_all('/([a-zA-Z0-9\-\.]+)\s*:\s*(.+)\s*;/U', $reader->value, $matches, \PREG_SET_ORDER)) {
+                foreach ($matches as $match) {
                     $attributes[trim($match[1])] = trim($match[2]);
                 }
             }
 
             return $attributes;
+        } else {
+            return [$name => $reader->value];
         }
-        else
-        {
-            return array($name => $reader->value);
-        }
-        
+
     }
-    
+
     private function getComplexAttributeName($name)
     {
-        if(!$this->complexAttributeFactory)
-        {
+        if (!$this->complexAttributeFactory) {
             return false;
         }
-        
+
         $complexAttributesNames = (array) $this->complexAttributeFactory->getDefinitionNames();
-        
-        foreach($complexAttributesNames as $complexAttributeName)
-        {
-            if(strpos($name, $complexAttributeName) === 0 && in_array(substr($name, strlen($complexAttributeName), 1), array('.', '-')))
-            {
+
+        foreach ($complexAttributesNames as $complexAttributeName) {
+            if (strpos($name, $complexAttributeName) === 0 && in_array(substr($name, strlen($complexAttributeName), 1), ['.', '-'])) {
                 return $complexAttributeName;
             }
         }
-        
+
         return false;
     }
 
@@ -250,8 +221,7 @@ class StylesheetParser extends XmlParser
     {
         $tag = $reader->name;
 
-        if($tag != self::ATTRIBUTE_TAG)
-        {
+        if ($tag != self::ATTRIBUTE_TAG) {
             $this->popFromStack();
         }
     }

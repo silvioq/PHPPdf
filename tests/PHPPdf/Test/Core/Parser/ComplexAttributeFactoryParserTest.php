@@ -9,7 +9,7 @@ class ComplexAttributeFactoryParserTest extends \PHPPdf\PHPUnit\Framework\TestCa
 {
     private $parser;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->parser = new ComplexAttributeFactoryParser();
     }
@@ -28,10 +28,11 @@ class ComplexAttributeFactoryParserTest extends \PHPPdf\PHPUnit\Framework\TestCa
 
     /**
      * @test
-     * @expectedException PHPPdf\Parser\Exception\ParseException
+     *
      */
     public function throwExceptionIfDocumentHasInvalidRoot()
     {
+        $this->expectException(\PHPPdf\Parser\Exception\ParseException::class);
         $xml = '<invalid-root></invalid-root>';
         $this->parser->parse($xml);
     }
@@ -57,10 +58,11 @@ XML;
 
     /**
      * @test
-     * @expectedException PHPPdf\Parser\Exception\ParseException
+     *
      */
     public function throwExceptionIfRequiredAttributesAreMissing()
     {
+        $this->expectException(\PHPPdf\Parser\Exception\ParseException::class);
         $xml = <<<XML
 <complex-attributes>
     <complex-attribute name="border" />

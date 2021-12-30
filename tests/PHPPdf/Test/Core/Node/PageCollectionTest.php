@@ -10,7 +10,7 @@ class PageCollectionTest extends \PHPPdf\PHPUnit\Framework\TestCase
 {
     private $pageCollection;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->pageCollection = new PageCollection();
     }

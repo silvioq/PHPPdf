@@ -9,7 +9,7 @@ class NodeFactoryTest extends \PHPPdf\PHPUnit\Framework\TestCase
 {
     private $factory;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->factory = new NodeFactory();
     }
@@ -19,11 +19,11 @@ class NodeFactoryTest extends \PHPPdf\PHPUnit\Framework\TestCase
      */
     public function nodeCreating()
     {
-        $mock = $this->getMock('PHPPdf\Core\Node\Node', array('copy'));
+        $mock = $this->createPartialMock('PHPPdf\Core\Node\Node', array('copy'));
 
         $mock->expects($this->once())
              ->method('copy')
-             ->will($this->returnValue($mock));
+             ->willReturn($mock);
 
         $this->factory->addPrototype('name', $mock);
         $this->factory->create('name');
@@ -47,19 +47,21 @@ class NodeFactoryTest extends \PHPPdf\PHPUnit\Framework\TestCase
 
     /**
      * @test
-     * @expectedException PHPPdf\Core\Exception\UnregisteredNodeException
+     *
      */
     public function creatingNotExistedNode()
     {
+        $this->expectException(\PHPPdf\Core\Exception\UnregisteredNodeException::class);
         $this->factory->create('key');
     }
 
     /**
      * @test
-     * @expectedException PHPPdf\Core\Exception\UnregisteredNodeException
+     *
      */
     public function gettingNotExistingPrototype()
     {
+        $this->expectException(\PHPPdf\Core\Exception\UnregisteredNodeException::class);
         $this->factory->getPrototype('key');
     }
 
@@ -88,12 +90,12 @@ class NodeFactoryTest extends \PHPPdf\PHPUnit\Framework\TestCase
         $invokeMethodArg = 12;
         $invokeMethodArgTag = 'tag';
         
-        $prototype = $this->getMock('PHPPdf\Core\Node\Container', array('copy'));
-        $product = $this->getMock('PHPPdf\Core\Node\Container', array($invokeMethodName));
+        $prototype = $this->createPartialMock('PHPPdf\Core\Node\Container', array('copy'));
+        $product = $this->createPartialMock('PHPPdf\Core\Node\Container', array($invokeMethodName));
         
         $prototype->expects($this->once())
                   ->method('copy')
-                  ->will($this->returnValue($product));
+                  ->willReturn($product);
                   
         $product->expects($this->once())
                 ->method($invokeMethodName)

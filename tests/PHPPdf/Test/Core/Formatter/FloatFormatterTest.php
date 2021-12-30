@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPPdf\Test\Core\Formatter;
 
 use PHPPdf\Core\Formatter\FloatFormatter,
@@ -8,84 +10,86 @@ use PHPPdf\Core\Formatter\FloatFormatter,
     PHPPdf\Core\Document,
     PHPPdf\Core\Node\Node,
     PHPPdf\Core\Node\Page;
+use PHPPdf\PHPUnit\Framework\TestCase;
+use PHPPdf\Core\Node\Container;
+use PHPUnit\Framework\MockObject\MockObject;
 
-class FloatFormatterTest extends \PHPPdf\PHPUnit\Framework\TestCase
+class FloatFormatterTest extends TestCase
 {
-    /**
-     * @var PHPPdf\Core\Formatter\FloatFormatter
-     */
-    private $formatter = null;
-    private $document;
+    private FloatFormatter $formatter;
+    private Document       $document;
 
-    public function setUp()
+    public function setUp(): void
     {
-        $this->formatter = new FloatFormatter();        
-        $this->document = $this->createDocumentStub();
+        $this->formatter = new FloatFormatter();
+        $this->document  = $this->createDocumentStub();
     }
 
     /**
      * @test
      */
-    public function correctNodesPositionIfHasFloatSetToLeft()
+    public function correctNodesPositionIfHasFloatSetToLeft(): void
     {
         $containers = $this->createContainerWithFloatingChildren(
-                array(0, 700, 700, 700),
-                array(0, 700, 300, 300), 'left',
-                array(0, 400, 200, 200), 'left'
+            [0, 700, 700, 700],
+            [0, 700, 300, 300], 'left',
+            [0, 400, 200, 200], 'left'
         );
 
         $this->formatter->format($containers[0], $this->document);
 
-        $this->assertEquals(array(300, 700), $containers[2]->getStartDrawingPoint());
-        $this->assertEquals(array(500, 500), $containers[2]->getEndDrawingPoint());
+        $this->assertEquals([300, 700], $containers[2]->getStartDrawingPoint());
+        $this->assertEquals([500, 500], $containers[2]->getEndDrawingPoint());
     }
 
-    private function createContainerWithFloatingChildren()
+    private function createContainerWithFloatingChildren(): array
     {
-        $args = func_get_args();
+        $args    = func_get_args();
         $numArgs = func_num_args();
-        
-        $container = $this->getNodeMock($args[0][0], $args[0][1], $args[0][2], $args[0][3], array('getChildren'));
 
-        $children = array();
+        $container = $this->getNodeMock($args[0][0], $args[0][1], $args[0][2], $args[0][3], ['getChildren']);
 
-        for($i=1; $i<$numArgs; $i+=2)
-        {
-            $children[] = $this->getNodeMockWithFloatAndParent($args[$i][0], $args[$i][1], $args[$i][2], $args[$i][3], $args[$i+1], $container);
+        $children = [];
+
+        for ($i = 1; $i < $numArgs; $i += 2) {
+            $children[] = $this->getNodeMockWithFloatAndParent($args[$i][0], $args[$i][1], $args[$i][2], $args[$i][3], $args[$i + 1], $container);
 
         }
 
         $container->expects($this->atLeastOnce())
                   ->method('getChildren')
-                  ->will($this->returnValue($children));
-        
-        return array_merge(array($container), $children);
+                  ->willReturn($children);
+
+        return array_merge([$container], $children);
     }
 
 
-    private function getNodeMock($x, $y, $width, $height, array $methods = array(), $boundaryAtLeastOnce = true, $class = 'PHPPdf\Core\Node\Container')
+    private function getNodeMock($x, $y, $width, $height, array $methods = [], $boundaryAtLeastOnce = true, $class = Container::class): MockObject
     {
-        $methods = array_merge(array('getBoundary', 'getHeight', 'getWidth'), $methods);
-        $mock = $this->getMock($class, $methods);
+        $methods = array_merge(['getBoundary', 'getHeight', 'getWidth'], $methods);
+        $mock    = $this->getMockBuilder($class)
+                        ->enableOriginalConstructor()
+                        ->onlyMethods($methods)
+                        ->getMock();
 
         $boundary = new Boundary();
         $boundary->setNext($x, $y)
-                 ->setNext($x+$width, $y)
-                 ->setNext($x+$width, $y-$height)
-                 ->setNext($x, $y-$height)
+                 ->setNext($x + $width, $y)
+                 ->setNext($x + $width, $y - $height)
+                 ->setNext($x, $y - $height)
                  ->close();
 
         $mock->expects($boundaryAtLeastOnce ? $this->atLeastOnce() : $this->any())
              ->method('getBoundary')
-             ->will($this->returnValue($boundary));
+             ->willReturn($boundary);
 
         $mock->expects($this->any())
              ->method('getHeight')
-             ->will($this->returnValue($height));
+             ->willReturn($height);
 
         $mock->expects($this->any())
              ->method('getWidth')
-             ->will($this->returnValue($width));
+             ->willReturn($width);
 
         return $mock;
     }
@@ -93,99 +97,99 @@ class FloatFormatterTest extends \PHPPdf\PHPUnit\Framework\TestCase
     /**
      * @test
      */
-    public function correctNodePositionIfHasFloatSetToRight()
+    public function correctNodePositionIfHasFloatSetToRight(): void
     {
         $containers = $this->createContainerWithFloatingChildren(
-                array(0, 700, 700, 700),
-                array(0, 500, 300, 300), 'left',
-                array(0, 200, 200, 200), 'right'
+            [0, 700, 700, 700],
+            [0, 500, 300, 300], 'left',
+            [0, 200, 200, 200], 'right'
         );
 
         $this->formatter->format($containers[0], $this->document);
 
-        $this->assertEquals(array(500, 500), $containers[2]->getStartDrawingPoint());
-        $this->assertEquals(array(700, 300), $containers[2]->getEndDrawingPoint());
+        $this->assertEquals([500, 500], $containers[2]->getStartDrawingPoint());
+        $this->assertEquals([700, 300], $containers[2]->getEndDrawingPoint());
     }
 
     /**
      * @test
      */
-    public function correctNodesPositionWithNoFloatIfPreviousSiblingsHaveFloat()
+    public function correctNodesPositionWithNoFloatIfPreviousSiblingsHaveFloat(): void
     {
         $containers = $this->createContainerWithFloatingChildren(
-                array(0, 700, 700, 700),
-                array(0, 700, 300, 300), 'left',
-                array(0, 400, 200, 200), 'right',
-                array(0, 200, 100, 100), 'none'
+            [0, 700, 700, 700],
+            [0, 700, 300, 300], 'left',
+            [0, 400, 200, 200], 'right',
+            [0, 200, 100, 100], 'none'
         );
 
         $this->formatter->format($containers[0], $this->document);
 
-        $this->assertEquals(array(500, 700), $containers[2]->getStartDrawingPoint());
-        $this->assertEquals(array(700, 500), $containers[2]->getEndDrawingPoint());
+        $this->assertEquals([500, 700], $containers[2]->getStartDrawingPoint());
+        $this->assertEquals([700, 500], $containers[2]->getEndDrawingPoint());
 
-        $this->assertEquals(array(0, 400), $containers[3]->getStartDrawingPoint());
+        $this->assertEquals([0, 400], $containers[3]->getStartDrawingPoint());
     }
 
     /**
      * @test
      */
-    public function correctParentDimensionIfHaveSomeFloatingChildrenInFewRows()
+    public function correctParentDimensionIfHaveSomeFloatingChildrenInFewRows(): void
     {
         $containers = $this->createContainerWithFloatingChildren(
-                array(0, 500, 500, 100),
-                array(0, 500, 20, 20), 'left',
-                array(0, 480, 20, 20), 'left',
-                array(0, 460, 20, 20), 'none',
-                array(0, 440, 20, 20), 'left',
-                array(0, 420, 20, 20), 'left'
+            [0, 500, 500, 100],
+            [0, 500, 20, 20], 'left',
+            [0, 480, 20, 20], 'left',
+            [0, 460, 20, 20], 'none',
+            [0, 440, 20, 20], 'left',
+            [0, 420, 20, 20], 'left'
         );
 
         $this->formatter->format($containers[0], $this->document);
 
         $boundary = $containers[0]->getBoundary();
 
-        $this->assertEquals(array(0, 500), $boundary[0]->toArray());
-        $this->assertEquals(array(500, 500), $boundary[1]->toArray());
-        $this->assertEquals(array(500, 440), $boundary[2]->toArray());
+        $this->assertEquals([0, 500], $boundary[0]->toArray());
+        $this->assertEquals([500, 500], $boundary[1]->toArray());
+        $this->assertEquals([500, 440], $boundary[2]->toArray());
     }
 
     /**
      * @test
      * @dataProvider flowTypes
      */
-    public function parentOverflowWhileFloating($float)
+    public function parentOverflowWhileFloating($float): void
     {
         $containers = $this->createContainerWithFloatingChildren(
-                array(0, 500, 100, 40),
-                array(0, 500, 80, 20), $float,
-                array(0, 480, 80, 20), $float
+            [0, 500, 100, 40],
+            [0, 500, 80, 20], $float,
+            [0, 480, 80, 20], $float
         );
 
         $this->formatter->format($containers[0], $this->document);
 
         $boundary = $containers[0]->getBoundary();
-        $this->assertEquals(array(0, 500), $boundary[0]->toArray());
-        $this->assertEquals(array(100, 460), $boundary[2]->toArray());
+        $this->assertEquals([0, 500], $boundary[0]->toArray());
+        $this->assertEquals([100, 460], $boundary[2]->toArray());
     }
 
-    public function flowTypes()
+    public function flowTypes(): array
     {
-        return array(
-            array('right'),
-            array('left'),
-        );
+        return [
+            ['right'],
+            ['left'],
+        ];
     }
 
     /**
      * @test
      */
-    public function nodesHaveEqualTopYCoordEvenIfHaveHeightIsDifferent()
+    public function nodesHaveEqualTopYCoordEvenIfHaveHeightIsDifferent(): void
     {
         $containers = $this->createContainerWithFloatingChildren(
-                array(0, 500, 200, 40),
-                array(0, 500, 80, 20), 'left',
-                array(0, 480, 80, 20), 'right'
+            [0, 500, 200, 40],
+            [0, 500, 80, 20], 'left',
+            [0, 480, 80, 20], 'right'
         );
 
         $containers[1]->setAttribute('padding-top', 7);
@@ -199,19 +203,19 @@ class FloatFormatterTest extends \PHPPdf\PHPUnit\Framework\TestCase
         $this->assertEquals($containers[1]->getFirstPoint()->getY(), $containers[2]->getFirstPoint()->getY());
     }
 
-    private function getNodeMockWithFloatAndParent($x, $y, $width, $height, $float, $parent, array $methods = array())
+    private function getNodeMockWithFloatAndParent($x, $y, $width, $height, $float, $parent, array $methods = []): MockObject
     {
         $methods[] = 'getFloat';
         $methods[] = 'getParent';
-        $node = $this->getNodeMock($x, $y, $width, $height, $methods);
+        $node      = $this->getNodeMock($x, $y, $width, $height, $methods);
 
         $node->expects($this->atLeastOnce())
-              ->method('getFloat')
-              ->will($this->returnValue($float));
+             ->method('getFloat')
+             ->willReturn($float);
 
         $node->expects($this->any())
-              ->method('getParent')
-              ->will($this->returnValue($parent));
+             ->method('getParent')
+             ->willReturn($parent);
 
         //internally in Node class is used $parent propery (not getParent() method) due to performance
         $this->writeAttribute($node, 'parent', $parent);
@@ -222,11 +226,11 @@ class FloatFormatterTest extends \PHPPdf\PHPUnit\Framework\TestCase
     /**
      * @test
      */
-    public function correctNodesPositionWithRightFloatIfRightPaddingIsSet()
+    public function correctNodesPositionWithRightFloatIfRightPaddingIsSet(): void
     {
         $containers = $this->createContainerWithFloatingChildren(
-                array(0, 500, 100, 40),
-                array(0, 500, 80, 20), 'right'
+            [0, 500, 100, 40],
+            [0, 500, 80, 20], 'right'
         );
 
         $containers[1]->setAttribute('padding-right', 20);
@@ -239,21 +243,21 @@ class FloatFormatterTest extends \PHPPdf\PHPUnit\Framework\TestCase
     /**
      * @test
      */
-    public function correctParentsHeightWhenFloatingChildrenHasDifferentHeight()
+    public function correctParentsHeightWhenFloatingChildrenHasDifferentHeight(): void
     {
-        $container = $this->getNodeMock(0, 500, 100, 100, array('getChildren', 'setHeight', 'getAttributesSnapshot'), false);
+        $container = $this->getNodeMock(0, 500, 100, 100, ['getChildren', 'setHeight', 'getAttributesSnapshot'], false);
 
         $container->expects($this->once())
                   ->method('setHeight')
                   ->with(60)
-                  ->will($this->returnValue($container));
+                  ->willReturn($container);
 
         $children[] = $this->getNodeMockWithFloatAndParent(0, 500, 40, 60, 'left', $container);
         $children[] = $this->getNodeMockWithFloatAndParent(0, 440, 40, 40, 'right', $container);
 
         $container->expects($this->atLeastOnce())
                   ->method('getChildren')
-                  ->will($this->returnValue($children));
+                  ->willReturn($children);
 
         $this->formatter->format($container, $this->document);
     }
@@ -261,9 +265,9 @@ class FloatFormatterTest extends \PHPPdf\PHPUnit\Framework\TestCase
     /**
      * @test
      */
-    public function dontCorrectParentsHeightIfHisChildrenPositionHasNotBeenCorrected()
+    public function dontCorrectParentsHeightIfHisChildrenPositionHasNotBeenCorrected(): void
     {
-        $container = $this->getNodeMock(0, 500, 100, 100, array('getChildren', 'setHeight'), false);
+        $container = $this->getNodeMock(0, 500, 100, 100, ['getChildren', 'setHeight'], false);
         $container->expects($this->never())
                   ->method('setHeight');
 
@@ -271,108 +275,108 @@ class FloatFormatterTest extends \PHPPdf\PHPUnit\Framework\TestCase
 
         $container->expects($this->atLeastOnce())
                   ->method('getChildren')
-                  ->will($this->returnValue(array($child)));
+                  ->willReturn([$child]);
 
         $this->formatter->format($container, $this->document);
     }
-    
+
     /**
      * @test
      */
-    public function containerWithoutFloatShouldBeBelowAllOfPreviousSiblingsWithFloat()
+    public function containerWithoutFloatShouldBeBelowAllOfPreviousSiblingsWithFloat(): void
     {
-        $container = $this->getNodeMock(0, 500, 100, 500, array('getChildren', 'setHeight'), false);
-        
-        $containerLeftFloated = $this->getNodeMockWithFloatAndParent(0, 500, 10, 200, 'left', $container);
+        $container = $this->getNodeMock(0, 500, 100, 500, ['getChildren', 'setHeight'], false);
+
+        $containerLeftFloated  = $this->getNodeMockWithFloatAndParent(0, 500, 10, 200, 'left', $container);
         $containerRightFloated = $this->getNodeMockWithFloatAndParent(0, 300, 10, 100, 'right', $container);
         $containerWithoutFloat = $this->getNodeMockWithFloatAndParent(0, 200, 10, 100, 'none', $container);
-        
+
         $container->expects($this->atLeastOnce())
                   ->method('getChildren')
-                  ->will($this->returnValue(array($containerLeftFloated, $containerRightFloated, $containerWithoutFloat)));
-                  
+                  ->willReturn([$containerLeftFloated, $containerRightFloated, $containerWithoutFloat]);
+
         $this->formatter->format($container, $this->document);
-        
+
         $this->assertEquals($containerLeftFloated->getDiagonalPoint()->getY(), $containerWithoutFloat->getFirstPoint()->getY());
     }
-    
+
     /**
      * @test
      * @dataProvider paddingProvider
      */
-    public function moveNodeWithRightFloatUnderPreviousSiblingIfPreviousSiblingHasLeftFloatAndBothElementsDontFit($firstContainerFloat, $secondContainerFloat, $heightOfFirstContainer, $paddingTopOfSecondContainer)
+    public function moveNodeWithRightFloatUnderPreviousSiblingIfPreviousSiblingHasLeftFloatAndBothElementsDontFit($firstContainerFloat, $secondContainerFloat, $heightOfFirstContainer, $paddingTopOfSecondContainer): void
     {
         $heightOfParentContainer = 500;
-        $widthOfParentContainer = 500;
-        $container = $this->getNodeMock(0, $heightOfParentContainer, $widthOfParentContainer, $heightOfParentContainer, array('getChildren', 'setHeight'), false);
-        
-        $widthOfFirstContainer = 300;
+        $widthOfParentContainer  = 500;
+        $container               = $this->getNodeMock(0, $heightOfParentContainer, $widthOfParentContainer, $heightOfParentContainer, ['getChildren', 'setHeight'], false);
+
+        $widthOfFirstContainer             = 300;
         $firstPointYCoordOfSecondContainer = $heightOfParentContainer - $heightOfFirstContainer;// - $paddingTopOfSecondContainer;
-        $heightOfSecondContainer = 100;
-        $widthOfSecondContainer = 300;
-        
-        $firstContainer = $this->getNodeMockWithFloatAndParent(0, $heightOfParentContainer, $widthOfFirstContainer, $heightOfFirstContainer, $firstContainerFloat, $container);
+        $heightOfSecondContainer           = 100;
+        $widthOfSecondContainer            = 300;
+
+        $firstContainer  = $this->getNodeMockWithFloatAndParent(0, $heightOfParentContainer, $widthOfFirstContainer, $heightOfFirstContainer, $firstContainerFloat, $container);
         $secondContainer = $this->getNodeMockWithFloatAndParent(0, $firstPointYCoordOfSecondContainer, $widthOfSecondContainer, $heightOfSecondContainer, $secondContainerFloat, $container);
         $secondContainer->setAttribute('padding-top', $paddingTopOfSecondContainer);
-        
+
         $container->expects($this->atLeastOnce())
                   ->method('getChildren')
-                  ->will($this->returnValue(array($firstContainer, $secondContainer)));
-                  
+                  ->willReturn([$firstContainer, $secondContainer]);
+
         $this->formatter->format($container, $this->document);
-        
+
         $expectedXCoordOfFirstContainer = $firstContainerFloat == Node::FLOAT_LEFT ? 0 : ($widthOfParentContainer - $widthOfSecondContainer);
         $this->assertEquals($expectedXCoordOfFirstContainer, $firstContainer->getFirstPoint()->getX());
-        
+
         $expectedXCoordOfSecondContainer = $secondContainerFloat == Node::FLOAT_LEFT ? 0 : ($widthOfParentContainer - $widthOfSecondContainer);
         $this->assertEquals($expectedXCoordOfSecondContainer, $secondContainer->getFirstPoint()->getX());
-        
-        
+
+
         $this->assertEquals($heightOfParentContainer, $firstContainer->getFirstPoint()->getY());
-        
+
         $expectedYCoordOfSecondContainer = $heightOfParentContainer - $heightOfFirstContainer;
         $this->assertEquals($expectedYCoordOfSecondContainer, $secondContainer->getFirstPoint()->getY());
     }
-    
-    public function paddingProvider()
+
+    public function paddingProvider(): array
     {
-        return array(
-            array('left', 'right', 200, 0),
-            array('left', 'left', 200, 0),
-            array('left', 'left', 200, 10),
-            array('right', 'left', 200, 10),
-            array('left', 'right', 200, 10),
-            array('right', 'right', 200, 10),
-        );
+        return [
+            ['left', 'right', 200, 0],
+            ['left', 'left', 200, 0],
+            ['left', 'left', 200, 10],
+            ['right', 'left', 200, 10],
+            ['left', 'right', 200, 10],
+            ['right', 'right', 200, 10],
+        ];
     }
-    
+
     /**
      * @test
      * @dataProvider floatAndMarginProvider
      */
-    public function marginIsRespectedEvenIfNodeHasFloat($float, $marginLeft, $marginRight, $parentWidth, $width, $expectedXCoord)
+    public function marginIsRespectedEvenIfNodeHasFloat($float, $marginLeft, $marginRight, $parentWidth, $width, $expectedXCoord): void
     {
-        $container = $this->getNodeMock(0, 500, $parentWidth, 500, array('getChildren'), false);
+        $container        = $this->getNodeMock(0, 500, $parentWidth, 500, ['getChildren'], false);
         $containerFloated = $this->getNodeMockWithFloatAndParent(0, 500, $width, 200, $float, $container);
         $containerFloated->setAttribute('margin-left', $marginLeft);
         $containerFloated->setAttribute('margin-right', $marginRight);
-        
+
         $container->expects($this->atLeastOnce())
                   ->method('getChildren')
-                  ->will($this->returnValue(array($containerFloated)));
-                  
+                  ->willReturn([$containerFloated]);
+
         $this->formatter->format($container, $this->document);
-        
+
         $this->assertEquals($expectedXCoord, $containerFloated->getFirstPoint()->getX());
     }
-    
-    public function floatAndMarginProvider()
+
+    public function floatAndMarginProvider(): array
     {
-        return array(
-            array(Node::FLOAT_LEFT, 100, 0, 500, 100, 100),
-            array(Node::FLOAT_RIGHT, 100, 100, 500, 100, 300),
-            array(Node::FLOAT_RIGHT, 0, 0, 500, 100, 400),
-            array(Node::FLOAT_LEFT, 0, 0, 500, 100, 0),
-        );
+        return [
+            [Node::FLOAT_LEFT, 100, 0, 500, 100, 100],
+            [Node::FLOAT_RIGHT, 100, 100, 500, 100, 300],
+            [Node::FLOAT_RIGHT, 0, 0, 500, 100, 400],
+            [Node::FLOAT_LEFT, 0, 0, 500, 100, 0],
+        ];
     }
 }

@@ -10,7 +10,7 @@ class BasicListItemTest extends \PHPPdf\PHPUnit\Framework\TestCase
     private $item;
     private $objectMother;
     
-    public function setUp()
+    public function setUp(): void
     {
         $this->item = new BasicListItem();
         $this->objectMother = new NodeObjectMother($this);
@@ -33,18 +33,18 @@ class BasicListItemTest extends \PHPPdf\PHPUnit\Framework\TestCase
         foreach($isLeafs as $i => $isLeaf)
         {
             $node = $this->getMockBuilder('PHPPdf\Core\Node\Node')
-                          ->setMethods(array('isLeaf', 'hasLeafDescendants', 'isAbleToExistsAboveCoord', 'breakAt'))
+                          ->onlyMethods(array('isLeaf', 'hasLeafDescendants', 'isAbleToExistsAboveCoord', 'breakAt'))
                           ->getMock();
             $node->expects($this->any())
                   ->method('isLeaf')
-                  ->will($this->returnValue($isLeaf));
+                  ->willReturn($isLeaf);
             $node->expects($this->any())
                   ->method('hasLeafDescendants')
-                  ->will($this->returnValue($isLeaf));
+                  ->willReturn($isLeaf);
             $node->expects($this->any())
                   ->method('isAbleToExistsAboveCoord')
                   ->with($height - $breakingHeight)
-                  ->will($this->returnValue($isAbleToExistsAboveCoords[$i]));
+                  ->willReturn($isAbleToExistsAboveCoords[$i]);
                   
             $boundary = $this->objectMother->getBoundaryStub(0, $height, 0, 200);
             $this->invokeMethod($node, 'setBoundary', array($boundary));

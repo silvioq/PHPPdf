@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Copyright 2011 Piotr Śliwa <peter.pl7@gmail.com>
  *
@@ -15,43 +17,42 @@ use PHPPdf\Exception\InvalidArgumentException;
  */
 class FontRegistry implements \Countable
 {
-    private $fonts = array();
-    private $document = null;
-    
+    private array    $fonts = [];
+    private Document $document;
+
     public function __construct(Document $document)
     {
         $this->document = $document;
     }
 
-    public function register($name, array $font)
+    public function register($name, array $font): void
     {
         $font = $this->document->createFont($font);
 
         $this->add($name, $font);
     }
 
-    private function add($name, $font)
+    private function add(string $name, $font): void
     {
-        $name = (string) $name;
+        $name               = (string) $name;
         $this->fonts[$name] = $font;
     }
 
     public function get($name)
     {
-        if($this->has($name))
-        {
+        if ($this->has($name)) {
             return $this->fonts[$name];
         }
 
         throw new InvalidArgumentException(sprintf('Font "%s" is not registered.', $name));
     }
 
-    public function has($name)
+    public function has($name): bool
     {
         return isset($this->fonts[$name]);
     }
 
-    public function count()
+    public function count(): int
     {
         return count($this->fonts);
     }

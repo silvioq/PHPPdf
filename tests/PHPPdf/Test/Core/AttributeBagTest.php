@@ -8,7 +8,7 @@ class AttributeBagTest extends \PHPPdf\PHPUnit\Framework\TestCase
 {
     private $bag;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->bag = new AttributeBag();
     }

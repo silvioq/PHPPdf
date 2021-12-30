@@ -25,47 +25,47 @@ use PHPPdf\Core\Node\Text,
 
 /**
  * Parse document to graph of Nodes
- * 
+ *
  * @author Piotr Śliwa <peter.pl7@gmail.com>
  */
 class XmlDocumentParser extends XmlParser implements DocumentParser
 {
-    const ROOT_TAG = 'pdf';
-    const ATTRIBUTE_ID = 'id';
-    const ATTRIBUTE_NAME = 'name';
+    const ROOT_TAG          = 'pdf';
+    const ATTRIBUTE_ID      = 'id';
+    const ATTRIBUTE_NAME    = 'name';
     const ATTRIBUTE_EXTENDS = 'extends';
-    const ATTRIBUTE_CLASS = 'class';
-    const STYLESHEET_TAG = 'stylesheet';
-    const PLACEHOLDERS_TAG = 'placeholders';
-    const BEHAVIOURS_TAG = 'behaviours';
-    
-    private $factory = null;
+    const ATTRIBUTE_CLASS   = 'class';
+    const STYLESHEET_TAG    = 'stylesheet';
+    const PLACEHOLDERS_TAG  = 'placeholders';
+    const BEHAVIOURS_TAG    = 'behaviours';
+
+    private $factory                 = null;
     private $complexAttributeFactory = null;
-    private $stylesheetConstraint = null;
-    private $stylesheetParser = null;
-    private $ignoredTags = array('attribute', 'enhancement', 'complex-attribute');
-    private $tagStack = array();
-    private $innerParser = null;
+    private $stylesheetConstraint    = null;
+    private $stylesheetParser        = null;
+    private $ignoredTags             = ['attribute', 'enhancement', 'complex-attribute'];
+    private $tagStack                = [];
+    private $innerParser             = null;
     /**
      * @var DocumentParsingContext
      */
     private $context;
-    private $endTag = self::ROOT_TAG;
+    private $endTag           = self::ROOT_TAG;
     private $behaviourFactory = null;
-    private $nodeManager = null;
-    
+    private $nodeManager      = null;
+
     private $isPreviousText = false;
-    
+
     private $currentParagraph = null;
-    
+
     private $document;
-    
-    private $listeners = array();
+
+    private $listeners = [];
 
     public function __construct(ComplexAttributeFactory $complexAttributeFactory, Document $document = null)
     {
-        $this->document = $document;
-        $factory = new NodeFactory();        
+        $this->document   = $document;
+        $factory          = new NodeFactory();
         $stylesheetParser = new StylesheetParser(null, true);
         $stylesheetParser->setComplexAttributeFactory($complexAttributeFactory);
 
@@ -77,12 +77,12 @@ class XmlDocumentParser extends XmlParser implements DocumentParser
 
         $this->initialize();
     }
-    
+
     public function setDocument(Document $document)
     {
         $this->document = $document;
     }
-    
+
     public function getNodeManager()
     {
         return $this->nodeManager;
@@ -92,30 +92,30 @@ class XmlDocumentParser extends XmlParser implements DocumentParser
     {
         $stylesheetConstraint = new StylesheetConstraint();
         $this->setStylesheetConstraint($stylesheetConstraint);
-        $this->isPreviousText = false;
+        $this->isPreviousText   = false;
         $this->currentParagraph = null;
-        $this->context = new DocumentParsingContext();
-        $this->tagStack = array();
-        $this->prototypes = array();
+        $this->context          = new DocumentParsingContext();
+        $this->tagStack         = [];
+        $this->prototypes       = [];
         $this->clearStack();
         $this->nodeManager->clear();
     }
-    
+
     public function addListener(DocumentParserListener $listener)
     {
         $this->listeners[] = $listener;
     }
-    
+
     public function clearListeners()
     {
-        $this->listeners = array();
+        $this->listeners = [];
     }
 
-    protected function createReader($content)
+    protected function createReader($content): \XMLReader
     {
         $reader = new \XMLReader();
 
-        $reader->XML($content, null, LIBXML_DTDLOAD);        
+        $reader->XML($content, null, LIBXML_DTDLOAD);
         $reader->setParserProperty(\XMLReader::SUBST_ENTITIES, true);
 
         return $reader;
@@ -131,8 +131,7 @@ class XmlDocumentParser extends XmlParser implements DocumentParser
      */
     private function getInnerParser()
     {
-        if($this->innerParser === null)
-        {
+        if ($this->innerParser === null) {
             $innerParser = new self($this->getComplexAttributeFactory(), $this->document);
             $innerParser->setNodeFactory($this->getNodeFactory());
 
@@ -144,29 +143,27 @@ class XmlDocumentParser extends XmlParser implements DocumentParser
 
     /**
      * Parses document and build graph of Node
-     * 
+     *
      * @return PageCollection Root of node's graph
      */
     public function parse($content, StylesheetConstraint $stylesheetConstraint = null)
     {
-        if($stylesheetConstraint !== null)
-        {
+        if ($stylesheetConstraint !== null) {
             $this->setStylesheetConstraint($stylesheetConstraint);
         }
 
         $pageCollection = parent::parse($content);
-        
+
         $this->fireOnEndParsing($pageCollection);
 
         $this->initialize();
 
         return $pageCollection;
     }
-    
+
     private function fireOnEndParsing(PageCollection $root)
     {
-        foreach($this->listeners as $listener)
-        {
+        foreach ($this->listeners as $listener) {
             $listener->onEndParsing($this->document, $root);
         }
     }
@@ -191,7 +188,7 @@ class XmlDocumentParser extends XmlParser implements DocumentParser
     {
         return $this->factory;
     }
-    
+
     public function setBehaviourFactory(BehaviourFactory $factory)
     {
         $this->behaviourFactory = $factory;
@@ -239,31 +236,20 @@ class XmlDocumentParser extends XmlParser implements DocumentParser
 
     protected function parseElement(\XMLReader $reader)
     {
-        $tag = $reader->name;
+        $tag        = $reader->name;
         $parentNode = $this->getLastElementFromStack();
 
-        if($this->context->isInPlaceholder())
-        {
+        if ($this->context->isInPlaceholder()) {
             $this->parsePlaceholder($reader, $parentNode);
-        }
-        elseif($this->context->isInBehaviour())
-        {
+        } elseif ($this->context->isInBehaviour()) {
             $this->parseBehaviour($reader, $parentNode);
-        }
-        elseif($tag === self::PLACEHOLDERS_TAG)
-        {
+        } elseif ($tag === self::PLACEHOLDERS_TAG) {
             $this->context->enterPlaceholder();
-        }
-        elseif($tag === self::BEHAVIOURS_TAG)
-        {
+        } elseif ($tag === self::BEHAVIOURS_TAG) {
             $this->context->enterBehaviour();
-        }
-        elseif($tag === self::STYLESHEET_TAG)
-        {
+        } elseif ($tag === self::STYLESHEET_TAG) {
             $this->parseStylesheet($reader, $parentNode);
-        }
-        else
-        {
+        } else {
             $this->parseNode($reader, $parentNode);
         }
     }
@@ -279,42 +265,37 @@ class XmlDocumentParser extends XmlParser implements DocumentParser
     private function parsePlaceholder(\XMLReader $reader, Node $parentNode)
     {
         $placeholderName = $reader->name;
-        $innerParser = $this->getInnerParser();
+        $innerParser     = $this->getInnerParser();
 
         $this->seekReaderToNextTag($reader);
 
-        if($parentNode->hasPlaceholder($placeholderName))
-        {
+        if ($parentNode->hasPlaceholder($placeholderName)) {
             $innerParser->setEndTag($placeholderName);
-            $collection = $innerParser->parse($reader, $this->getStylesheetConstraint());
+            $collection  = $innerParser->parse($reader, $this->getStylesheetConstraint());
             $placeholder = current($collection->getChildren());
 
-            if($placeholder)
-            {
+            if ($placeholder) {
                 $parentNode->setPlaceholder($placeholderName, $placeholder);
             }
-        }
-        else
-        {
+        } else {
             $element = end($this->tagStack);
 
             throw new ParseException(sprintf('Placeholder "%s" is not supported by "%s" tag.', $placeholderName, $element['tag']));
         }
     }
-    
+
     private function parseBehaviour(\XMLReader $reader, Node $parentNode)
     {
         $behaviourName = $reader->name;
-        
-        $options = array();
-        
-        while($reader->moveToNextAttribute())
-        {
+
+        $options = [];
+
+        while ($reader->moveToNextAttribute()) {
             $options[$reader->name] = $reader->value;
         }
-        
+
         $this->seekReaderToNextTag($reader);
-        
+
         $value = trim((string) $reader->value);
 
         $parentNode->addBehaviour($this->behaviourFactory->create($behaviourName, $value, $options));
@@ -324,7 +305,7 @@ class XmlDocumentParser extends XmlParser implements DocumentParser
     {
         return !in_array($tag, $this->ignoredTags);
     }
-    
+
     private function setNodeStylesheet(Node $node, BagContainer $bagContainer)
     {
         $bagContainer->apply($node);
@@ -332,75 +313,65 @@ class XmlDocumentParser extends XmlParser implements DocumentParser
 
     private function parseNode(\XMLReader $reader, Node $parentNode)
     {
-        $tag = $reader->name;
+        $tag            = $reader->name;
         $isEmptyElement = $reader->isEmptyElement;
 
         $node = $this->createNode($reader);
-        
-        if($this->isntTextNode($node))
-        {
-            if($this->currentParagraph !== null)
-            {
+
+        if ($this->isntTextNode($node)) {
+            if ($this->currentParagraph !== null) {
                 $this->fireOnEndParseNode($this->currentParagraph);
             }
             $this->currentParagraph = null;
-            $this->isPreviousText = false;
-        }
-        else
-        {
+            $this->isPreviousText   = false;
+        } else {
             $this->isPreviousText = true;
         }
 
         $class = $reader->getAttribute('class');
         $this->pushOnTagStack($tag, $class);
-    
+
         $bagContainer = $this->getStylesheetConstraint()->find($this->tagStack);
         $this->setNodeStylesheet($node, $bagContainer);
-    
+
         $id = $this->getIdAttribute($reader);
-    
-        if($id)
-        {
+
+        if ($id) {
             $this->nodeManager->register($id, $node);
         }
         $this->setBehavioursFromReader($reader, $node);
         $this->setNodeAttributesFromReader($reader, $node);
-    
-        if($this->isTextNode($node) && $this->isntTextNode($parentNode))
-        {
+
+        if ($this->isTextNode($node) && $this->isntTextNode($parentNode)) {
             $parentNode = $this->getCurrentParagraph();
         }
 
         $parentNode->add($node);
         $this->pushOnStack($node);
-        
+
         $this->fireOnStartParseNode($node);
 
-        if($isEmptyElement)
-        {
+        if ($isEmptyElement) {
             $this->parseEndElement($reader);
         }
     }
-    
+
     private function getIdAttribute(\XMLReader $reader)
     {
-        foreach(array(self::ATTRIBUTE_ID, self::ATTRIBUTE_NAME) as $attributeName)
-        {
+        foreach ([self::ATTRIBUTE_ID, self::ATTRIBUTE_NAME] as $attributeName) {
             $id = $reader->getAttribute($attributeName);
-            
-            if($id)
-            {
+
+            if ($id) {
                 return $id;
             }
         }
-        
+
         return null;
     }
-    
+
     private function fireOnStartParseNode(Node $node)
     {
-        foreach($this->listeners as $listener)
-        {
+        foreach ($this->listeners as $listener) {
             $listener->onStartParseNode($this->document, $this->getFirstElementFromStack(), $node, $this->context);
         }
     }
@@ -408,47 +379,40 @@ class XmlDocumentParser extends XmlParser implements DocumentParser
     private function createNode(\XMLReader $reader)
     {
         $extends = $reader->getAttribute('extends');
-        $tag = $reader->name;
+        $tag     = $reader->name;
 
-        if($extends)
-        {
+        if ($extends) {
             $parent = $this->nodeManager->get($extends);
-            
-            if($parent->getNode() == null)
-            {
+
+            if ($parent->getNode() == null) {
                 throw new Exceptions\IdNotFoundException(sprintf('Element with id="%s" dosn\'t exist.', $extends));
             }
 
             $node = $parent->getNode()->copy();
             $node->removeAll();
-        }
-        else
-        {
-            $node = $this->createNodeByTag($tag);            
+        } else {
+            $node = $this->createNodeByTag($tag);
         }
 
         $node->setUnitConverter($this->document);
 
         return $node;
     }
-    
+
     private function createNodeByTag($tag)
     {
-        try
-        {
+        try {
             return $this->getNodeFactory()->create($tag);
-        }
-        catch(\PHPPdf\Core\Exception\UnregisteredNodeException $e)
-        {
+        } catch (\PHPPdf\Core\Exception\UnregisteredNodeException $e) {
             throw new ParseException(sprintf('Unknown tag "%s".', $tag), 0, $e);
         }
     }
-    
+
     private function isTextNode(Node $node)
     {
         return $node instanceof Text;
     }
-    
+
     private function isntTextNode(Node $node)
     {
         return !$this->isTextNode($node);
@@ -456,32 +420,30 @@ class XmlDocumentParser extends XmlParser implements DocumentParser
 
     private function pushOnTagStack($tag, $class)
     {
-        $class = (string) $class;
-        $classes = $class ? explode(' ', $class) : array();
+        $class   = (string) $class;
+        $classes = $class ? explode(' ', $class) : [];
 
-        array_push($this->tagStack, array('tag' => $tag, 'classes' => $classes));
+        array_push($this->tagStack, ['tag' => $tag, 'classes' => $classes]);
     }
 
     private function setNodeAttributesFromReader(\XMLReader $reader, Node $node)
     {
         $bagContainer = new BagContainer();
-        
+
         $stylesheetParser = $this->getStylesheetParser();
-        
-        $ignoredTags = array_merge($this->behaviourFactory->getSupportedBehaviourNames(), array(self::ATTRIBUTE_ID, self::ATTRIBUTE_NAME, self::ATTRIBUTE_EXTENDS, self::ATTRIBUTE_CLASS));
-        
+
+        $ignoredTags = array_merge($this->behaviourFactory->getSupportedBehaviourNames(), [self::ATTRIBUTE_ID, self::ATTRIBUTE_NAME, self::ATTRIBUTE_EXTENDS, self::ATTRIBUTE_CLASS]);
+
         $stylesheetParser->addConstraintsFromAttributes($bagContainer, $reader, $ignoredTags);
 
         $this->setNodeStylesheet($node, $bagContainer);
     }
-    
+
     private function setBehavioursFromReader(\XMLReader $reader, Node $node)
     {
-        foreach($this->behaviourFactory->getSupportedBehaviourNames() as $name)
-        {
+        foreach ($this->behaviourFactory->getSupportedBehaviourNames() as $name) {
             $value = $reader->getAttribute($name);
-            if($value)
-            {                
+            if ($value) {
                 $node->addBehaviour($this->behaviourFactory->create($name, $value));
             }
         }
@@ -489,53 +451,43 @@ class XmlDocumentParser extends XmlParser implements DocumentParser
 
     protected function parseEndElement(\XMLReader $reader)
     {
-        if($reader->name === self::PLACEHOLDERS_TAG)
-        {
+        if ($reader->name === self::PLACEHOLDERS_TAG) {
             $this->context->exitPlaceholder();
             $node = $this->getLastElementFromStack();
             $this->fireOnEndParsePlaceholders($node);
-        }
-        elseif($this->context->isInBehaviour() && $reader->name === self::BEHAVIOURS_TAG)
-        {
+        } elseif ($this->context->isInBehaviour() && $reader->name === self::BEHAVIOURS_TAG) {
             $this->context->exitBehaviour();
-        }
-        elseif(!$this->context->isInBehaviour())
-        {
+        } elseif (!$this->context->isInBehaviour()) {
             $node = $this->getLastElementFromStack();
 
-            if($this->isntTextNode($node))
-            {
+            if ($this->isntTextNode($node)) {
                 $this->isPreviousText = false;
-                
-                if($this->currentParagraph !== null)
-                {
+
+                if ($this->currentParagraph !== null) {
                     $this->fireOnEndParseNode($this->currentParagraph);
                 }
                 $this->currentParagraph = null;
             }
-            
-            if($reader->name !== self::ROOT_TAG)
-            {
+
+            if ($reader->name !== self::ROOT_TAG) {
                 $this->fireOnEndParseNode($node);
             }
-            
+
             $this->popFromStack();
             $this->popFromTagStack();
         }
     }
-    
+
     private function fireOnEndParsePlaceholders(Node $node)
     {
-        foreach($this->listeners as $listener)
-        {
+        foreach ($this->listeners as $listener) {
             $listener->onEndParsePlaceholders($this->document, $this->getFirstElementFromStack(), $node, $this->context);
         }
     }
-    
+
     private function fireOnEndParseNode(Node $node)
     {
-        foreach($this->listeners as $listener)
-        {
+        foreach ($this->listeners as $listener) {
             $listener->onEndParseNode($this->document, $this->getFirstElementFromStack(), $node, $this->context);
         }
     }
@@ -548,63 +500,57 @@ class XmlDocumentParser extends XmlParser implements DocumentParser
     protected function parseText(\XMLReader $reader)
     {
         $text = $reader->value;
-        
-        $text = str_replace(array("\n", "\r", "\t"), '', $text);
-        if(!$this->isPreviousText)
-        {
+
+        $text = str_replace(["\n", "\r", "\t"], '', $text);
+        if (!$this->isPreviousText) {
             $text = ltrim($text);
         }
 
-        if($text !== '')
-        {
+        if ($text !== '') {
             $this->isPreviousText = true;
-            $parentNode = $this->getLastElementFromStack();
+            $parentNode           = $this->getLastElementFromStack();
 
-            if($this->isntTextNode($parentNode))
-            {
+            if ($this->isntTextNode($parentNode)) {
                 $parentNode = $this->getCurrentParagraph();
             }
 
             $textNode = $this->getNodeFactory()->create('text');
             $textNode->setText($text);
-            
+
             $parentNode->add($textNode);
-            
-            if($this->isntTextNode($parentNode))
-            {
+
+            if ($this->isntTextNode($parentNode)) {
                 $this->fireOnStartParseNode($textNode);
                 $this->fireOnEndParseNode($textNode);
             }
         }
     }
-    
+
     private function getCurrentParagraph()
     {
-        if($this->currentParagraph === null)
-        {
+        if ($this->currentParagraph === null) {
             $this->currentParagraph = $this->getNodeFactory()->create('paragraph');
-            $parentNode = $this->getLastElementFromStack();
-            
+            $parentNode             = $this->getLastElementFromStack();
+
             $parentNode->add($this->currentParagraph);
-            
+
             $this->fireOnStartParseNode($this->currentParagraph);
         }
-        
+
         return $this->currentParagraph;
     }
 
-    protected function isEndOfParsedDocument(\XMLReader $reader)
+    protected function isEndOfParsedDocument(\XMLReader $reader): bool
     {
-        return $reader->name == $this->endTag;
+        return $reader->name === $this->endTag;
     }
 
     protected function parseRootAttributes(\XMLReader $reader)
     {
-        while($reader->moveToNextAttribute())
-        {
-            $name = $reader->name;
+        while ($reader->moveToNextAttribute()) {
+            $name  = $reader->name;
             $value = $reader->value;
-            
+
             $this->document->setMetadataValue($name, $value);
         }
     }

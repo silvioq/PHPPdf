@@ -31,19 +31,19 @@ class CachingStylesheetConstraintTest extends \PHPPdf\PHPUnit\Framework\TestCase
 
     private function getConstraintMock($tag, array $classes, $bag)
     {
-        $constraintMock = $this->getMock('PHPPdf\Core\Parser\StylesheetConstraint', array('getTag', 'getClasses', 'find'));
+        $constraintMock = $this->createPartialMock('PHPPdf\Core\Parser\StylesheetConstraint', array('getTag', 'getClasses', 'find'));
 
         $constraintMock->expects($this->any())
                        ->method('getTag')
-                       ->will($this->returnValue($tag));
+                       ->willReturn($tag);
         //internally in StylesheetConstraint class $tag property is used insted of getTag() method (due to performance)
         $this->writeAttribute($constraintMock, 'tag', $tag);
         $constraintMock->expects($this->atLeastOnce())
                        ->method('getClasses')
-                       ->will($this->returnValue($classes));
+                       ->willReturn($classes);
         $constraintMock->expects($this->once())
                        ->method('find')
-                       ->will($this->returnValue($bag));
+                       ->willReturn($bag);
 
         return $constraintMock;
     }
@@ -107,7 +107,7 @@ class CachingStylesheetConstraintTest extends \PHPPdf\PHPUnit\Framework\TestCase
         $expectedAttributes = array_merge($firstAttributes, $secondAttributes);
         $expectedResultMap = array($query => new BagContainer($expectedAttributes));
         
-        $this->assertEquals($expectedResultMap, $this->readAttribute($constraint, 'resultMap'));
+        $this->assertEquals($expectedResultMap, $this->getAttribute($constraint, 'resultMap'));
         $this->assertEquals(array($firstConstraint, $secondConstraint), $constraint->getConstraints());
     }
     

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Copyright 2011 Piotr Śliwa <peter.pl7@gmail.com>
  *
@@ -15,99 +17,91 @@ use PHPPdf\Core\Node\Table\Row;
 
 /**
  * Table element
- * 
+ *
  * @author Piotr Śliwa <peter.pl7@gmail.com>
  */
 class Table extends Container implements Listener
 {
-    private $widthsOfColumns = array();
-    private $marginsOfColumns = array(
-        'margin-left' => array(),
-        'margin-right' => array(),
-    );
+    private array $widthsOfColumns  = [];
+    private array $marginsOfColumns = [
+        'margin-left'  => [],
+        'margin-right' => [],
+    ];
 
     protected static function setDefaultAttributes()
     {
         parent::setDefaultAttributes();
-        
+
         static::addAttribute('row-height');
     }
-    
+
     protected static function initializeType()
     {
         parent::initializeType();
-        static::setAttributeSetters(array('row-height' => 'setRowHeight'));
+        static::setAttributeSetters(['row-height' => 'setRowHeight']);
     }
-    
+
     public function setRowHeight($value)
     {
         $this->setAttributeDirectly('row-height', $this->convertUnit($value));
     }
 
-    public function add(Node $node)
+    public function add(Node $node): static
     {
-        if(!$node instanceof Row)
-        {
+        if (!$node instanceof Row) {
             throw new InvalidArgumentException(sprintf('Invalid child node type, expected PHPPdf\Core\Node\Table\Row, %s given.', get_class($node)));
         }
 
-        foreach($node->getChildren() as $cell)
-        {
+        foreach ($node->getChildren() as $cell) {
             $this->updateColumnDataIfNecessary($cell);
         }
 
         return parent::add($node);
     }
-    
+
     private function updateColumnDataIfNecessary(Cell $cell)
     {
         $this->setColumnWidthIfNecessary($cell);
-        foreach(array('margin-left', 'margin-right') as $attribute)
-        {
+        foreach (['margin-left', 'margin-right'] as $attribute) {
             $this->setColumnMarginIfNecessary($cell, $attribute);
         }
     }
 
     private function setColumnWidthIfNecessary(Node $node)
     {
-        $width = $node->getWidth();
+        $width        = $node->getWidth();
         $columnNumber = $node->getNumberOfColumn();
-        $colspan = $node->getAttribute('colspan');
+        $colspan      = $node->getAttribute('colspan');
 
-        $isWidthRelative = strpos($width, '%') !== false;
+        $isWidthRelative = str_contains((string) $width, '%');
 
         $currentWidth = 0;
-        for($i=0; $i<$colspan; $i++)
-        {
+        for ($i = 0; $i < $colspan; $i++) {
             $realColumnNumber = $columnNumber + $i;
-            $currentWidth += isset($this->widthsOfColumns[$realColumnNumber]) ? (float)$this->widthsOfColumns[$realColumnNumber] : 0;
+            $currentWidth     += isset($this->widthsOfColumns[$realColumnNumber]) ? (float) $this->widthsOfColumns[$realColumnNumber] : 0;
         }
-        
-        $diff = ((int)$width - $currentWidth)/$colspan;
-        
-        if($isWidthRelative)
-        {
+
+        $diff = ((int) $width - $currentWidth) / $colspan;
+
+        if ($isWidthRelative) {
             $diff .= '%';
         }
 
-        if($diff >= 0)
-        {
-            for($i=0; $i<$colspan; $i++)
-            {
+        if ($diff >= 0) {
+            for ($i = 0; $i < $colspan; $i++) {
                 $realColumnNumber = $columnNumber + $i;
-                
-                $this->widthsOfColumns[$realColumnNumber] = isset($this->widthsOfColumns[$realColumnNumber]) ? ((float)$this->widthsOfColumns[$realColumnNumber] + $diff) : $diff;
+
+                $this->widthsOfColumns[$realColumnNumber] = isset($this->widthsOfColumns[$realColumnNumber]) ? ($this->widthsOfColumns[$realColumnNumber] + $diff) : $diff;
             }
         }
     }
 
     private function setColumnMarginIfNecessary(Node $node, $marginType)
     {
-        $margin = $node->getAttribute($marginType);
+        $margin       = $node->getAttribute($marginType);
         $columnNumber = $node->getNumberOfColumn();
 
-        if(!isset($this->marginsOfColumns[$marginType][$columnNumber]) || $margin > $this->marginsOfColumns[$marginType][$columnNumber])
-        {
+        if (!isset($this->marginsOfColumns[$marginType][$columnNumber]) || $margin > $this->marginsOfColumns[$marginType][$columnNumber]) {
             $this->marginsOfColumns[$marginType][$columnNumber] = $margin;
         }
     }
@@ -116,11 +110,9 @@ class Table extends Container implements Listener
     {
         $broken = parent::doBreakAt($height);
 
-        if($broken)
-        {
+        if ($broken) {
             $height = 0;
-            foreach($this->getChildren() as $row)
-            {
+            foreach ($this->getChildren() as $row) {
                 $height += $row->getHeight() + $row->getMarginTop() + $row->getMarginBottom();
             }
 
@@ -138,12 +130,9 @@ class Table extends Container implements Listener
 
     public function attributeChanged(Node $node, $attributeName, $oldValue)
     {
-        if($attributeName == 'width')
-        {
+        if ($attributeName == 'width') {
             $this->setColumnWidthIfNecessary($node);
-        }
-        elseif(in_array($attributeName, array('margin-left', 'margin-right')))
-        {
+        } elseif (in_array($attributeName, ['margin-left', 'margin-right'])) {
             $this->setColumnMarginIfNecessary($node, $attributeName);
         }
     }
@@ -155,10 +144,9 @@ class Table extends Container implements Listener
 
     public function getWidthsOfColumns()
     {
-        if(!$this->widthsOfColumns)
-        {
-            $numberOfColumns = $this->getNumberOfColumns();
-            $this->widthsOfColumns = $numberOfColumns > 0 ? array_fill(0, $this->getNumberOfColumns(), 0) : array();
+        if (!$this->widthsOfColumns) {
+            $numberOfColumns       = $this->getNumberOfColumns();
+            $this->widthsOfColumns = $numberOfColumns > 0 ? array_fill(0, $this->getNumberOfColumns(), 0) : [];
         }
 
         return $this->widthsOfColumns;
@@ -168,31 +156,27 @@ class Table extends Container implements Listener
     {
         $this->widthsOfColumns = $widthsOfColumns;
     }
-    
+
     public function convertRelativeWidthsOfColumns()
     {
-        $tableWidth = $this->getWidth();
+        $tableWidth    = $this->getWidth();
         $unitConverter = $this->getUnitConverter();
-        
+
         $tableWidthMinusColumns = $tableWidth;
-        $columnsWithoutWidth = array();
-        array_walk($this->widthsOfColumns, function(&$width, $key, $tableWidth) use($unitConverter, &$tableWidthMinusColumns, &$columnsWithoutWidth){
+        $columnsWithoutWidth    = [];
+        array_walk($this->widthsOfColumns, function (&$width, $key, $tableWidth) use ($unitConverter, &$tableWidthMinusColumns, &$columnsWithoutWidth) {
             $width = $unitConverter ? $unitConverter->convertPercentageValue($width, $tableWidth) : $width;
-            if(!$width)
-            {
+            if (!$width) {
                 $columnsWithoutWidth[] = $key;
-            }
-            else
-            {
+            } else {
                 $tableWidthMinusColumns -= $width;
             }
-        }, $tableWidth);
-        
+        },         $tableWidth);
+
         $numberOfColumnsWithoutWidth = count($columnsWithoutWidth);
-        $width = $numberOfColumnsWithoutWidth ? $tableWidthMinusColumns / $numberOfColumnsWithoutWidth : 0;
-        
-        foreach($columnsWithoutWidth as $column)
-        {
+        $width                       = $numberOfColumnsWithoutWidth ? $tableWidthMinusColumns / $numberOfColumnsWithoutWidth : 0;
+
+        foreach ($columnsWithoutWidth as $column) {
             $this->widthsOfColumns[$column] = $width;
         }
     }
@@ -204,18 +188,15 @@ class Table extends Container implements Listener
 
     public function getMinWidthsOfColumns()
     {
-        $minWidthsOfColumns = array();
-        foreach($this->getChildren() as $row)
-        {
-            foreach($row->getChildren() as $cell)
-            {
-                $column = $cell->getNumberOfColumn();
-                $colspan = $cell->getColspan();
+        $minWidthsOfColumns = [];
+        foreach ($this->getChildren() as $row) {
+            foreach ($row->getChildren() as $cell) {
+                $column            = $cell->getNumberOfColumn();
+                $colspan           = $cell->getColspan();
                 $minWidthPerColumn = $cell->getMinWidth() / $colspan;
 
-                for($i=0; $i<$colspan; $i++)
-                {
-                    $realColumn = $column + $i;
+                for ($i = 0; $i < $colspan; $i++) {
+                    $realColumn                      = $column + $i;
                     $minWidthsOfColumns[$realColumn] = isset($minWidthsOfColumns[$realColumn]) ? max($minWidthsOfColumns[$realColumn], $minWidthPerColumn) : $minWidthPerColumn;
                 }
             }
@@ -238,7 +219,7 @@ class Table extends Container implements Listener
     {
         $this->marginsOfColumns['margin-left'] = $margins;
     }
-    
+
     private function setMarginsRightOfColumns(array $margins)
     {
         $this->marginsOfColumns['margin-right'] = $margins;
@@ -246,11 +227,10 @@ class Table extends Container implements Listener
 
     public function reduceColumnsWidthsByMargins()
     {
-        $marginsLeft = $this->getMarginsLeftOfColumns();
+        $marginsLeft  = $this->getMarginsLeftOfColumns();
         $marginsRight = $this->getMarginsRightOfColumns();
 
-        foreach($this->widthsOfColumns as $columnNumber => $widthOfColumn)
-        {
+        foreach ($this->widthsOfColumns as $columnNumber => $widthOfColumn) {
             $this->widthsOfColumns[$columnNumber] -= $marginsLeft[$columnNumber] + $marginsRight[$columnNumber];
         }
     }

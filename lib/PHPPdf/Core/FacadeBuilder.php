@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Copyright 2011 Piotr Śliwa <peter.pl7@gmail.com>
  *
@@ -31,81 +33,79 @@ use PHPPdf\Cache\CacheImpl;
  */
 class FacadeBuilder extends AbstractStringFilterContainer
 {
-    const PARSER_XML = 'xml';
-    const PARSER_MARKDOWN = 'markdown';
-    
-    private $configurationLoader = null;
-    private $cacheType = null;
-    private $cacheOptions = null;
-    private $useCacheForStylesheetConstraint = true;
-    private $useCacheForConfigurationLoader = true;
-    private $documentParserType = self::PARSER_XML;
-    private $markdownStylesheetFilepath = null;
-    private $markdownDocumentTemplateFilepath = null;
+    public const PARSER_XML      = 'xml';
+    public const PARSER_MARKDOWN = 'markdown';
 
-    private $engineFactory;
-    private $engineType = EngineFactoryImpl::TYPE_PDF;
-    private $engineOptions = array();
+    private Loader  $configurationLoader;
+    private ?string $cacheType                        = null;
+    private array   $cacheOptions                     = [];
+    private bool    $useCacheForStylesheetConstraint  = true;
+    private bool    $useCacheForConfigurationLoader   = true;
+    private string  $documentParserType               = self::PARSER_XML;
+    private ?string $markdownStylesheetFilepath       = null;
+    private ?string $markdownDocumentTemplateFilepath = null;
+
+    private EngineFactory $engineFactory;
+    private string        $engineType    = EngineFactoryImpl::TYPE_PDF;
+    private array         $engineOptions = [];
 
     private function __construct(Loader $configurationLoader = null, EngineFactory $engineFactory = null)
     {
         $this->stringFilters[] = new ResourcePathStringFilter();
 
-        if($configurationLoader === null)
-        {
+        if ($configurationLoader === null) {
             $configurationLoader = new LoaderImpl();
         }
 
-        if($engineFactory === null)
-        {
+        if ($engineFactory === null) {
             $engineFactory = new EngineFactoryImpl();
         }
-        
+
         $this->engineFactory = $engineFactory;
         $this->setConfigurationLoader($configurationLoader);
     }
-    
+
     /**
      * @return FacadeBuilder
-     */    
-    public function addStringFilter(StringFilter $filter)
+     */
+    public function addStringFilter(StringFilter $filter): static
     {
         parent::addStringFilter($filter);
-        
+
         return $this;
     }
-    
+
     /**
      * @return FacadeBuilder
-     */ 
-    public function setStringFilters(array $filters)
+     */
+    public function setStringFilters(array $filters): static
     {
         parent::setStringFilters($filters);
-        
+
         return $this;
     }
 
     /**
      * Static constructor
-     * 
+     *
      * @return FacadeBuilder
      */
-    public static function create(Loader $configuration = null, EngineFactory $engineFactory = null)
+    public static function create(Loader $configuration = null, EngineFactory $engineFactory = null): FacadeBuilder
     {
         return new self($configuration, $engineFactory);
     }
 
-    public function setConfigurationLoader(Loader $configurationLoader)
+    public function setConfigurationLoader(Loader $configurationLoader): static
     {
         $this->configurationLoader = $configurationLoader;
-        
+
         return $this;
     }
-    
-    public function setUseCacheForConfigurationLoader($flag)
+
+    public function setUseCacheForConfigurationLoader(bool $flag): static
     {
-        $this->useCacheForConfigurationLoader = (bool) $flag;
-        
+        $this->useCacheForConfigurationLoader = $flag;
+
         return $this;
     }
 
@@ -114,75 +114,68 @@ class FacadeBuilder extends AbstractStringFilterContainer
      *
      * @return Facade
      */
-    public function build()
+    public function build(): Facade
     {
-        $documentParser = $this->createDocumentParser();
+        $documentParser   = $this->createDocumentParser();
         $stylesheetParser = new StylesheetParser();
         $stylesheetParser->setComplexAttributeFactory($this->configurationLoader->createComplexAttributeFactory());
-        
+
         $engine = $this->engineFactory->createEngine($this->engineType, $this->engineOptions);
 
         $document = new Document($engine);
         $this->addStringFiltersTo($document);
-        
+
         $facade = new Facade($this->configurationLoader, $document, $documentParser, $stylesheetParser);
         $this->addStringFiltersTo($facade);
         $facade->setEngineType($this->engineType);
-        
-        if($documentParser instanceof FacadeAware)
-        {
+
+        if ($documentParser instanceof FacadeAware) {
             $documentParser->setFacade($facade);
         }
-        
+
         $facade->setUseCacheForStylesheetConstraint($this->useCacheForStylesheetConstraint);
 
-        if($this->cacheType && $this->cacheType !== 'Null')
-        {
+        if ($this->cacheType && $this->cacheType !== 'Null') {
             $cache = new CacheImpl($this->cacheType, $this->cacheOptions);
             $facade->setCache($cache);
-            
-            if($this->useCacheForConfigurationLoader)
-            {
+
+            if ($this->useCacheForConfigurationLoader) {
                 $this->configurationLoader->setCache($cache);
             }
         }
 
         return $facade;
     }
-    
-    private function addStringFiltersTo($obj)
+
+    private function addStringFiltersTo($obj): void
     {
         $obj->setStringFilters($this->stringFilters);
     }
-    
-    /**
-     * @return DocumentParser
-     */
-    private function createDocumentParser()
+
+    private function createDocumentParser(): MarkdownDocumentParser|XmlDocumentParser
     {
         $parser = new XmlDocumentParser($this->configurationLoader->createComplexAttributeFactory());
-        
-        if($this->documentParserType === self::PARSER_MARKDOWN)
-        {
+
+        if ($this->documentParserType === self::PARSER_MARKDOWN) {
             $parser = new MarkdownDocumentParser($parser);
             $parser->setStylesheetFilepath($this->markdownStylesheetFilepath);
             $parser->setDocumentTemplateFilepath($this->markdownDocumentTemplateFilepath);
         }
-        
+
         return $parser;
     }
 
     /**
      * Set cache type and options for facade
      *
-     * @param string $type Type of cache, see {@link PHPPdf\Cache\CacheImpl} engine constants
-     * @param array $options Options for cache
-     * 
+     * @param string $type    Type of cache, see {@link \PHPPdf\Cache\CacheImpl} engine constants
+     * @param array  $options Options for cache
+     *
      * @return FacadeBuilder
      */
-    public function setCache($type, array $options = array())
+    public function setCache($type, array $options = []): static
     {
-        $this->cacheType = $type;
+        $this->cacheType    = $type;
         $this->cacheOptions = $options;
 
         return $this;
@@ -195,79 +188,78 @@ class FacadeBuilder extends AbstractStringFilterContainer
      * you should set cache parameters by method setCache(), otherwise NullCache as default will
      * be used.
      *
-     * @see setCache()
      * @param boolean $useCache Cache for Stylesheets should by used?
-     * 
+     *
      * @return FacadeBuilder
+     * @see setCache()
      */
-    public function setUseCacheForStylesheetConstraint($useCache)
+    public function setUseCacheForStylesheetConstraint(bool $useCache): static
     {
-        $this->useCacheForStylesheetConstraint = (bool) $useCache;
+        $this->useCacheForStylesheetConstraint = $useCache;
 
         return $this;
     }
-    
+
     /**
      * @return FacadeBuilder
      */
-    public function setDocumentParserType($type)
+    public function setDocumentParserType($type): static
     {
-        $parserTypes = array(self::PARSER_XML, self::PARSER_MARKDOWN);
-        if(!in_array($type, $parserTypes))
-        {
+        $parserTypes = [self::PARSER_XML, self::PARSER_MARKDOWN];
+        if (!in_array($type, $parserTypes, true)) {
             throw new InvalidArgumentException(sprintf('Unknown parser type "%s", expected one of: %s.', $type, implode(', ', $parserTypes)));
         }
 
         $this->documentParserType = $type;
-        
+
         return $this;
     }
-    
+
     /**
      * Sets stylesheet filepath for markdown document parser
-     * 
+     *
      * @param string|null $filepath Filepath
-     * 
+     *
      * @return FacadeBuilder
      */
-    public function setMarkdownStylesheetFilepath($filepath)
+    public function setMarkdownStylesheetFilepath(?string $filepath): static
     {
         $this->markdownStylesheetFilepath = $filepath;
-        
+
         return $this;
     }
-    
+
     /**
      * Sets document template for markdown document parser
-     * 
+     *
      * @param string|null $filepath Filepath to document template
-     * 
+     *
      * @return FacadeBuilder
      */
-    public function setMarkdownDocumentTemplateFilepath($filepath)
+    public function setMarkdownDocumentTemplateFilepath(?string $filepath): static
     {
         $this->markdownDocumentTemplateFilepath = $filepath;
-        
+
         return $this;
     }
-    
+
     /**
      * @return FacadeBuilder
      */
-    public function setEngineType($type)
+    public function setEngineType($type): static
     {
         $this->engineType = $type;
-        
+
         return $this;
     }
-    
+
     /**
      * @return FacadeBuilder
      */
-    public function setEngineOptions(array $options)
+    public function setEngineOptions(array $options): static
     {
         $this->engineOptions = $options;
-        
+
         return $this;
     }
 }

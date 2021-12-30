@@ -8,6 +8,7 @@
 
 namespace PHPPdf\Core\ComplexAttribute;
 
+use Zend\Code\Generator\DocBlockGenerator;
 
 use PHPPdf\Core\Node\Page,
     PHPPdf\Core\Node\Node,
@@ -31,15 +32,15 @@ use PHPPdf\Core\Node\Page,
  */
 class Border extends ComplexAttribute
 {
-    const TYPE_NONE = 0;
-    const TYPE_TOP = 1;
-    const TYPE_RIGHT = 2;
-    const TYPE_BOTTOM = 4;
-    const TYPE_LEFT = 8;
-    const TYPE_ALL = 15;
+    public const TYPE_NONE = 0;
+    public const TYPE_TOP  = 1;
+    public const TYPE_RIGHT = 2;
+    public const TYPE_BOTTOM = 4;
+    public const TYPE_LEFT   = 8;
+    public const TYPE_ALL  = 15;
 
-    const STYLE_SOLID = GraphicsContext::DASHING_PATTERN_SOLID;
-    const STYLE_DOTTED = GraphicsContext::DASHING_PATTERN_DOTTED;
+    public const STYLE_SOLID  = GraphicsContext::DASHING_PATTERN_SOLID;
+    public const STYLE_DOTTED = GraphicsContext::DASHING_PATTERN_DOTTED;
 
     private $type = self::TYPE_ALL;
     private $size;

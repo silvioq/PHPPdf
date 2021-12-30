@@ -17,7 +17,7 @@ use PHPPdf\Core\Node\Node;
 
 /**
  * Row of the table
- * 
+ *
  * @author Piotr Śliwa <peter.pl7@gmail.com>
  */
 class Row extends Container implements Listener
@@ -28,15 +28,15 @@ class Row extends Container implements Listener
         'margin-top' => 0,
         'margin-bottom' => 0,
     );
-    
-    public function initialize()
+
+    public function initialize(): void
     {
         parent::initialize();
-        
+
         $this->setAttribute('breakable', false);
     }
 
-    public function add(Node $node)
+    public function add(Node $node): static
     {
         if(!$node instanceof Cell)
         {

@@ -1,18 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPPdf\Test\Core\Formatter;
 
 use PHPPdf\Core\Formatter\TextPositionFormatter,
     PHPPdf\Core\Point,
     PHPPdf\Core\Document;
+use PHPPdf\Core\Node\Text;
+use PHPPdf\Core\Node\Node;
+use PHPPdf\Core\Boundary;
+use PHPPdf\PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 
-class TextPositionFormatterTest extends \PHPPdf\PHPUnit\Framework\TestCase
+class TextPositionFormatterTest extends TestCase
 {
     const TEXT_LINE_HEIGHT = 14;
-    
-    private $formatter;
 
-    public function setUp()
+    private TextPositionFormatter $formatter;
+
+    public function setUp(): void
     {
         $this->formatter = new TextPositionFormatter();
     }
@@ -20,81 +27,90 @@ class TextPositionFormatterTest extends \PHPPdf\PHPUnit\Framework\TestCase
     /**
      * @test
      */
-    public function addPointsToBoundaryAccordingToLineSizes()
+    public function addPointsToBoundaryAccordingToLineSizes(): void
     {
-        $mock = $this->getTextMock(array(50, 100), array(0, 700));
+        $mock = $this->getTextMock([50, 100], [0, 700]);
 
         $this->formatter->format($mock, $this->createDocumentStub());
     }
 
-    private function getTextMock($lineSizes, $parentFirstPoint, $firstXCoord = null)
+    private function getTextMock($lineSizes, $parentFirstPoint, $firstXCoord = null): MockObject|Text
     {
-        $parentMock = $this->getMock('\PHPPdf\Core\Node\Node', array('getStartDrawingPoint'));
+        $parentMock = $this->getMockBuilder(Node::class)
+                           ->enableOriginalConstructor()
+                           ->onlyMethods(['getStartDrawingPoint'])
+                           ->getMock();
         $parentMock->expects($this->once())
                    ->method('getStartDrawingPoint')
-                   ->will($this->returnValue(array(0, 700)));
+                   ->willReturn([0, 700]);
 
-        $mock = $this->getMock('\PHPPdf\Core\Node\Text', array(
-            'getParent',
-            'getLineHeightRecursively',
-            'getLineSizes',
-            'getStartDrawingPoint',
-            'getBoundary',
-        ));
+        $mock = $this->getMockBuilder(Text::class)
+                     ->enableOriginalConstructor()
+                     ->onlyMethods([
+                                       'getParent',
+                                       'getLineHeightRecursively',
+                                       'getStartDrawingPoint',
+                                       'getBoundary',
+                                   ])
+                     ->addMethods(['getLineSizes'])
+                     ->getMock();
 
         $mock->expects($this->atLeastOnce())
              ->method('getParent')
-             ->will($this->returnValue($parentMock));
+             ->willReturn($parentMock);
 
-        $boundaryMock = $this->getMock('\PHPPdf\Core\Boundary', array(
+        $boundaryMock = $this->createPartialMock(Boundary::class, [
             'getFirstPoint',
             'setNext',
             'close',
-        ));
+        ]);
 
-        $firstXCoord = $firstXCoord ? $firstXCoord : $parentFirstPoint[0];
+        $firstXCoord = $firstXCoord ?: $parentFirstPoint[0];
         $boundaryMock->expects($this->atLeastOnce())
                      ->method('getFirstPoint')
-                     ->will($this->returnValue(Point::getInstance($firstXCoord, $parentFirstPoint[1])));
+                     ->willReturn(Point::getInstance($firstXCoord, $parentFirstPoint[1]));
 
         $this->addBoundaryPointsAsserts($boundaryMock, $lineSizes, $parentFirstPoint[1]);
 
         $mock->expects($this->atLeastOnce())
              ->method('getBoundary')
-             ->will($this->returnValue($boundaryMock));
+             ->willReturn($boundaryMock);
 
         $mock->expects($this->atLeastOnce())
              ->method('getBoundary')
-             ->will($this->returnValue($boundaryMock));
+             ->willReturn($boundaryMock);
 
         $mock->expects($this->once())
              ->method('getLineHeightRecursively')
-             ->will($this->returnValue(self::TEXT_LINE_HEIGHT));
+             ->willReturn(self::TEXT_LINE_HEIGHT);
 
         $mock->expects($this->once())
              ->method('getLineSizes')
-             ->will($this->returnValue($lineSizes));
+             ->willReturn($lineSizes);
 
         return $mock;
     }
 
-    private function addBoundaryPointsAsserts($boundaryMock, $lineSizes, $firstYCoord)
+    private function addBoundaryPointsAsserts($boundaryMock, $lineSizes, $firstYCoord): void
     {
-        $at = 1;
-        foreach($lineSizes as $i => $size)
-        {
-            $yCoord = $firstYCoord - self::TEXT_LINE_HEIGHT*$i;
-            $boundaryMock->expects($this->at($at++))
-                         ->method('setNext')
-                         ->with($size, $yCoord);
+        $at                = 1;
+        $expectedArguments = [];
+        foreach ($lineSizes as $i => $size) {
+            $yCoord                   = $firstYCoord - self::TEXT_LINE_HEIGHT * $i;
+            $expectedArguments[$at++] = [
+                $size, $yCoord,
+            ];
 
-            if(isset($lineSizes[$i+1]))
-            {
-                $boundaryMock->expects($this->at($at++))
-                             ->method('setNext')
-                             ->with($size, $yCoord - self::TEXT_LINE_HEIGHT);
+            if (isset($lineSizes[$i + 1])) {
+                $expectedArguments[$at++] = [
+                    $size, $yCoord - self::TEXT_LINE_HEIGHT,
+                ];
             }
         }
+
+        $boundaryMock
+            ->method('setNext')
+            ->withConsecutive(...$expectedArguments);
 
         $boundaryMock->expects($this->once())
                      ->method('close');

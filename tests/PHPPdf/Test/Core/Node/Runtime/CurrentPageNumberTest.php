@@ -9,6 +9,8 @@ use PHPPdf\Core\Node\Runtime\CurrentPageNumber,
     PHPPdf\Core\Document,
     PHPPdf\Core\Node\DynamicPage,
     PHPPdf\Core\Node\Page;
+use PHPPdf\Core\Node\Paragraph\LinePart;
+use PHPPdf\Core\Node\PageContext;
 
 class CurrentPageNumberTest extends \PHPPdf\PHPUnit\Framework\TestCase
 {
@@ -17,7 +19,7 @@ class CurrentPageNumberTest extends \PHPPdf\PHPUnit\Framework\TestCase
      */
     private $node;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->node = new CurrentPageNumber();
     }
@@ -38,7 +40,7 @@ class CurrentPageNumberTest extends \PHPPdf\PHPUnit\Framework\TestCase
 
     private function getPageMock()
     {
-        $mock = $this->getMock('PHPPdf\Core\Node\Page', array('markAsRuntimeNode'));
+        $mock = $this->createPartialMock('PHPPdf\Core\Node\Page', ['markAsRuntimeNode']);
         $mock->expects($this->once())
              ->method('markAsRuntimeNode');
 
@@ -50,7 +52,7 @@ class CurrentPageNumberTest extends \PHPPdf\PHPUnit\Framework\TestCase
      */
     public function cannotMergeComplexAttributes()
     {
-        $this->node->mergeComplexAttributes('name', array('name' => 'value'));
+        $this->node->mergeComplexAttributes('name', ['name' => 'value']);
 
         $this->assertEmpty($this->node->getComplexAttributes());
     }
@@ -61,84 +63,90 @@ class CurrentPageNumberTest extends \PHPPdf\PHPUnit\Framework\TestCase
     public function valueBeforeEvaluation()
     {
         $dummyText = $this->node->getAttribute('dummy-text');
-        $text = $this->node->getText();
+        $text      = $this->node->getText();
 
         $this->assertNotEmpty($dummyText);
         $this->assertEquals($dummyText, $text);
     }
-    
+
     /**
      * @test
      * @dataProvider offsetProvider
      */
     public function drawingAfterEvaluating($offset)
     {
-        $pageMock = $this->getMock('PHPPdf\Core\Node\Page', array('getContext'));
-        $contextMock = $this->getMock('PHPPdf\Core\Node\PageContext', array('getPageNumber'), array(5, new DynamicPage()));
+        $pageMock    = $this->createPartialMock(Page::class, ['getContext']);
+        $contextMock = $this->getMockBuilder(PageContext::class)
+                            ->enableOriginalConstructor()
+                            ->setConstructorArgs([5, new DynamicPage()])
+                            ->getMock();
+
 
         $pageMock->expects($this->atLeastOnce())
                  ->method('getContext')
-                 ->will($this->returnValue($contextMock));
+                 ->willReturn($contextMock);
 
         $pageNumber = 5;
         $contextMock->expects($this->atLeastOnce())
                     ->method('getPageNumber')
-                    ->will($this->returnValue($pageNumber));
-                    
+                    ->willReturn($pageNumber);
+
         $format = 'abc%s.';
         $this->node->setAttribute('format', $format);
         $this->node->setAttribute('offset', $offset);
 
         $this->node->setParent($pageMock);
-        $linePart = $this->getMockBuilder('PHPPdf\Core\Node\Paragraph\LinePart')
-                         ->setMethods(array('setWords', 'collectOrderedDrawingTasks'))
+        $linePart = $this->getMockBuilder(LinePart::class)
+                         ->onlyMethods(['setWords', 'collectOrderedDrawingTasks'])
                          ->disableOriginalConstructor()
                          ->getMock();
-                         
+
         $expectedText = sprintf($format, $pageNumber + $offset);
-        $linePart->expects($this->at(0))
+        $linePart->expects($this->once())
+                 ->id('1')
                  ->method('setWords')
                  ->with($expectedText);
 
-                 
-        $document = $this->createDocumentStub();
-        $drawingTaskStub = new DrawingTask(function(){});
-        $tasks = new DrawingTaskHeap();
 
-        $linePart->expects($this->at(1))
+        $document        = $this->createDocumentStub();
+        $drawingTaskStub = new DrawingTask(function () { });
+        $tasks           = new DrawingTaskHeap();
+
+        $linePart->expects($this->once())
+                 ->after('1')
                  ->method('collectOrderedDrawingTasks')
-                 ->with($this->isInstanceOf('PHPPdf\Core\Document'), $this->isInstanceOf('PHPPdf\Core\DrawingTaskHeap'))
-                 ->will($this->returnCallback(function() use($tasks, $drawingTaskStub){
+                 ->with($this->isInstanceOf(Document::class), $this->isInstanceOf(DrawingTaskHeap::class))
+                 ->willReturnCallback(function () use ($tasks, $drawingTaskStub) {
                      $tasks->insert($drawingTaskStub);
-                 }));
-                 
+                 });
+
         $this->node->addLinePart($linePart);
 
         $this->node->evaluate();
 
         $this->node->collectOrderedDrawingTasks($this->createDocumentStub(), $tasks);
-        $this->assertEquals(1, count($tasks));
+        $this->assertCount(1, $tasks);
         $this->assertEquals($expectedText, $this->node->getText());
     }
-    
-    public function offsetProvider()
+
+    public function offsetProvider(): array
     {
-        return array(
-            array(0),
-            array(5),
-        );
+        return [
+            [0],
+            [5],
+        ];
     }
 
     /**
      * @test
      */
-    public function settingPage()
+    public function settingPage(): void
     {
         $page = new Page();
 
         $this->node->setPage($page);
 
-        $this->assertTrue($page === $this->node->getPage());
+        $this->assertSame($page, $this->node->getPage());
     }
 
     /**

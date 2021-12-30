@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Copyright 2011 Piotr Śliwa <peter.pl7@gmail.com>
  *
@@ -8,7 +10,8 @@
 
 namespace PHPPdf\Core;
 
-use PHPPdf\Core\Document;
+
+use PHPPdf\Core\Exception\DrawingException;
 
 /**
  * Encapsulate drawing task (callback + arguments + priority + order)
@@ -17,20 +20,20 @@ use PHPPdf\Core\Document;
  */
 class DrawingTask
 {
-    private $callback;
-    private $arguments;
-    private $priority;
-    private $order;
+    private       $callback;
+    private array $arguments;
+    private int   $priority;
+    private int   $order = 0;
 
-    public function __construct($callback, array $arguments = array(), $priority = Document::DRAWING_PRIORITY_FOREGROUND2)
+    public function __construct(callable $callback, array $arguments = [], $priority = Document::DRAWING_PRIORITY_FOREGROUND2)
     {
-        $this->callback = $callback;
+        $this->callback  = $callback;
         $this->arguments = $arguments;
-        $this->priority = $priority;
+        $this->priority  = $priority;
     }
-    
+
     /**
-     * @throws PHPPdf\Core\Exception\DrawingException If error occurs while drawing
+     * @throws DrawingException If error occurs while drawing
      */
     public function invoke()
     {
@@ -42,27 +45,24 @@ class DrawingTask
         return $this->priority;
     }
 
-    public function getOrder()
+    public function getOrder(): int
     {
         return $this->order;
     }
 
-    public function setOrder($order)
+    public function setOrder(int $order): void
     {
-        $this->order = (int) $order;
+        $this->order = $order;
     }
-    
-    public function compareTo(DrawingTask $task)
+
+    public function compareTo(DrawingTask $task): int
     {
         $diff = ($this->priority - $task->priority);
 
-        if($diff === 0)
-        {
+        if ($diff === 0) {
             return ($task->order - $this->order);
         }
-        else
-        {
-            return $diff;
-        }
+
+        return $diff;
     }
 }

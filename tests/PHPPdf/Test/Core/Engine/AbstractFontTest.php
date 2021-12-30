@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPPdf\Test\Core\Engine;
 
 use PHPPdf\PHPUnit\Framework\TestCase;
@@ -8,48 +10,51 @@ use PHPPdf\Core\Engine\Font;
 
 class AbstractFontTest extends TestCase
 {
-    private $font;
-    
-    public function setUp()
+    private StubFont $font;
+
+    public function setUp(): void
     {
-        $this->font = new StubFont(array(
-            Font::STYLE_NORMAL => TEST_RESOURCES_DIR.'/font-judson/normal.ttf',
-            Font::STYLE_BOLD => TEST_RESOURCES_DIR.'/font-judson/bold.ttf',
-            Font::STYLE_ITALIC => TEST_RESOURCES_DIR.'/font-judson/italic.ttf',
-            Font::STYLE_BOLD_ITALIC => TEST_RESOURCES_DIR.'/font-judson/bold+italic.ttf',
-        ));
+        $this->font = new StubFont([
+                                       Font::STYLE_NORMAL      => TEST_RESOURCES_DIR.'/font-judson/normal.ttf',
+                                       Font::STYLE_BOLD        => TEST_RESOURCES_DIR.'/font-judson/bold.ttf',
+                                       Font::STYLE_ITALIC      => TEST_RESOURCES_DIR.'/font-judson/italic.ttf',
+                                       Font::STYLE_BOLD_ITALIC => TEST_RESOURCES_DIR.'/font-judson/bold+italic.ttf',
+                                   ]);
     }
 
     /**
      * @test
-     * @expectedException \InvalidArgumentException
+     *
      */
-    public function creationWithEmptyArray()
+    public function creationWithEmptyArray(): void
     {
-        new StubFont(array());
+        $this->expectException(\InvalidArgumentException::class);
+        new StubFont([]);
     }
 
     /**
      * @test
-     * @expectedException \InvalidArgumentException
+     *
      */
-    public function creationWithInvalidFontTypes()
+    public function creationWithInvalidFontTypes(): void
     {
-        new StubFont(array(
-            Font::STYLE_BOLD => TEST_RESOURCES_DIR.'/font-judson/bold.ttf',
-            Font::STYLE_NORMAL => TEST_RESOURCES_DIR.'/font-judson/normal.ttf',
-            8 => TEST_RESOURCES_DIR.'/font-judson/normal.ttf',
-        ));
+        $this->expectException(\InvalidArgumentException::class);
+        new StubFont([
+                         Font::STYLE_BOLD   => TEST_RESOURCES_DIR.'/font-judson/bold.ttf',
+                         Font::STYLE_NORMAL => TEST_RESOURCES_DIR.'/font-judson/normal.ttf',
+                         8                  => TEST_RESOURCES_DIR.'/font-judson/normal.ttf',
+                     ]);
     }
 
     /**
      * @test
-     * @expectedException \InvalidArgumentException
+     *
      */
-    public function creationWithoutNormalFont()
+    public function creationWithoutNormalFont(): void
     {
-        new StubFont(array(
-            Font::STYLE_BOLD => TEST_RESOURCES_DIR.'/font-judson/normal.ttf',
-        ));
+        $this->expectException(\InvalidArgumentException::class);
+        new StubFont([
+                         Font::STYLE_BOLD => TEST_RESOURCES_DIR.'/font-judson/normal.ttf',
+                     ]);
     }
 }

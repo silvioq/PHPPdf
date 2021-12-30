@@ -9,7 +9,7 @@ class FontRegistryParserTest extends \PHPPdf\PHPUnit\Framework\TestCase
 {
     private $parser;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->parser = new FontRegistryParser();
     }
@@ -75,10 +75,11 @@ XML;
 
     /**
      * @test
-     * @expectedException \PHPPdf\Parser\Exception\ParseException
+     *
      */
     public function throwExceptionIfFontStylesAreInvalid()
     {
+        $this->expectException(\PHPPdf\Parser\Exception\ParseException::class);
         $xml = <<<XML
 <fonts>
     <font name="font">

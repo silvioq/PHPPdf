@@ -77,9 +77,11 @@ class ConvertAttributesFormatter extends BaseFormatter
     protected function convertDegreesToRadians(Node $node)
     {
         $rotate = $node->getAttribute('rotate');
-        
-        $radians = Util::convertAngleValue($rotate);
-        $node->setAttribute('rotate', $radians);
+        if(!in_array($rotate, [Node::ROTATE_DIAGONALLY, Node::ROTATE_OPPOSITE_DIAGONALLY], true)){
+            $radians = Util::convertAngleValue($rotate);
+            $node->setAttribute('rotate', $radians);
+        }
+
     }
     
     protected function convertColor(Node $node, Document $document)

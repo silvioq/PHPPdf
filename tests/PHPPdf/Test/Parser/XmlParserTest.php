@@ -9,26 +9,28 @@ class XmlParserTest extends TestCase
 {
     private $parser;
     
-    public function setUp()
+    public function setUp(): void
     {
         $this->parser = new XmlParser();
     }
     
     /**
      * @test
-     * @expectedException \PHPPdf\Parser\Exception\ParseException
+     *
      */
     public function parse_throwExceptionWhenFileNotExists()
     {
+        $this->expectException(\PHPPdf\Parser\Exception\ParseException::class);
         $this->parser->parse(__DIR__.'/unexistedfile');
     }
     
     /**
      * @test
-     * @expectedException \PHPPdf\Parser\Exception\ParseException
+     *
      */
     public function parse_throwExceptionWhenFileIsNotValidXml()
     {
+        $this->expectException(\PHPPdf\Parser\Exception\ParseException::class);
         $this->parser->parse(__FILE__);
     }
     
@@ -37,7 +39,7 @@ class XmlParserTest extends TestCase
      */
     public function parse_successWhenFileIsValidXml()
     {
-        $this->parser->parse(__DIR__.'/../../Resources/sample.xml');
+        $this->assertEquals([], $this->parser->parse(__DIR__.'/../../Resources/sample.xml'));
     }
 }
 

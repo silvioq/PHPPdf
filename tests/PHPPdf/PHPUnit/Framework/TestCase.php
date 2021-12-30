@@ -1,13 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPPdf\PHPUnit\Framework;
 
 use PHPPdf\Core\Document;
 
 use PHPPdf\PHPUnit\Framework\Constraint\ValidateByCallback;
 use PHPPdf\PHPUnit\Framework\MockObject\Stub\ComposeStub;
+use PHPPdf\Core\Engine\Engine;
 
-abstract class TestCase extends \PHPUnit_Framework_TestCase
+abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
     public function  __construct($name = NULL, array $data = array(), $dataName = '')
     {
@@ -16,7 +19,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $this->init();
     }
 
-    protected function init()
+    protected function init(): void
     {
     }
 
@@ -29,23 +32,32 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         return $method->invokeArgs($object, $args);
     }
     
-    protected static function returnCompose(array $stubs)
+    protected static function returnCompose(array $stubs): ComposeStub
     {
         return new ComposeStub($stubs);
     }
     
-    protected static function validateByCallback(\Closure $closure, TestCase $testCase)
+    protected static function validateByCallback(\Closure $closure, TestCase $testCase): ValidateByCallback
     {
         return new ValidateByCallback($closure, $testCase);
     }
     
-    public function writeAttribute($object, $attributeName, $value)
+    public function writeAttribute($object, $attributeName, $value): void
     {
         $class = new \ReflectionClass(get_class($object));
         $class->getParentClass();
         $attribute = $this->getProperty($class, $attributeName);
         $attribute->setAccessible(true);
         $attribute->setValue($object, $value);
+    }
+
+    protected function getAttribute($object, $attributeName): mixed
+    {
+        $class     = new \ReflectionClass(get_class($object));
+        $attribute = $this->getProperty($class, $attributeName);
+        $attribute->setAccessible(true);
+
+        return $attribute->getValue($object);
     }
     
     private function getProperty(\ReflectionClass $class, $name)
@@ -63,8 +75,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         return null;
     }
     
-    protected function createDocumentStub()
+    protected function createDocumentStub(): Document
     {
-        return new Document($this->getMock('PHPPdf\Core\Engine\Engine'));
+        return new Document($this->createMock(Engine::class));
     }
 }

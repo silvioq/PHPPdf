@@ -2,28 +2,29 @@
 
 namespace PHPPdf\Test\Cache;
 
+use Laminas\Cache\Exception\InvalidArgumentException;
+use Laminas\Cache\Storage\StorageInterface;
 use PHPPdf\Cache\CacheImpl;
+use PHPPdf\Exception\RuntimeException;
+use PHPPdf\PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 
-class CacheImplTest extends \PHPPdf\PHPUnit\Framework\TestCase
+class CacheImplTest extends TestCase
 {
-    private $engineMock;
+    private MockObject $engineMock;
 
-    public function setUp()
+    public function setUp(): void
     {
-        if(!class_exists('Zend\Cache\StorageFactory', true))
-        {
-            $this->fail('Zend Framework 2 library is missing. You have to download dependencies, for example by using "vendors.php" file.');
-        }
-
         $this->engineMock = $this->getCacheEngineMock();
     }
 
     /**
      * @test
-     * @expectedException \PHPPdf\Exception\RuntimeException
+     *
      */
-    public function throwExceptionIfPassedCacheEngineIsUnavailable()
+    public function throwExceptionIfPassedCacheEngineIsUnavailable(): void
     {
+        $this->expectException(RuntimeException::class);
         new CacheImpl('Unexisted-cache-engine');
     }
 
@@ -31,57 +32,58 @@ class CacheImplTest extends \PHPPdf\PHPUnit\Framework\TestCase
      * @test
      * @dataProvider provideCacheOperations
      */
-    public function delegateOperationsToCacheEngine($method, $adapterMethod, array $args, $returnValue, $expectedArgs = null, $expectedReturnValue = null, $cacheOptions = array())
+    public function delegateOperationsToCacheEngine($method, $adapterMethod, array $args, $returnValue, $expectedArgs = null, $expectedReturnValue = null, $cacheOptions = [])
     {
-        $expectedArgs = $expectedArgs ? $expectedArgs : $args;
-        $expectedReturnValue = $expectedReturnValue === null ? $returnValue : $expectedReturnValue;
+        $expectedArgs        = $expectedArgs ?: $args;
+        $expectedReturnValue = $expectedReturnValue ?? $returnValue;
 
         $matcher = $this->engineMock->expects($this->once())
                                     ->method($adapterMethod)
-                                    ->will($this->returnValue($expectedReturnValue));
-        call_user_func_array(array($matcher, 'with'), $expectedArgs);
+                                    ->willReturn($expectedReturnValue);
+        call_user_func_array([$matcher, 'with'], $expectedArgs);
 
         $cache = new CacheImpl($this->engineMock, $cacheOptions);
-        
-        $this->assertEquals($returnValue, call_user_func_array(array($cache, $method), $args));
+
+        $this->assertEquals($returnValue, call_user_func_array([$cache, $method], $args));
     }
 
-    public function provideCacheOperations()
+    public function provideCacheOperations(): array
     {
-        return array(
-            array('load', 'getItem', array('id'), 'value', null, null, array('automatic_serialization' => false)),
-            array('load', 'getItem', array('id'), 'value', null, serialize('value'), array('automatic_serialization' => true)),
-            array('load', 'getItem', array('id'), 'value', null, serialize('value')),
-            array('test', 'hasItem', array('id'), true),
-            array('save', 'setItem', array('value', 'id'), true, array('id', 'value'), null, array('automatic_serialization' => false)),
-            array('save', 'setItem', array('value', 'id'), true, array('id', serialize('value')), null, array('automatic_serialization' => true)),
-            array('save', 'setItem', array('value', 'id'), true, array('id', serialize('value')), null),
-            array('remove', 'removeItem', array('id'), true),
-        );
+        return [
+            ['load', 'getItem', ['id'], 'value', null, null, ['automatic_serialization' => false]],
+            ['load', 'getItem', ['id'], 'value', null, serialize('value'), ['automatic_serialization' => true]],
+            ['load', 'getItem', ['id'], 'value', null, serialize('value')],
+            ['test', 'hasItem', ['id'], true],
+            ['save', 'setItem', ['value', 'id'], true, ['id', 'value'], null, ['automatic_serialization' => false]],
+            ['save', 'setItem', ['value', 'id'], true, ['id', serialize('value')], null, ['automatic_serialization' => true]],
+            ['save', 'setItem', ['value', 'id'], true, ['id', serialize('value')], null],
+            ['remove', 'removeItem', ['id'], true],
+        ];
     }
 
     private function getCacheEngineMock()
     {
-        $mock = $this->getMock('Zend\Cache\Storage\StorageInterface');
+        $mock = $this->createMock(StorageInterface::class);
 
         return $mock;
     }
 
     /**
      * @test
-     * @expectedException \PHPPdf\Exception\RuntimeException
+     *
      * @dataProvider provideCacheOperations
      */
     public function wrapCacheEngineExceptions($operation, $adapterMethod, array $args)
     {
-        $e = new \Zend\Cache\Exception\InvalidArgumentException();
-        
+        $this->expectException(RuntimeException::class);
+        $e = new InvalidArgumentException();
+
         $this->engineMock->expects($this->once())
                          ->method($adapterMethod)
                          ->will($this->throwException($e));
 
         $cache = new CacheImpl($this->engineMock);
 
-        call_user_func_array(array($cache, $operation), $args);
+        call_user_func_array([$cache, $operation], $args);
     }
 }

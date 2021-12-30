@@ -1,35 +1,39 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPPdf\Test\Core\Engine\ZF;
 
 use PHPPdf\Core\Engine\ZF\Font;
+use PHPPdf\Exception\InvalidResourceException;
+use PHPPdf\PHPUnit\Framework\TestCase;
+use ZendPdf\PdfDocument;
 
-class FontTest extends \PHPPdf\PHPUnit\Framework\TestCase
+class FontTest extends TestCase
 {
-    private $font;
-    private $fontPath;
+    private Font   $font;
+    private string $fontPath;
 
-    public function setUp()
+    public function setUp(): void
     {
-        if(!class_exists('ZendPdf\PdfDocument', true))
-        {
+        if (!class_exists(PdfDocument::class, true)) {
             $this->fail('Zend Framework 2 library is missing. You have to download dependencies, for example by using "vendors.php" file.');
         }
-        
+
         $this->fontPath = TEST_RESOURCES_DIR;
 
-        $this->font = new Font(array(
-            Font::STYLE_NORMAL => TEST_RESOURCES_DIR.'/font-judson/normal.ttf',
-            Font::STYLE_BOLD => TEST_RESOURCES_DIR.'/font-judson/bold.ttf',
-            Font::STYLE_ITALIC => TEST_RESOURCES_DIR.'/font-judson/italic.ttf',
-            Font::STYLE_BOLD_ITALIC => TEST_RESOURCES_DIR.'/font-judson/bold+italic.ttf',
-        ));
+        $this->font = new Font([
+                                   Font::STYLE_NORMAL      => TEST_RESOURCES_DIR.'/font-judson/normal.ttf',
+                                   Font::STYLE_BOLD        => TEST_RESOURCES_DIR.'/font-judson/bold.ttf',
+                                   Font::STYLE_ITALIC      => TEST_RESOURCES_DIR.'/font-judson/italic.ttf',
+                                   Font::STYLE_BOLD_ITALIC => TEST_RESOURCES_DIR.'/font-judson/bold+italic.ttf',
+                               ]);
     }
 
     /**
      * @test
      */
-    public function styleSwitching()
+    public function styleSwitching(): void
     {
         $font = $this->font->getCurrentWrappedFont();
 
@@ -37,7 +41,7 @@ class FontTest extends \PHPPdf\PHPUnit\Framework\TestCase
 
         $this->font->setStyle(Font::STYLE_BOLD);
         $font = $this->font->getCurrentWrappedFont();
-        
+
         $this->assertTrue($font->isBold());
         $this->assertFalse($font->isItalic());
 
@@ -66,11 +70,11 @@ class FontTest extends \PHPPdf\PHPUnit\Framework\TestCase
     /**
      * @test
      */
-    public function switchingDecorationStyleByString()
+    public function switchingDecorationStyleByString(): void
     {
         $this->font->setStyle('bold');
         $font = $this->font->getCurrentWrappedFont();
-        
+
         $this->assertTrue($font->isBold());
         $this->assertFalse($font->isItalic());
 
@@ -84,30 +88,31 @@ class FontTest extends \PHPPdf\PHPUnit\Framework\TestCase
         $font = $this->font->getCurrentWrappedFont();
         $this->assertFalse($font->isBold() || $font->isItalic());
     }
-    
+
     /**
      * @test
-     * @expectedException PHPPdf\Exception\InvalidResourceException
+     *
      */
-    public function throwExceptionIfInvalidFontDataPassed()
+    public function throwExceptionIfInvalidFontDataPassed(): void
     {
-        $font = new Font(array(
-            Font::STYLE_NORMAL => 'some/unexisted/path.ttf',
-        ));
-        
+        $this->expectException(InvalidResourceException::class);
+        $font = new Font([
+                             Font::STYLE_NORMAL => 'some/unexisted/path.ttf',
+                         ]);
+
         $wrappedFont = $font->getCurrentWrappedFont();
     }
 
     /**
      * @test
      */
-    public function getWidthOfText()
-    {        
+    public function getWidthOfText(): void
+    {
         $text = 'some text';
-        
+
         $width12 = $this->font->getWidthOfText($text, 12);
         $width14 = $this->font->getWidthOfText($text, 14);
-        
+
         $this->assertTrue($width12 > 0);
         $this->assertTrue($width14 > $width12);
     }

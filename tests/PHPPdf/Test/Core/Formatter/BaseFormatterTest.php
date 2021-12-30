@@ -1,45 +1,50 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPPdf\Test\Core\Formatter;
 
 use PHPPdf\Core\Formatter\BaseFormatter;
+use PHPPdf\PHPUnit\Framework\TestCase;
 use PHPPdf\Stub\Formatter\StubFormatter;
 
-abstract class BaseFormatterTest extends \PHPPdf\PHPUnit\Framework\TestCase
+abstract class BaseFormatterTest extends TestCase
 {
-    private $formatter;
+    private StubFormatter $formatter;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->formatter = new StubFormatter();
     }
 
     /**
      * @test
-     * @expectedException \LogicException
+     *
      */
-    public function throwExceptionIfTryToGetUnsettedDocument()
+    public function throwExceptionIfTryToGetUnsettedDocument(): void
     {
+        $this->expectException(\LogicException::class);
         $this->formatter->getDocument();
     }
 
     /**
      * @test
      */
-    public function dontThrowExceptionIfDocumentIsSet()
+    public function dontThrowExceptionIfDocumentIsSet(): void
     {
         $document = $this->createDocumentStub();
         $this->formatter->setDocument($document);
 
-        $this->assertTrue($document === $this->formatter->getDocument());
+        $this->assertSame($document, $this->formatter->getDocument());
     }
 
     /**
      * @test
-     * @expectedException \LogicException
+     *
      */
-    public function unserializedFormatterHaveDocumentDetached()
+    public function unserializedFormatterHaveDocumentDetached(): void
     {
+        $this->expectException(\LogicException::class);
         $document = $this->createDocumentStub();
         $this->formatter->setDocument($document);
 

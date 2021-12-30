@@ -8,7 +8,10 @@
 
 namespace PHPPdf\Cache;
 
-use Laminas\Cache\StorageFactory;
+use Laminas\Cache\Exception\ExceptionInterface;
+use Laminas\Cache\Storage\Adapter\AbstractAdapter;
+use Laminas\Cache\Storage\Adapter\Filesystem;
+use Laminas\Cache\Storage\Adapter\Memory;
 use Laminas\Cache\Storage\StorageInterface;
 use PHPPdf\Exception\RuntimeException;
 
@@ -19,54 +22,52 @@ use PHPPdf\Exception\RuntimeException;
  */
 class CacheImpl implements Cache
 {
-    const ENGINE_FILE = 'File';
-    const ENGINE_APC = 'Apc';
-    const ENGINE_MEMCACHED = 'Memcached';
+    const ENGINE_FILE       = 'File';
+    const ENGINE_MEMORY     = 'Memory';
     const ENGINE_FILESYSTEM = 'Filesystem';
-    
+
     /**
-     * @var Laminas\Cache\Storage\Adapter
+     * @var AbstractAdapter
      */
     private $adapter;
-    
+
     private $automaticSerialization = true;
 
-    public function __construct($engine = self::ENGINE_FILE, array $options = array())
+    public function __construct($engine = self::ENGINE_FILE, array $options = [])
     {
-        if(!$engine instanceof StorageInterface)
-        {
+        if (!$engine instanceof StorageInterface) {
             $engine = $this->createAdapter($engine);
         }
-        
+
         $this->adapter = $engine;
-        
-        if(isset($options['automatic_serialization']))
-        {
+
+        if (isset($options['automatic_serialization'])) {
             $this->automaticSerialization = $options['automatic_serialization'];
             unset($options['automatic_serialization']);
         }
-        
+
         $this->adapter->setOptions($options);
     }
-    
+
     private function createAdapter($name)
     {
         $name = ucfirst(strtolower($name));
 
-        if($name === self::ENGINE_FILE)
-        {
+        if ($name === self::ENGINE_FILE) {
             $name = self::ENGINE_FILESYSTEM;
         }
-        
+
         $const = 'PHPPdf\Cache\CacheImpl::ENGINE_'.strtoupper($name);
-        if(!defined($const))
-        {
+        if (!defined($const)) {
             throw $this->cacheEngineDosntExistException($name);
         }
-        
+
         $name = constant($const);
-        
-        return StorageFactory::adapterFactory($name);
+
+        return match ($name) {
+            self::ENGINE_FILESYSTEM => new Filesystem(),
+            self::ENGINE_MEMORY => new Memory()
+        };
     }
 
     private function cacheEngineDosntExistException($engine, \Exception $e = null)
@@ -76,25 +77,20 @@ class CacheImpl implements Cache
 
     public function load($id)
     {
-        try
-        {
+        try {
             $data = $this->adapter->getItem($id);
-            
-            if($this->automaticSerialization)
-            {
+
+            if ($this->automaticSerialization) {
                 $data = @unserialize($data);
-                
-                if($data === false)
-                {
+
+                if ($data === false) {
                     $this->remove($id);
                     throw new RuntimeException(sprintf('Invalid data under "%s" key. Cache has been remove.', $id));
                 }
             }
-            
+
             return $data;
-        }
-        catch(\Laminas\Cache\Exception\ExceptionInterface $e)
-        {
+        } catch (ExceptionInterface $e) {
             $this->wrapLowLevelException($e, __METHOD__);
         }
     }
@@ -106,47 +102,37 @@ class CacheImpl implements Cache
 
     public function test($id)
     {
-        try
-        {
+        try {
             return $this->adapter->hasItem($id);
-        }
-        catch(\Laminas\Cache\Exception\ExceptionInterface $e)
-        {
+        } catch (ExceptionInterface $e) {
             $this->wrapLowLevelException($e, __METHOD__);
         }
     }
 
     /**
      * @TODO change params order
-     * 
-     * @param mixed $data Data to save in cache. Attention: false value is not supported!
-     * @param string $id Identifier of cache
+     *
+     * @param mixed  $data Data to save in cache. Attention: false value is not supported!
+     * @param string $id   Identifier of cache
      */
     public function save($data, $id)
     {
-        try
-        {
-            if($this->automaticSerialization)
-            {
+        try {
+            if ($this->automaticSerialization) {
                 $data = serialize($data);
             }
-            
+
             return $this->adapter->setItem($id, $data);
-        }
-        catch(\Laminas\Cache\Exception\ExceptionInterface $e)
-        {
+        } catch (ExceptionInterface $e) {
             $this->wrapLowLevelException($e, __METHOD__);
         }
     }
 
     public function remove($id)
     {
-        try
-        {
+        try {
             return $this->adapter->removeItem($id);
-        }
-        catch(\Laminas\Cache\Exception\ExceptionInterface $e)
-        {
+        } catch (ExceptionInterface $e) {
             $this->wrapLowLevelException($e, __METHOD__);
         }
     }

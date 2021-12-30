@@ -99,7 +99,7 @@ class StylesheetConstraint extends BagContainer implements \Countable
         return $this->constraints;
     }
 
-    public function count()
+    public function count(): int
     {
         return count($this->getConstraints());
     }

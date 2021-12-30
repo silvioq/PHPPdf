@@ -10,22 +10,22 @@ use PHPPdf\Core\FacadeConfiguration;
 class FacadeTest extends \PHPPdf\PHPUnit\Framework\TestCase
 {
     private $facade;
-    
+
     private $loaderMock;
     private $documentParser;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->loaderMock = $this->getMockBuilder('PHPPdf\Core\Configuration\Loader')
                                  ->getMock();
-        $this->documentParser = $this->getMock('PHPPdf\Core\Parser\DocumentParser');
+        $this->documentParser = $this->createMock('PHPPdf\Core\Parser\DocumentParser');
         $this->stylesheetParser = $this->getMockBuilder('PHPPdf\Core\Parser\StylesheetParser')
-                                       ->setMethods(array('parse'))
+                                       ->onlyMethods(array('parse'))
                                        ->disableOriginalConstructor()
                                        ->getMock();
-                                       
+
         $document = $this->createDocumentStub();
-                                       
+
         $this->facade = new Facade($this->loaderMock, $document, $this->documentParser, $this->stylesheetParser);
     }
 
@@ -34,8 +34,8 @@ class FacadeTest extends \PHPPdf\PHPUnit\Framework\TestCase
      */
     public function parsersMayByInjectedFromOutside()
     {
-        $documentParser = $this->getMock('PHPPdf\Core\Parser\DocumentParser');
-        $stylesheetParser = $this->getMock('PHPPdf\Core\Parser\StylesheetParser');
+        $documentParser = $this->createMock('PHPPdf\Core\Parser\DocumentParser');
+        $stylesheetParser = $this->createMock('PHPPdf\Core\Parser\StylesheetParser');
 
         $this->facade->setDocumentParser($documentParser);
         $this->facade->setStylesheetParser($stylesheetParser);
@@ -56,38 +56,38 @@ class FacadeTest extends \PHPPdf\PHPUnit\Framework\TestCase
         $content = 'pdf content';
 
         $documentMock = $this->getMockBuilder('PHPPdf\Core\Document')
-                             ->setMethods(array('draw', 'initialize', 'render', 'addFontDefinitions', 'setComplexAttributeFactory', 'setColorPalette'))
+                             ->onlyMethods(array('draw', 'initialize', 'render', 'addFontDefinitions', 'setComplexAttributeFactory', 'setColorPalette'))
                              ->disableOriginalConstructor()
                              ->getMock();
 
-        $stylesheetParserMock = $this->getMock('PHPPdf\Core\Parser\StylesheetParser', array('parse'));
-        $constraintMock = $this->getMock('PHPPdf\Core\Parser\StylesheetConstraint');
-        $pageCollectionMock = $this->getMock('PHPPdf\Core\Node\PageCollection', array());
-        
-        $colorPaletteParserMock = $this->getMock('PHPPdf\Parser\Parser');
+        $stylesheetParserMock = $this->createPartialMock('PHPPdf\Core\Parser\StylesheetParser', array('parse'));
+        $constraintMock = $this->createMock('PHPPdf\Core\Parser\StylesheetConstraint');
+        $pageCollectionMock = $this->createPartialMock('PHPPdf\Core\Node\PageCollection', array());
+
+        $colorPaletteParserMock = $this->createMock('PHPPdf\Parser\Parser');
         $colorPaletteParserMock->expects($this->once())
                                ->method('parse')
-                               ->will($this->returnValue($colorPalette));
+                               ->willReturn($colorPalette);
         $this->facade->setColorPaletteParser($colorPaletteParserMock);
-        
-        $nodeFactoryMock = $this->getMock('PHPPdf\Core\Node\NodeFactory');
-        $complexAttributeFactoryMock = $this->getMock('PHPPdf\Core\ComplexAttribute\ComplexAttributeFactory');
+
+        $nodeFactoryMock = $this->createMock('PHPPdf\Core\Node\NodeFactory');
+        $complexAttributeFactoryMock = $this->createMock('PHPPdf\Core\ComplexAttribute\ComplexAttributeFactory');
         $fontDefinitionsStub = array('some-data');
-        
+
         $this->loaderMock->expects($this->atLeastOnce())
                          ->method('createNodeFactory')
-                         ->will($this->returnValue($nodeFactoryMock));
+                         ->willReturn($nodeFactoryMock);
         $this->loaderMock->expects($this->atLeastOnce())
                          ->method('createComplexAttributeFactory')
-                         ->will($this->returnValue($complexAttributeFactoryMock));
+                         ->willReturn($complexAttributeFactoryMock);
         $this->loaderMock->expects($this->atLeastOnce())
                          ->method('createFontRegistry')
-                         ->will($this->returnValue($fontDefinitionsStub));
-                         
+                         ->willReturn($fontDefinitionsStub);
+
         $documentMock->expects($this->once())
                      ->method('setColorPalette')
                      ->with(new ColorPalette($colorPalette));
-                         
+
         $documentMock->expects($this->once())
                      ->method('addFontDefinitions')
                      ->with($fontDefinitionsStub);
@@ -104,20 +104,20 @@ class FacadeTest extends \PHPPdf\PHPUnit\Framework\TestCase
         $this->documentParser->expects($this->once())
                              ->method('parse')
                              ->with($this->equalTo($xml), $this->equalTo($constraintMock))
-                             ->will($this->returnValue($pageCollectionMock));
+                             ->willReturn($pageCollectionMock);
 
         $this->stylesheetParser->expects($this->once())
                                ->method('parse')
                                ->with($this->equalTo($stylesheet))
-                               ->will($this->returnValue($constraintMock));
+                               ->willReturn($constraintMock);
 
-        $documentMock->expects($this->at(3))
+        $documentMock->expects($this->once())
                 ->method('draw')
                 ->with($this->equalTo($pageCollectionMock));
-        $documentMock->expects($this->at(4))
+        $documentMock->expects($this->once())
                 ->method('render')
-                ->will($this->returnValue($content));
-        $documentMock->expects($this->at(5))
+                ->willReturn($content);
+        $documentMock->expects($this->once())
                 ->method('initialize');
 
         $this->invokeMethod($this->facade, 'setDocument', array($documentMock));
@@ -126,7 +126,7 @@ class FacadeTest extends \PHPPdf\PHPUnit\Framework\TestCase
 
         $this->assertEquals($content, $result);
     }
-    
+
     /**
      * @test
      * @dataProvider stylesheetCachingParametersProvider
@@ -135,10 +135,10 @@ class FacadeTest extends \PHPPdf\PHPUnit\Framework\TestCase
     {
         $facade = new Facade(new LoaderImpl(), $this->createDocumentStub(), $this->documentParser, $this->stylesheetParser);
 
-        $cache = $this->getMock('PHPPdf\Cache\NullCache', array('test', 'save', 'load'));
+        $cache = $this->createPartialMock('PHPPdf\Cache\NullCache', array('test', 'save', 'load'));
         $cache->expects($this->exactly($numberOfCacheMethodInvoking))
               ->method('test')
-              ->will($this->returnValue(false));
+              ->willReturn(false);
         $cache->expects($this->exactly(0))
               ->method('load');
         $cache->expects($this->exactly($numberOfCacheMethodInvoking))
@@ -146,11 +146,11 @@ class FacadeTest extends \PHPPdf\PHPUnit\Framework\TestCase
 
         $this->documentParser->expects($this->once())
                              ->method('parse')
-                             ->will($this->returnValue(new \PHPPdf\Core\Node\PageCollection()));
+                             ->willReturn(new \PHPPdf\Core\Node\PageCollection());
 
         $this->stylesheetParser->expects($this->once())
                                  ->method('parse')
-                                 ->will($this->returnValue(new \PHPPdf\Core\Parser\CachingStylesheetConstraint()));
+                                 ->willReturn(new \PHPPdf\Core\Parser\CachingStylesheetConstraint());
 
 
         $facade->setCache($cache);

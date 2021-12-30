@@ -23,7 +23,7 @@ class ParagraphTest extends \PHPPdf\PHPUnit\Framework\TestCase
 {
     private $paragraph;
     
-    public function setUp()
+    public function setUp(): void
     {
         $this->paragraph = new Paragraph();
     }
@@ -95,7 +95,7 @@ class ParagraphTest extends \PHPPdf\PHPUnit\Framework\TestCase
         for($i=0; $i<3; $i++)
         {
             $line = $this->getMockBuilder('PHPPdf\Core\Node\Paragraph\Line')
-                         ->setMethods(array('format'))
+                         ->onlyMethods(array('format'))
                          ->disableOriginalConstructor()
                          ->getMock();
                              
@@ -123,7 +123,7 @@ class ParagraphTest extends \PHPPdf\PHPUnit\Framework\TestCase
         for($i=0; $i<3; $i++)
         {
             $text = $this->getMockBuilder('PHPPdf\Core\Node\Text')
-                         ->setMethods(array('collectOrderedDrawingTasks'))
+                         ->onlyMethods(array('collectOrderedDrawingTasks'))
                          ->disableOriginalConstructor()
                          ->getMock();
             
@@ -288,12 +288,12 @@ class ParagraphTest extends \PHPPdf\PHPUnit\Framework\TestCase
         foreach($linesWidths as $width)
         {
             $line = $this->getMockBuilder('PHPPdf\Core\Node\Paragraph\Line')
-                         ->setMethods(array('getTotalWidth'))
+                         ->onlyMethods(array('getTotalWidth'))
                          ->disableOriginalConstructor()
                          ->getMock();
             $line->expects($this->atLeastOnce())
                  ->method('getTotalWidth')
-                 ->will($this->returnValue($width));
+                 ->willReturn($width);
                  
             $this->paragraph->addLine($line);
         }

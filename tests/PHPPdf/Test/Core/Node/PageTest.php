@@ -14,13 +14,14 @@ use PHPPdf\Core\Node\PageContext;
 use PHPPdf\Core\Node\DynamicPage;
 use PHPPdf\Core\Node\Container;
 use PHPPdf\Core\Boundary;
+use PHPPdf\Core\UnitConverter;
 
 class PageTest extends \PHPPdf\PHPUnit\Framework\TestCase
 {
     private $page;
     private $document;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->page = new Page();
         $this->document = new Document(new Engine());
@@ -38,15 +39,22 @@ class PageTest extends \PHPPdf\PHPUnit\Framework\TestCase
         {
             $task->invoke();
         }
+
+        $this->assertTrue(true);
     }
 
     /**
      * @test
-     * @expectedException PHPPdf\Core\Exception\DrawingException
+     *
      */
     public function failureDrawing()
     {
-        $child = $this->getMock('\PHPPdf\Core\Node\Node', array('doDraw'));
+        $this->expectException(\PHPPdf\Core\Exception\DrawingException::class);
+        $child =  $this->getMockBuilder('\PHPPdf\Core\Node\Node')
+                       ->enableOriginalConstructor()
+                       ->onlyMethods(array('doDraw'))
+                       ->getMock();
+
         $child->expects($this->any())
               ->method('doDraw')
               ->will($this->throwException(new \Exception('exception')));
@@ -76,10 +84,11 @@ class PageTest extends \PHPPdf\PHPUnit\Framework\TestCase
 
     /**
      * @test
-     * @expectedException \InvalidArgumentException
+     *
      */
     public function invalidPageSize()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $this->page->setPageSize('100');
     }
 
@@ -88,7 +97,7 @@ class PageTest extends \PHPPdf\PHPUnit\Framework\TestCase
      */
     public function getStartingPoint()
     {
-        list($x, $y) = $this->page->getStartDrawingPoint();
+        [$x, $y] = $this->page->getStartDrawingPoint();
         $this->assertEquals($this->page->getHeight(), $y);
         $this->assertEquals(0, $x);
     }
@@ -121,25 +130,30 @@ class PageTest extends \PHPPdf\PHPUnit\Framework\TestCase
         $originalVerticalMargin = 33;
         $originalHorizontalMargin = 22;
         
-        $unitConverter = $this->getMock('PHPPdf\Core\UnitConverter');
+        $unitConverter = $this->createMock(UnitConverter::class);
         $this->page->setUnitConverter($unitConverter);
-        
-        foreach(array(0, 2) as $i)
-        {
-            $unitConverter->expects($this->at($i))
-                          ->method('convertUnit')
-                          ->with($originalVerticalMargin)
-                          ->will($this->returnValue($verticalMargin));
-        }
-        
-        foreach(array(1, 3) as $i)
-        {
-            $unitConverter->expects($this->at($i))
-                          ->method('convertUnit')
-                          ->with($originalHorizontalMargin)
-                          ->will($this->returnValue($horizontalMargin));
-        }
-        
+
+
+        $expectedArgs = [
+            [$originalVerticalMargin],
+            [$originalHorizontalMargin],
+            [$originalVerticalMargin],
+            [$originalHorizontalMargin]
+        ];
+
+        $expectedReturns = [
+            $this->returnValue($verticalMargin),
+            $this->returnValue($horizontalMargin),
+            $this->returnValue($verticalMargin),
+            $this->returnValue($horizontalMargin)
+        ];
+
+        $unitConverter->expects($this->exactly(4))
+                 ->method('convertUnit')
+                 ->withConsecutive(...$expectedArgs)
+                 ->willReturnOnConsecutiveCalls(...$expectedReturns);
+
+
         $this->page->setMargin($originalVerticalMargin, $originalHorizontalMargin);
 
         $this->assertEquals($height - 2*$verticalMargin, $this->page->getHeight());
@@ -174,21 +188,24 @@ class PageTest extends \PHPPdf\PHPUnit\Framework\TestCase
 
     private function createFooterOrHeaderMock(Boundary $boundary, $height = null)
     {
-        $mock = $this->getMock('PHPPdf\Core\Node\Container', array('getBoundary', 'getHeight', 'setStaticSize'));
+        $mock = $this->getMockBuilder('PHPPdf\Core\Node\Container')
+                       ->enableOriginalConstructor()
+                       ->onlyMethods( array('getBoundary', 'getHeight', 'setStaticSize'))
+                       ->getMock();
         $mock->expects($this->atLeastOnce())
              ->method('getBoundary')
-             ->will($this->returnValue($boundary));
+             ->willReturn($boundary);
 
         $mock->expects($this->once())
              ->method('setStaticSize')
              ->with($this->equalTo(true))
-             ->will($this->returnValue($mock));
+             ->willReturn($mock);
 
         if($height !== null)
         {
             $mock->expects($this->atLeastOnce())
                  ->method('getHeight')
-                 ->will($this->returnValue($height));
+                 ->willReturn($height);
         }
 
         return $mock;
@@ -196,10 +213,11 @@ class PageTest extends \PHPPdf\PHPUnit\Framework\TestCase
 
     /**
      * @test
-     * @expectedException \InvalidArgumentException
+     *
      */
     public function exceptionIfFootersHeightIsNull()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $footer = new Container();
 
         $this->page->setFooter($footer);
@@ -229,10 +247,11 @@ class PageTest extends \PHPPdf\PHPUnit\Framework\TestCase
 
     /**
      * @test
-     * @expectedException \InvalidArgumentException
+     *
      */
     public function exceptionIfHeadersHeightIsNull()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $header = new Container();
 
         $this->page->setHeader($header);
@@ -240,10 +259,11 @@ class PageTest extends \PHPPdf\PHPUnit\Framework\TestCase
 
     /**
      * @test
-     * @expectedException \LogicException
+     *
      */
     public function exceptionIfPageContextNotFound()
     {
+        $this->expectException(\LogicException::class);
         $this->page->getContext();
     }
 
@@ -284,16 +304,19 @@ class PageTest extends \PHPPdf\PHPUnit\Framework\TestCase
     public function drawingTasksFromPlaceholderAreInResultOfGetDrawingTasksIfPrepareTemplateMethodHasNotBeenInvoked($invoke)
     {
         $tasks = array(new DrawingTask(function(){}), new DrawingTask(function(){}));
-        
-        $header = $this->getMock('PHPPdf\Core\Node\Container', array('format', 'getHeight', 'collectOrderedDrawingTasks'));
+
+        $header = $this->getMockBuilder('PHPPdf\Core\Node\Container')
+                       ->enableOriginalConstructor()
+                       ->onlyMethods( array('format', 'getHeight', 'collectOrderedDrawingTasks'))
+                       ->getMock();
         $header->expects($this->once())
                ->method('format');
         $header->expects($this->atLeastOnce())
                ->method('getHeight')
-               ->will($this->returnValue(10));
+               ->willReturn(10);
         $header->expects($this->once())
                ->method('collectOrderedDrawingTasks')
-               ->will($this->returnValue($tasks));
+               ->willReturn($tasks);
         
         $this->page->setHeader($header);
         
@@ -337,12 +360,15 @@ class PageTest extends \PHPPdf\PHPUnit\Framework\TestCase
 
     private function getPlaceholderMockWithNeverFormatMethodInvocation()
     {
-        $header = $this->getMock('PHPPdf\Core\Node\Container', array('format', 'getHeight'));
+        $header = $this->getMockBuilder('PHPPdf\Core\Node\Container')
+        ->enableOriginalConstructor()
+        ->onlyMethods( array('format', 'getHeight'))
+        ->getMock();
         $header->expects($this->never())
                ->method('format');
         $header->expects($this->any())
                ->method('getHeight')
-               ->will($this->returnValue(10));
+               ->willReturn(10);
 
         return $header;
     }
@@ -352,12 +378,12 @@ class PageTest extends \PHPPdf\PHPUnit\Framework\TestCase
      */
     public function pageCopingDosntCreateGraphicContextIfNotExists()
     {
-        $this->assertNull($this->readAttribute($this->page, 'graphicsContext'));
+        $this->assertNull($this->getAttribute($this->page, 'graphicsContext'));
         
         $copyPage = $this->page->copy();
         
-        $this->assertNull($this->readAttribute($this->page, 'graphicsContext'));
-        $this->assertNull($this->readAttribute($copyPage, 'graphicsContext'));
+        $this->assertNull($this->getAttribute($this->page, 'graphicsContext'));
+        $this->assertNull($this->getAttribute($copyPage, 'graphicsContext'));
     }
     
     /**
@@ -397,8 +423,7 @@ class PageTest extends \PHPPdf\PHPUnit\Framework\TestCase
         $this->page->setAttribute('page-size', $pageSize);
 
         [$expectedWidth, $expectedHeight] = explode(':', $expectedSize);
-        $expectedWidth = (int) $expectedWidth;
-        $expectedHeight = (int) $expectedHeight;
+
         $this->assertEquals($expectedWidth, $this->page->getWidth());
         $this->assertEquals($expectedHeight, $this->page->getHeight());
     }
@@ -591,19 +616,19 @@ class PageTest extends \PHPPdf\PHPUnit\Framework\TestCase
         if($numberOfPage !== null)
         {
             $pageContext = $this->getMockBuilder('PHPPdf\Core\Node\PageContext')
-                                ->setMethods(array('getPageNumber'))
+                                ->onlyMethods(array('getPageNumber'))
                                 ->disableOriginalConstructor()
                                 ->getMock();
                                 
             $pageContext->expects($this->once())
                         ->method('getPageNumber')
-                        ->will($this->returnValue($numberOfPage));
+                        ->willReturn($numberOfPage);
             $this->page->setContext($pageContext);
         }
         
         $document = $this->getMockBuilder('PHPPdf\Core\Document')
                          ->disableOriginalConstructor()
-                         ->setMethods(array('loadEngine'))
+                         ->onlyMethods(array('loadEngine'))
                          ->getMock();
                          
         $engine = $this->getMockBuilder('PHPPdf\Core\Engine\Engine')
@@ -623,11 +648,11 @@ class PageTest extends \PHPPdf\PHPUnit\Framework\TestCase
         $document->expects($this->once())
                  ->method('loadEngine')
                  ->with($fileOfSourcePage, 'utf-8')
-                 ->will($this->returnValue($engine));
+                 ->willReturn($engine);
                  
         $engine->expects($this->once())
                ->method('getAttachedGraphicsContexts')
-               ->will($this->returnValue($sourceGcs));
+               ->willReturn($sourceGcs);
                
         $sourceGcIndex = $numberOfPage === null ? 0 : ($numberOfPage - 1) % $numberOfSourceGcs;
 
@@ -635,14 +660,14 @@ class PageTest extends \PHPPdf\PHPUnit\Framework\TestCase
 
         $sourceGc->expects($this->once())
                  ->method('copy')
-                 ->will($this->returnValue($copiedGc));
+                 ->willReturn($copiedGc);
         
         $copiedGc->expects($this->atLeastOnce())
                  ->method('getWidth')
-                 ->will($this->returnValue($width));
+                 ->willReturn($width);
         $copiedGc->expects($this->atLeastOnce())
                  ->method('getHeight')
-                 ->will($this->returnValue($height));
+                 ->willReturn($height);
            
         $this->page->format($document);
         
@@ -664,7 +689,7 @@ class PageTest extends \PHPPdf\PHPUnit\Framework\TestCase
      */
     public function setsPageSizeOnWidthOrHeightAttributeSet()
     {
-        list($width, $height) = explode(':', $this->page->getAttribute('page-size'));
+        [$width, $height] = explode(':', $this->page->getAttribute('page-size'));
         
         $newWidth = 123;
         $this->page->setWidth($newWidth);

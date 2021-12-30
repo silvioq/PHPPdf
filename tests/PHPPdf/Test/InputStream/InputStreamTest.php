@@ -51,7 +51,7 @@ abstract class InputStreamTest extends TestCase
         $this->assertEquals(strlen(self::EXPECTED_STREAM_CONTENT), $this->stream->size());
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->stream->close();
     }

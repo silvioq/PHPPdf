@@ -1,39 +1,43 @@
 <?php
 
+declare(strict_types=1);
 
 namespace PHPPdf\Test\Core\Formatter;
 
 
+use PHPPdf\Core\Document;
 use PHPPdf\Core\Formatter\ImageRatioFormatter;
+use PHPPdf\PHPUnit\Framework\TestCase;
 use PHPPdf\Test\Helper\NodeAssert;
 use PHPPdf\Test\Helper\NodeBuilder;
+use PHPPdf\Test\Helper\Image;
 
-class ImageRatioFormatterTest extends \PHPPdf\PHPUnit\Framework\TestCase
+class ImageRatioFormatterTest extends TestCase
 {
-    private $formatter;
-    private $document;
+    private ImageRatioFormatter $formatter;
+    private Document            $document;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->formatter = new ImageRatioFormatter();
-        $this->document = $this->createDocumentStub();
+        $this->document  = $this->createDocumentStub();
     }
 
     /**
      * @test
      * @dataProvider dataProvider
      */
-    public function givenRatioDoesntMatchOriginalRatio_fixDimensionToFitOriginalRatio($originalWidth, $originalHeight, $currentWidth, $currentHeight, $expectedWidth, $expectedHeight)
+    public function givenRatioDoesntMatchOriginalRatio_fixDimensionToFitOriginalRatio($originalWidth, $originalHeight, $currentWidth, $currentHeight, $expectedWidth, $expectedHeight): void
     {
         //given
 
         $image = NodeBuilder::create()
-            ->nodeClass('PHPPdf\Test\Helper\Image')
-            ->attr('original-width', $originalWidth)
-            ->attr('original-height', $originalHeight)
-            ->attr('width', $currentWidth)
-            ->attr('height', $currentHeight)
-            ->getNode();
+                            ->nodeClass(Image::class)
+                            ->attr('original-width', $originalWidth)
+                            ->attr('original-height', $originalHeight)
+                            ->attr('width', $currentWidth)
+                            ->attr('height', $currentHeight)
+                            ->getNode();
 
         //when
 
@@ -42,16 +46,15 @@ class ImageRatioFormatterTest extends \PHPPdf\PHPUnit\Framework\TestCase
         //then
 
         NodeAssert::create($image)
-            ->width($expectedWidth)
-            ->height($expectedHeight);
+                  ->width($expectedWidth)
+                  ->height($expectedHeight);
     }
 
-    public function dataProvider()
+    public function dataProvider(): array
     {
-        return array(
-            array(50, 100, 50, 50, 25, 50),
-            array(100, 50, 50, 50, 50, 25),
-        );
+        return [
+            [50, 100, 50, 50, 25, 50],
+            [100, 50, 50, 50, 50, 25],
+        ];
     }
 }
- 

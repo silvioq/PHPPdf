@@ -6,7 +6,7 @@ use PHPPdf\InputStream\FopenInputStream;
 
 class FopenInputStreamTest extends InputStreamTest
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->stream = new FopenInputStream(TEST_RESOURCES_DIR.'/test.txt', 'rb');
     }

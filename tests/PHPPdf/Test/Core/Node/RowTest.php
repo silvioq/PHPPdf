@@ -4,26 +4,29 @@ namespace PHPPdf\Test\Core\Node;
 
 use PHPPdf\Core\Node\Table\Row;
 use PHPPdf\Core\Node as Nodes;
+use PHPPdf\Core\Node\Table;
+use PHPPdf\Core\Node\Table\Cell;
 
 class RowTest extends \PHPPdf\PHPUnit\Framework\TestCase
 {
     private $row = null;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->row = new Row();
     }
 
     /**
      * @test
-     * @expectedException \InvalidArgumentException
+     *
      */
     public function addingInvalidChild()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $node = new Nodes\Container();
         $this->row->add($node);
     }
-    
+
     /**
      * @test
      */
@@ -34,7 +37,7 @@ class RowTest extends \PHPPdf\PHPUnit\Framework\TestCase
 
         $this->assertTrue(count($this->row->getChildren()) > 0);
     }
-    
+
     /**
      * @test
      */
@@ -56,33 +59,33 @@ class RowTest extends \PHPPdf\PHPUnit\Framework\TestCase
      */
     public function getHeightFromTable()
     {
-        $tableMock = $this->getMock('PHPPdf\Core\Node\Table', array(
-            'getRowHeight'
-        ));
+        $tableMock = $this->getMockBuilder(Table::class)
+                          ->addMethods(['getRowHeight'])
+                          ->getMock();
 
         $rowHeight = 45;
         $tableMock->expects($this->once())
                   ->method('getRowHeight')
-                  ->will($this->returnValue($rowHeight));
+                  ->willReturn($rowHeight);
 
         $tableMock->add($this->row);
 
         $this->assertEquals($rowHeight, $this->row->getHeight());
     }
-    
+
     /**
      * @test
      */
     public function getWidthFromTable()
     {
-        $tableMock = $this->getMock('PHPPdf\Core\Node\Table', array(
-            'getWidth'
-        ));
+        $tableMock = $this->createPartialMock('PHPPdf\Core\Node\Table', [
+            'getWidth',
+        ]);
 
         $width = 200;
         $tableMock->expects($this->exactly(2))
                   ->method('getWidth')
-                  ->will($this->returnValue($width));
+                  ->willReturn($width);
 
         $tableMock->add($this->row);
 
@@ -95,37 +98,38 @@ class RowTest extends \PHPPdf\PHPUnit\Framework\TestCase
      * @test
      * @dataProvider colspanProvider
      */
-    public function setNumberOfColumnForCells(array $colspans)
+    public function setNumberOfColumnForCells(array $colspans): void
     {
         $i = 0;
-        foreach($colspans as $colspan)
-        {
-            $cell = $this->getMock('PHPPdf\Core\Node\Table\Cell', array('setNumberOfColumn', 'getColspan'));
+        foreach ($colspans as $colspan) {
+            $cell = $this->getMockBuilder(Cell::class)
+                         ->enableOriginalConstructor()
+                         ->onlyMethods(['setNumberOfColumn', 'getColspan'])
+                         ->getMock();
             $cell->expects($this->atLeastOnce())
                  ->method('getColspan')
-                 ->will($this->returnValue($colspan));
+                 ->willReturn($colspan);
             $cell->expects($this->once())
                  ->method('setNumberOfColumn')
                  ->with($i);
 
             $cells[] = $cell;
-            $i += $colspan;
+            $i       += $colspan;
         }
 
-        foreach($cells as $cell)
-        {
+        foreach ($cells as $cell) {
             $this->row->add($cell);
         }
     }
 
-    public function colspanProvider()
+    public function colspanProvider(): array
     {
-        return array(
-            array(
-                array(1, 1),
+        return [
+            [
+                [1, 1],
 //                array(2, 1),
-            ),
-        );
+            ],
+        ];
     }
 
     /**
@@ -133,20 +137,22 @@ class RowTest extends \PHPPdf\PHPUnit\Framework\TestCase
      */
     public function addTableAsListenerWhenCellHasAddedToRow()
     {
-        $table = $this->getMock('PHPPdf\Core\Node\Table');
-        $cell = $this->cellWithAddListenerExpectation($table);
+        $table = $this->createMock(Table::class);
+        $cell  = $this->cellWithAddListenerExpectation($table, 2);
 
         $this->row->setParent($table);
         $this->row->add($cell);
     }
-    
-    private function cellWithAddListenerExpectation($listener)
-    {
-        $cell = $this->getMock('PHPPdf\Core\Node\Table\Cell', array('addListener'));
 
-        $cell->expects($this->at(0))
+    private function cellWithAddListenerExpectation($listener, $expectedCalls = 1)
+    {
+        $cell = $this->getMockBuilder(Cell::class)
+                     ->enableOriginalConstructor()
+                     ->onlyMethods(['addListener'])
+                     ->getMock();
+        $cell->expects($this->exactly($expectedCalls))
              ->method('addListener')
-             ->with($listener);
+             ->withConsecutive([$listener]);
 
         return $cell;
     }
@@ -154,9 +160,9 @@ class RowTest extends \PHPPdf\PHPUnit\Framework\TestCase
     /**
      * @test
      */
-    public function addRowAsListenerWhenCellHasAddedToRow()
+    public function addRowAsListenerWhenCellHasAddedToRow(): void
     {
-        $cell = $this->cellWithAddListenerExpectation($this->row);
+        $cell = $this->cellWithAddListenerExpectation($this->row, 1);
 
         $this->row->add($cell);
     }
@@ -165,36 +171,37 @@ class RowTest extends \PHPPdf\PHPUnit\Framework\TestCase
      * @test
      * @dataProvider cellsHeightsProvider
      */
-    public function setMaxHeightWhenRowIsNotifiedByCell(array $heights)
+    public function setMaxHeightWhenRowIsNotifiedByCell(array $heights): void
     {
         $cells = $this->createMockedCellsWithHeights($heights);
 
-        foreach($cells as $cell)
-        {
+        foreach ($cells as $cell) {
             $this->row->attributeChanged($cell, 'height', null);
         }
 
         $this->assertEquals(max($heights), $this->row->getMaxHeightOfCells());
     }
 
-    public function cellsHeightsProvider()
+    public function cellsHeightsProvider(): array
     {
-        return array(
-            array(
-                array(10, 20, 30, 20, 10),
-            ),
-        );
+        return [
+            [
+                [10, 20, 30, 20, 10],
+            ],
+        ];
     }
 
-    private function createMockedCellsWithHeights(array $heights)
+    private function createMockedCellsWithHeights(array $heights): array
     {
-        $cells = array();
-        foreach($heights as $height)
-        {
-            $cell = $this->getMock('PHPPdf\Core\Node\Table\Cell', array('getHeight'));
+        $cells = [];
+        foreach ($heights as $height) {
+            $cell = $this->getMockBuilder(Cell::class)
+                         ->enableOriginalConstructor()
+                         ->onlyMethods(['getHeight'])
+                         ->getMock();
             $cell->expects($this->atLeastOnce())
                  ->method('getHeight')
-                 ->will($this->returnValue($height));
+                 ->willReturn($height);
             $cells[] = $cell;
         }
 
@@ -205,12 +212,11 @@ class RowTest extends \PHPPdf\PHPUnit\Framework\TestCase
      * @test
      * @dataProvider cellsHeightsProvider
      */
-    public function setMaxHeightWhileCellAdding(array $heights)
+    public function setMaxHeightWhileCellAdding(array $heights): void
     {
         $cells = $this->createMockedCellsWithHeights($heights);
 
-        foreach($cells as $cell)
-        {
+        foreach ($cells as $cell) {
             $this->row->add($cell);
         }
 
@@ -221,12 +227,11 @@ class RowTest extends \PHPPdf\PHPUnit\Framework\TestCase
      * @test
      * @dataProvider marginsDataProvider
      */
-    public function setMaxVerticalMarginsWhileCellAdding(array $marginsTop, array $marginsBottom)
+    public function setMaxVerticalMarginsWhileCellAdding(array $marginsTop, array $marginsBottom): void
     {
         $cells = $this->createMockedCellsWidthVerticalMargins($marginsTop, $marginsBottom);
 
-        foreach($cells as $cell)
-        {
+        foreach ($cells as $cell) {
             $this->row->add($cell);
         }
 
@@ -234,29 +239,32 @@ class RowTest extends \PHPPdf\PHPUnit\Framework\TestCase
         $this->assertEquals(max($marginsBottom), $this->row->getMarginsBottomOfCells());
     }
 
-    public function marginsDataProvider()
+    public function marginsDataProvider(): array
     {
-        return array(
-            array(
-                array(10, 12, 5),
-                array(5, 1, 8),
-            ),
-        );
+        return [
+            [
+                [10, 12, 5],
+                [5, 1, 8],
+            ],
+        ];
     }
 
-    private function createMockedCellsWidthVerticalMargins($marginsTop, $marginsBottom)
+    private function createMockedCellsWidthVerticalMargins($marginsTop, $marginsBottom): array
     {
-        $cells = array();
+        $cells = [];
 
-        for($i=0, $count = count($marginsTop); $i<$count; $i++)
-        {
-            $cell = $this->getMock('PHPPdf\Core\Node\Table\Cell', array('getMarginTop', 'getMarginBottom'));
+        for ($i = 0, $count = count($marginsTop); $i < $count; $i++) {
+            $cell = $this->getMockBuilder(Cell::class)
+                         ->enableOriginalConstructor()
+                         ->onlyMethods(['getMarginTop', 'getMarginBottom'])
+                         ->getMock();
+
             $cell->expects($this->atLeastOnce())
                  ->method('getMarginTop')
-                 ->will($this->returnValue($marginsTop[$i]));
+                 ->willReturn($marginsTop[$i]);
             $cell->expects($this->atLeastOnce())
                  ->method('getMarginBottom')
-                 ->will($this->returnValue($marginsBottom[$i]));
+                 ->willReturn($marginsBottom[$i]);
 
             $cells[] = $cell;
         }

@@ -1,93 +1,98 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPPdf\Test\Core\Engine\Imagine;
 
+use Imagine\Image\ImagineInterface;
 use PHPPdf\PHPUnit\Framework\TestCase;
 use PHPPdf\Core\Engine\Imagine\Font;
+use PHPUnit\Framework\MockObject\MockObject;
+use Imagine\Image\BoxInterface;
+use Imagine\Image\FontInterface;
 
 class FontTest extends TestCase
 {
-    private $font;
-    private $imagine;
-    private $fontResources;
-    
-    public function setUp()
+    private Font                        $font;
+    private ImagineInterface|MockObject $imagine;
+    private array                       $fontResources;
+
+    public function setUp(): void
     {
-        if(!interface_exists('Imagine\Image\ImagineInterface', true))
-        {
+        if (!interface_exists(ImagineInterface::class, true)) {
             $this->fail('Imagine library is missing. You have to download dependencies, for example by using "vendors.php" file.');
         }
 
-        $this->imagine = $this->getMock('Imagine\Image\ImagineInterface');
-        $this->fontResources = array(
-            Font::STYLE_NORMAL => TEST_RESOURCES_DIR.'/font-judson/normal.ttf',
-            Font::STYLE_BOLD => TEST_RESOURCES_DIR.'/font-judson/bold.ttf',
-            Font::STYLE_ITALIC => TEST_RESOURCES_DIR.'/font-judson/italic.ttf',
+        $this->imagine       = $this->createMock(ImagineInterface::class);
+        $this->fontResources = [
+            Font::STYLE_NORMAL      => TEST_RESOURCES_DIR.'/font-judson/normal.ttf',
+            Font::STYLE_BOLD        => TEST_RESOURCES_DIR.'/font-judson/bold.ttf',
+            Font::STYLE_ITALIC      => TEST_RESOURCES_DIR.'/font-judson/italic.ttf',
             Font::STYLE_BOLD_ITALIC => TEST_RESOURCES_DIR.'/font-judson/bold+italic.ttf',
-        );
-        
+        ];
+
         $this->font = new Font($this->fontResources, $this->imagine);
     }
-    
+
     /**
      * @test
      */
-    public function getWidthOfText()
-    {        
-        $text = 'some text';
+    public function getWidthOfText(): void
+    {
+        $text     = 'some text';
         $fontSize = 12;
-        
+
         $expectedWidth = 111;
-        
-        $box = $this->getMock('Imagine\Image\BoxInterface');
+
+        $box = $this->createMock(BoxInterface::class);
         $box->expects($this->once())
             ->method('getWidth')
-            ->will($this->returnValue($expectedWidth));
-        
-        $font = $this->getMock('Imagine\Image\FontInterface');
+            ->willReturn($expectedWidth);
+
+        $font = $this->createMock(FontInterface::class);
         $font->expects($this->once())
              ->method('box')
              ->with($text)
-             ->will($this->returnValue($box));
-            
+             ->willReturn($box);
+
         $this->imagine->expects($this->once())
                       ->method('font')
                       ->with($this->fontResources[Font::STYLE_NORMAL], $fontSize, $this->anything())
-                      ->will($this->returnValue($font));
+                      ->willReturn($font);
 
         $width = $this->font->getWidthOfText($text, $fontSize);
-        
+
         $this->assertEquals($expectedWidth, $width);
     }
-    
+
     /**
      * @test
      * @dataProvider styleProvider
      */
-    public function styleSwitching($style)
+    public function styleSwitching($style): void
     {
-        $color = '#000000';
+        $color    = '#000000';
         $fontSize = 13;
-        
+
         $this->font->setStyle($style);
-        
-        $expectedFont = $this->getMock('Imagine\Image\FontInterface');
-        
+
+        $expectedFont = $this->createMock(FontInterface::class);
+
         $this->imagine->expects($this->once())
                       ->method('font')
                       ->with($this->fontResources[$style], $fontSize, $this->anything())
-                      ->will($this->returnValue($expectedFont));
-        
+                      ->willReturn($expectedFont);
+
         $actualFont = $this->font->getWrappedFont($color, $fontSize);
-        
+
         $this->assertEquals($expectedFont, $actualFont);
     }
-    
-    public function styleProvider()
+
+    public function styleProvider(): array
     {
-        return array(
-            array(Font::STYLE_NORMAL),
-            array(Font::STYLE_BOLD),
-        );
+        return [
+            [Font::STYLE_NORMAL],
+            [Font::STYLE_BOLD],
+        ];
     }
 }

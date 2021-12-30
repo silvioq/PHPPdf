@@ -19,7 +19,7 @@ class ImageTest extends \PHPPdf\PHPUnit\Framework\TestCase
     
     private $image;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->image = new Image(array(
             'width' => 100,
@@ -43,25 +43,28 @@ class ImageTest extends \PHPPdf\PHPUnit\Framework\TestCase
         $this->image->setAttribute('src', self::IMAGE_PATH);
         $this->image->setAttribute('keep-ratio', $keepRatio);
         
-        $imageResource = $this->getMock('PHPPdf\Core\Engine\Image');
+        $imageResource = $this->createMock('PHPPdf\Core\Engine\Image');
         $imageResource->expects($this->any())
                       ->method('getOriginalWidth')
-                      ->will($this->returnValue($sourceWidth));
+                      ->willReturn($sourceWidth);
         $imageResource->expects($this->any())
                       ->method('getOriginalHeight')
-                      ->will($this->returnValue($sourceHeight));
+                      ->willReturn($sourceHeight);
         
         $document = $this->getMockBuilder('PHPPdf\Core\Document')
-                         ->setMethods(array('createImage'))
+                         ->onlyMethods(array('createImage'))
                          ->disableOriginalConstructor()
                          ->getMock();
 
         $document->expects($this->atLeastOnce())
                  ->method('createImage')
                  ->with(self::IMAGE_PATH)
-                 ->will($this->returnValue($imageResource));
+                 ->willReturn($imageResource);
                  
-        $pageMock = $this->getMock('PHPPdf\Core\Node\Page', array('getGraphicsContext'));      
+        $pageMock = $this->getMockBuilder('PHPPdf\Core\Node\Page')
+        ->enableOriginalConstructor()
+        ->onlyMethods(array('getGraphicsContext'))
+        ->getMock();
 
         $gcMock = $this->getMockBuilder('PHPPdf\Core\Engine\GraphicsContext')
         			   ->getMock();
@@ -101,7 +104,7 @@ class ImageTest extends \PHPPdf\PHPUnit\Framework\TestCase
 
         $pageMock->expects($this->once())
                  ->method('getGraphicsContext')
-                 ->will($this->returnValue($gcMock));
+                 ->willReturn($gcMock);
 
         $this->image->setParent($pageMock);
 
@@ -154,8 +157,8 @@ class ImageTest extends \PHPPdf\PHPUnit\Framework\TestCase
     {
         $this->givenImageWithIgnoreError($ignoreError);
         
-        $engine = $this->getMock('PHPPdf\Core\Engine\Engine');
-        $engineImage = $this->getMock('PHPPdf\Core\Engine\Image');
+        $engine = $this->createMock('PHPPdf\Core\Engine\Engine');
+        $engineImage = $this->createMock('PHPPdf\Core\Engine\Image');
 
         if($invalidSrc)
         {
@@ -222,7 +225,7 @@ class ImageTest extends \PHPPdf\PHPUnit\Framework\TestCase
         $engine->expects($this->once())
             ->method('createImage')
             ->with(self::IMAGE_PATH)
-            ->will($this->returnValue($engineImage));
+            ->willReturn($engineImage);
     }
 
     /**
@@ -241,10 +244,11 @@ class ImageTest extends \PHPPdf\PHPUnit\Framework\TestCase
 
     /**
      * @test
-     * @expectedException PHPPdf\Exception\InvalidResourceException
+     *
      */
     public function turnOffIgnoreErrorAttribute_errorOccursOnPreFormat_throwException()
     {
+        $this->expectException(\PHPPdf\Exception\InvalidResourceException::class);
         $this->givenImageWithIgnoreError(false);
         $this->clearImageSize();
 
@@ -257,7 +261,7 @@ class ImageTest extends \PHPPdf\PHPUnit\Framework\TestCase
     protected function createDocumentMock()
     {
         $document = $this->getMockBuilder('PHPPdf\Core\Document')
-            ->setMethods(array('createImage'))
+            ->onlyMethods(array('createImage'))
             ->disableOriginalConstructor()
             ->getMock();
         return $document;

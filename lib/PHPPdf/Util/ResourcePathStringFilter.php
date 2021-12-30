@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Copyright 2011 Piotr Śliwa <peter.pl7@gmail.com>
  *
@@ -17,14 +19,14 @@ namespace PHPPdf\Util;
  */
 class ResourcePathStringFilter implements StringFilter
 {
-    private $path;
+    private ?string $path = null;
     
-    public function filter($value)
+    public function filter($value): array|string
     {
-        return str_replace('%resources%', $this->getPathToResources(), $value);;
+        return str_replace('%resources%', $this->getPathToResources(), $value);
     }
     
-    private function getPathToResources()
+    private function getPathToResources(): array|string|null
     {
         if($this->path === null)
         {

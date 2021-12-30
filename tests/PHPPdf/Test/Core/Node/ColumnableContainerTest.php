@@ -14,7 +14,7 @@ class ColumnableContainerTest extends \PHPPdf\PHPUnit\Framework\TestCase
 
     private $column;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->column = new ColumnableContainer();
 
@@ -29,10 +29,10 @@ class ColumnableContainerTest extends \PHPPdf\PHPUnit\Framework\TestCase
     public function setWidthOnPreFormat()
     {
         $width = 500;
-        $page = $this->getMock('PHPPdf\Core\Node\Page', array('getWidth'));
+        $page = $this->createPartialMock('PHPPdf\Core\Node\Page', array('getWidth'));
         $page->expects($this->atLeastOnce())
              ->method('getWidth')
-             ->will($this->returnValue($width));
+             ->willReturn($width);
              
         $this->column->setParent($page);
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Copyright 2011 Piotr Śliwa <peter.pl7@gmail.com>
  *
@@ -15,207 +17,187 @@ use PHPPdf\Core\Document,
 
 /**
  * Paragraph element
- * 
+ *
  * @author Piotr Śliwa <peter.pl7@gmail.com>
  */
 class Paragraph extends Container
 {
-    private $lines = array();
-    
-    public function initialize()
+    private array $lines = [];
+
+    public function initialize(): void
     {
         parent::initialize();
         $this->setAttribute('text-align', null);
     }
-    
+
     public function getWidth()
     {
-        if($this->getParent())
-        {
+        if ($this->getParent()) {
             //paragraph hasn't his own width, his width is equal to parent's one
             return $this->getParent()->getWidth();
         }
-        
+
         return 0;
     }
-    
+
     public function setWidth($width)
     {
         $parent = $this->getParent();
-        
+
         //paragraph hasn't his own width, his width is equal to parent's one
-        if($parent && !$parent instanceof Page)
-        {
+        if ($parent && !$parent instanceof Page) {
             $parent->setWidth($width);
         }
+
         return $this;
     }
-    
+
     public function getParentPaddingLeft()
     {
         return $this->getParent()->getPaddingLeft();
     }
-    
+
     public function getParentPaddingRight()
     {
         return $this->getParent()->getPaddingRight();
     }
-    
+
     public function getWidthWithoutPaddings()
     {
         return $this->getParent()->getWidthWithoutPaddings();
     }
 
-    public function add(Node $text)
+    public function add(Node $text): static
     {
         $previousText = $this->getLastChild();
-        
+
         parent::add($text);
 
         $text->setText(preg_replace('/[ \t]+/', ' ', $text->getText()));
 
-        if(!$previousText || $this->startsWithWhiteChars($text) && $this->endsWithWhiteChars($previousText))
-        {
+        if (!$previousText || $this->startsWithWhiteChars($text) && $this->endsWithWhiteChars($previousText)) {
             $text->setText(ltrim($text->getText()));
-        }        
-        
+        }
+
         return $this;
     }
-    
-    private function getLastChild()
+
+    private function getLastChild(): ?Node
     {
         $lastIndex = count($this->getChildren()) - 1;
-        if($lastIndex >= 0)
-        {
+        if ($lastIndex >= 0) {
             return $this->getChild($lastIndex);
         }
-        
+
         return null;
     }
-    
-    private function endsWithWhiteChars(Text $text)
+
+    private function endsWithWhiteChars(Text $text): bool
     {
-        return rtrim($text->getText()) != $text->getText();
+        return rtrim($text->getText()) !== $text->getText();
     }
-    
-    private function startsWithWhiteChars(Text $text)
+
+    private function startsWithWhiteChars(Text $text): bool
     {
-        return ltrim($text->getText()) != $text->getText();
+        return ltrim($text->getText()) !== $text->getText();
     }
-    
-    public function addLine(Line $line)
+
+    public function addLine(Line $line): void
     {
         $this->lines[] = $line;
     }
-    
-    public function getLines()
+
+    public function getLines(): array
     {
         return $this->lines;
     }
-    
+
     public function collectOrderedDrawingTasks(Document $document, DrawingTaskHeap $tasks)
     {
         $lastIndex = count($this->lines) - 1;
-        foreach($this->lines as $i => $line)
-        {
+        foreach ($this->lines as $i => $line) {
             $line->format($i != $lastIndex);
         }
-        
-        foreach($this->getChildren() as $text)
-        {
+
+        foreach ($this->getChildren() as $text) {
             $text->collectOrderedDrawingTasks($document, $tasks);
         }
-        
+
         $this->getDrawingTasksFromComplexAttributes($document, $tasks);
-        
-        if($this->getAttribute('dump'))
-        {
+
+        if ($this->getAttribute('dump')) {
             $tasks->insert($this->createDumpTask());
         }
 
         return $tasks;
     }
-    
+
     protected function doBreakAt($height)
     {
-        $linesToMove = array();
+        $linesToMove   = [];
         $numberOfLines = count($this->lines);
-        foreach($this->lines as $i => $line)
-        {
+        foreach ($this->lines as $i => $line) {
             $lineEnd = $line->getYTranslation() + $line->getHeight();
-            if($lineEnd > $height)
-            {
+            if ($lineEnd > $height) {
                 $linesToMove[] = $line;
                 unset($this->lines[$i]);
             }
         }
-        
-        if(!$linesToMove || count($linesToMove) == $numberOfLines)
-        {
+
+        if (!$linesToMove || count($linesToMove) == $numberOfLines) {
             return null;
         }
-        
+
         $firstLineToMove = current($linesToMove);
-        $yTranslation = $height - $firstLineToMove->getYTranslation();
-        $height = $firstLineToMove->getYTranslation();
-        
+        $yTranslation    = $height - $firstLineToMove->getYTranslation();
+        $height          = $firstLineToMove->getYTranslation();
+
         $paragraphProduct = Node::doBreakAt($height);
-        
+
         $paragraphProduct->removeAll();
-        
-        $replaceText = array();
-        $textsToMove = array();
-        
-        foreach($firstLineToMove->getParts() as $part)
-        {
+
+        $replaceText = [];
+        $textsToMove = [];
+
+        foreach ($firstLineToMove->getParts() as $part) {
             $text = $part->getText();
-            
+
             $textHeight = $text->getFirstPoint()->getY() - ($this->getFirstPoint()->getY() - $height);
-            
+
             $textProduct = $text->breakAt($textHeight);
-            
-            if($textProduct)
-            {
+
+            if ($textProduct) {
                 $replaceText[spl_object_hash($text)] = $textProduct;
                 $paragraphProduct->add($textProduct);
                 $part->setText($textProduct);
-            }
-            else
-            {
+            } else {
                 $replaceText[spl_object_hash($text)] = $text;
                 $textsToMove[spl_object_hash($text)] = $text;
             }
-        }        
-        
-        foreach($linesToMove as $line)
-        {
+        }
+
+        foreach ($linesToMove as $line) {
             $line->setYTranslation($line->getYTranslation() - $height);
             $line->setParagraph($paragraphProduct);
             $paragraphProduct->addLine($line);
         }
-        
+
         array_shift($linesToMove);
-        
-        foreach($linesToMove as $line)
-        {
-            foreach($line->getParts() as $part)
-            {
+
+        foreach ($linesToMove as $line) {
+            foreach ($line->getParts() as $part) {
                 $text = $part->getText();
                 $hash = spl_object_hash($text);
-                
-                if(isset($replaceText[$hash]))
-                {
+
+                if (isset($replaceText[$hash])) {
                     $part->setText($replaceText[$hash]);
-                }
-                else
-                {
+                } else {
                     $textsToMove[$hash] = $text;
                 }
             }
         }
-        
-        foreach($textsToMove as $text)
-        {
+
+        foreach ($textsToMove as $text) {
             $this->remove($text);
             $paragraphProduct->add($text);
         }
@@ -226,39 +208,37 @@ class Paragraph extends Container
 
         return $paragraphProduct;
     }
-    
+
     public function copy()
     {
-        $copy = parent::copy();
-        $copy->lines = array();
-        
+        $copy        = parent::copy();
+        $copy->lines = [];
+
         return $copy;
     }
-    
+
     public function getMinWidth()
     {
         $minWidth = 0;
-        
-        foreach($this->lines as $line)
-        {
+
+        foreach ($this->lines as $line) {
             $minWidth = max($line->getTotalWidth(), $minWidth);
         }
-        
+
         return $minWidth;
     }
-    
-    public function flush()
+
+    public function flush(): void
     {
-        foreach($this->lines as $line)
-        {
+        foreach ($this->lines as $line) {
             $line->flush();
         }
-        
-        $this->lines = array();
-        
+
+        $this->lines = [];
+
         parent::flush();
     }
-    
+
     public function resize($x, $y)
     {
     }

@@ -8,7 +8,7 @@ class TextTransformatorTest extends \PHPPdf\PHPUnit\Framework\TestCase
 {
     private $transformator;
     
-    public function setUp()
+    public function setUp(): void
     {
         $this->transformator = new TextTransformator();
     }

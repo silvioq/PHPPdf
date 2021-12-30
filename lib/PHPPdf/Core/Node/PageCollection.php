@@ -8,6 +8,7 @@
 
 namespace PHPPdf\Core\Node;
 
+use PHPPdf\Core\Engine\GraphicsContext;
 use PHPPdf\Exception\LogicException;
 use PHPPdf\Core\DrawingTaskHeap;
 use PHPPdf\Core\Document;
@@ -36,7 +37,7 @@ class PageCollection extends Container
         throw new LogicException('PageCollection can\'t be broken.');
     }
     
-    public function getGraphicsContext()
+    public function getGraphicsContext(): ?GraphicsContext
     {
         return null;
     }

@@ -1,16 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPPdf\Test\Core\Formatter;
 
 use PHPPdf\Core\Formatter\RowDimensionFormatter,
     PHPPdf\Core\Boundary,
     PHPPdf\Core\Document;
+use PHPPdf\PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPPdf\Core\Node\Table\Row;
+use PHPPdf\Core\Node\Table\Cell;
 
-class RowDimensionFormatterTest extends \PHPPdf\PHPUnit\Framework\TestCase
+class RowDimensionFormatterTest extends TestCase
 {
-    private $formatter;
+    private RowDimensionFormatter $formatter;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->formatter = new RowDimensionFormatter();
     }
@@ -19,7 +25,7 @@ class RowDimensionFormatterTest extends \PHPPdf\PHPUnit\Framework\TestCase
      * @test
      * @dataProvider heightProvider
      */
-    public function changeRowsHeightIfMaxCellHeigtIsGreater($oldHeight, $height)
+    public function changeRowsHeightIfMaxCellHeigtIsGreater($oldHeight, $height): void
     {
         $diff = $height - $oldHeight;
 
@@ -30,46 +36,44 @@ class RowDimensionFormatterTest extends \PHPPdf\PHPUnit\Framework\TestCase
         $this->formatter->format($row, $this->createDocumentStub());
     }
 
-    public function heightProvider()
+    public function heightProvider(): array
     {
-        return array(
-            array(100, 150),
-            array(100, 80),
-        );
+        return [
+            [100, 150],
+            [100, 80],
+        ];
     }
 
-    private function getBoundaryMockWithEnlargeAsserts($enlargeBy)
+    private function getBoundaryMockWithEnlargeAsserts($enlargeBy): Boundary|MockObject
     {
-        $boundary = $this->getMock('PHPPdf\Core\Boundary', array('pointTranslate'));
-        $boundary->expects($this->at(0))
+        $boundary = $this->createPartialMock(Boundary::class, ['pointTranslate']);
+
+        $boundary->expects($this->exactly(2))
                  ->method('pointTranslate')
-                 ->with(2, 0, $enlargeBy)
-                 ->will($this->returnValue($boundary));
-        $boundary->expects($this->at(1))
-                 ->method('pointTranslate')
-                 ->with(3, 0, $enlargeBy);
+                 ->withConsecutive([2, 0, $enlargeBy], [3, 0, $enlargeBy])
+                 ->willReturnOnConsecutiveCalls($this->returnValue($boundary));
 
         return $boundary;
     }
 
-    private function getRowMockWithHeightAsserts($boundary, $oldHeight, $maxHeightOfCells, $expectedNewHeight = null)
+    private function getRowMockWithHeightAsserts($boundary, $oldHeight, $maxHeightOfCells, $expectedNewHeight = null): Row|MockObject
     {
-        $row = $this->getMock('PHPPdf\Core\Node\Table\Row', array('getBoundary', 'getHeight', 'setHeight', 'getMaxHeightOfCells', 'getChildren', 'getMarginsBottomOfCells', 'getMarginsTopOfCells'));
+        $row = $this->createPartialMock(Row::class, ['getBoundary', 'getHeight', 'setHeight', 'getMaxHeightOfCells', 'getChildren', 'getMarginsBottomOfCells', 'getMarginsTopOfCells']);
 
-        $expectedNewHeight = $expectedNewHeight === null ? $maxHeightOfCells : $expectedNewHeight;
+        $expectedNewHeight = $expectedNewHeight ?? $maxHeightOfCells;
 
         $row->expects($this->atLeastOnce())
             ->method('getBoundary')
-            ->will($this->returnValue($boundary));
+            ->willReturn($boundary);
         $row->expects($this->atLeastOnce())
             ->method('getHeight')
-            ->will($this->returnValue($oldHeight));
+            ->willReturn($oldHeight);
         $row->expects($this->once())
             ->method('setHeight')
             ->with($expectedNewHeight);
         $row->expects($this->atLeastOnce())
             ->method('getMaxHeightOfCells')
-            ->will($this->returnValue($maxHeightOfCells));
+            ->willReturn($maxHeightOfCells);
 
         return $row;
     }
@@ -78,24 +82,23 @@ class RowDimensionFormatterTest extends \PHPPdf\PHPUnit\Framework\TestCase
      * @test
      * @dataProvider marginsDataProvider
      */
-    public function enlargeCellsToRowHeight($rowHeight, array $cellHeights, $marginTop, $marginBottom)
+    public function enlargeCellsToRowHeight($rowHeight, array $cellHeights, $marginTop, $marginBottom): void
     {
         $verticalMargins = $marginTop + $marginBottom;
 
-        $cells = array();
+        $cells = [];
 
-        foreach($cellHeights as $height)
-        {
+        foreach ($cellHeights as $height) {
             $boundary = $this->getBoundaryMockWithEnlargeAsserts($rowHeight - $height);
 
-            $cell = $this->getMock('PHPPdf\Core\Node\Table\Cell', array('getHeight', 'setHeight', 'getBoundary'));
+            $cell = $this->createPartialMock(Cell::class, ['getHeight', 'setHeight', 'getBoundary']);
 
             $cell->expects($this->atLeastOnce())
                  ->method('getBoundary')
-                 ->will($this->returnValue($boundary));
+                 ->willReturn($boundary);
             $cell->expects($this->atLeastOnce())
                  ->method('getHeight')
-                 ->will($this->returnValue($height));
+                 ->willReturn($height);
             $cell->expects($this->once())
                  ->method('setHeight')
                  ->with($rowHeight);
@@ -104,30 +107,30 @@ class RowDimensionFormatterTest extends \PHPPdf\PHPUnit\Framework\TestCase
         }
 
         $boundary = $this->getBoundaryMockWithEnlargeAsserts($verticalMargins);
-        $row = $this->getRowMockWithHeightAsserts($boundary, $rowHeight, $rowHeight, $rowHeight + $verticalMargins);
+        $row      = $this->getRowMockWithHeightAsserts($boundary, $rowHeight, $rowHeight, $rowHeight + $verticalMargins);
         $row->expects($this->atLeastOnce())
             ->method('getMarginsBottomOfCells')
-            ->will($this->returnValue($marginBottom));
+            ->willReturn($marginBottom);
         $row->expects($this->atLeastOnce())
             ->method('getMarginsTopOfCells')
-            ->will($this->returnValue($marginTop));
+            ->willReturn($marginTop);
 
         $row->expects($this->atLeastOnce())
             ->method('getChildren')
-            ->will($this->returnValue($cells));
+            ->willReturn($cells);
 
         $this->formatter->format($row, $this->createDocumentStub());
     }
 
-    public function marginsDataProvider()
+    public function marginsDataProvider(): array
     {
-        return array(
-            array(
-                100, array(30, 50), 10, 12
-            ),
-            array(
-                100, array(30, 50), 0, 0
-            ),
-        );
+        return [
+            [
+                100, [30, 50], 10, 12,
+            ],
+            [
+                100, [30, 50], 0, 0,
+            ],
+        ];
     }
 }

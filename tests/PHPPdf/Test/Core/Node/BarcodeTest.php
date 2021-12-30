@@ -15,11 +15,11 @@ class BarcodeTest extends TestCase
     private $gc;
     private $page;
     
-    public function setUp()
+    public function setUp(): void
     {
         $this->barcode = new Barcode();
         $this->objectMother = new NodeObjectMother($this);
-        $this->gc = $this->getMock('PHPPdf\Core\Engine\GraphicsContext');
+        $this->gc = $this->createMock('PHPPdf\Core\Engine\GraphicsContext');
         $this->page = new Page();
         $this->invokeMethod($this->page, 'setGraphicsContext', array($this->gc));
         $this->barcode->setParent($this->page);
@@ -33,22 +33,22 @@ class BarcodeTest extends TestCase
     {               
         $boundary = $this->objectMother->getBoundaryStub($x, $y, $width, $height);
         $this->invokeMethod($this->barcode, 'setBoundary', array($boundary));
-        $font = $this->getMock('PHPPdf\Core\Engine\Font');
+        $font = $this->createMock('PHPPdf\Core\Engine\Font');
         $fontPath = 'path';
         
         $document = $this->getMockBuilder('PHPPdf\Core\Document')
                          ->disableOriginalConstructor()
-                         ->setMethods(array('getFont', 'getColorFromPalette'))
+                         ->onlyMethods(array('getFont', 'getColorFromPalette'))
                          ->getMock();
                          
         $document->expects($this->once())
                  ->method('getFont')
                  ->with($fontType)
-                 ->will($this->returnValue($font));
+                 ->willReturn($font);
         $document->expects($this->once())
                  ->method('getColorFromPalette')
                  ->with($color)
-                 ->will($this->returnValue($color));
+                 ->willReturn($color);
         
         $this->gc->expects($this->once())
                  ->method('drawBarcode')
@@ -58,7 +58,7 @@ class BarcodeTest extends TestCase
                      $test->assertEquals($barcodeText, $barcode->getText());
                      $test->assertEquals($fontPath, $barcode->getFont());
                      $test->assertEquals($fontSize, $barcode->getFontSize());
-                     $test->assertEquals(hexdec(str_replace('#', '', $color)), $barcode->getForeColor());
+                     $test->assertEquals(hexdec(ltrim($color, '#')), $barcode->getForeColor());
                      $test->assertEquals($drawText, $barcode->getDrawText());
                      $test->assertEquals($barHeight, $barcode->getBarHeight());
                      $test->assertEquals($withChecksum, $barcode->getWithChecksum());
@@ -71,7 +71,7 @@ class BarcodeTest extends TestCase
      
         $font->expects($this->once())
              ->method('getCurrentResourceIdentifier')
-             ->will($this->returnValue($fontPath));
+             ->willReturn($fontPath);
                  
         $this->barcode->setAttribute('type', $barcodeType);
         $this->barcode->setAttribute('code', $barcodeText);

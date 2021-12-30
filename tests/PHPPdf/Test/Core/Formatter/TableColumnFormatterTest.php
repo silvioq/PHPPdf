@@ -1,22 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPPdf\Test\Core\Formatter;
 
 use PHPPdf\Core\Formatter\TableColumnFormatter,
     PHPPdf\ObjectMother\TableObjectMother,
     PHPPdf\Core\Document;
+use PHPPdf\PHPUnit\Framework\TestCase;
+use PHPPdf\Core\Node\Table;
+use PHPPdf\Core\Node\Table\Row;
 
-class TableColumnFormatterTest extends \PHPPdf\PHPUnit\Framework\TestCase
+class TableColumnFormatterTest extends TestCase
 {
-    private $formatter;
-    private $objectMother;
+    private TableColumnFormatter $formatter;
+    private TableObjectMother    $objectMother;
 
-    protected function init()
+    protected function init(): void
     {
         $this->objectMother = new TableObjectMother($this);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->formatter = new TableColumnFormatter();
     }
@@ -25,30 +30,28 @@ class TableColumnFormatterTest extends \PHPPdf\PHPUnit\Framework\TestCase
      * @test
      * @dataProvider columnsDataProvider
      */
-    public function spreadEventlyColumnsWidth(array $cellsInRowsWidths, array $columnsWidths, $tableWidth)
+    public function spreadEventlyColumnsWidth(array $cellsInRowsWidths, array $columnsWidths, $tableWidth): void
     {
-        $table = $this->getMock('PHPPdf\Core\Node\Table', array('reduceColumnsWidthsByMargins', 'getWidthsOfColumns', 'getChildren', 'getWidth', 'getNumberOfColumns', 'getMarginsLeftOfColumns', 'getMarginsRightOfColumns', 'convertRelativeWidthsOfColumns'));
-        $totalColumnsWidth = array_sum($columnsWidths);
-        $numberOfColumns = count($columnsWidths);
-        $enlargeColumnWidth = ($tableWidth - $totalColumnsWidth)/$numberOfColumns;
+        $table              = $this->createPartialMock(Table::class, ['reduceColumnsWidthsByMargins', 'getWidthsOfColumns', 'getChildren', 'getWidth', 'getNumberOfColumns', 'getMarginsLeftOfColumns', 'getMarginsRightOfColumns', 'convertRelativeWidthsOfColumns']);
+        $totalColumnsWidth  = array_sum($columnsWidths);
+        $numberOfColumns    = count($columnsWidths);
+        $enlargeColumnWidth = ($tableWidth - $totalColumnsWidth) / $numberOfColumns;
 
-        $rows = array();
-        foreach($cellsInRowsWidths as $cellsWidths)
-        {
-            $cells = array();
-            foreach($cellsWidths as $column => $width)
-            {
+        $rows = [];
+        foreach ($cellsInRowsWidths as $cellsWidths) {
+            $cells = [];
+            foreach ($cellsWidths as $column => $width) {
                 $cell = $this->objectMother->getCellMockWithResizeExpectations($width, $columnsWidths[$column] + $enlargeColumnWidth, false);
                 $cell->expects($this->atLeastOnce())
                      ->method('getNumberOfColumn')
-                     ->will($this->returnValue($column));
+                     ->willReturn($column);
                 $cells[] = $cell;
             }
 
-            $row = $this->getMock('PHPPdf\Core\Node\Table\Row', array('getChildren'));
+            $row = $this->createPartialMock(Row::class, ['getChildren']);
             $row->expects($this->atLeastOnce())
                 ->method('getChildren')
-                ->will($this->returnValue($cells));
+                ->willReturn($cells);
 
             $rows[] = $row;
         }
@@ -65,49 +68,49 @@ class TableColumnFormatterTest extends \PHPPdf\PHPUnit\Framework\TestCase
         $table->expects($this->atLeastOnce())
               ->method('getChildren')
               ->after('reduceColumns')
-              ->will($this->returnValue($rows));
+              ->willReturn($rows);
 
         $table->expects($this->atLeastOnce())
               ->method('getWidth')
               ->after('reduceColumns')
-              ->will($this->returnValue($tableWidth));
+              ->willReturn($tableWidth);
 
         $table->expects($this->atLeastOnce())
               ->method('getWidthsOfColumns')
               ->after('reduceColumns')
-              ->will($this->returnValue($columnsWidths));
+              ->willReturn($columnsWidths);
 
         $table->expects($this->atLeastOnce())
               ->method('getNumberOfColumns')
               ->after('reduceColumns')
-              ->will($this->returnValue(count($columnsWidths)));
+              ->willReturn(count($columnsWidths));
 
         $margins = array_fill(0, $numberOfColumns, 0);
         $table->expects($this->atLeastOnce())
               ->method('getMarginsLeftOfColumns')
               ->after('reduceColumns')
-              ->will($this->returnValue($margins));
+              ->willReturn($margins);
 
         $table->expects($this->atLeastOnce())
               ->method('getMarginsRightOfColumns')
               ->after('reduceColumns')
-              ->will($this->returnValue($margins));
+              ->willReturn($margins);
 
         $this->formatter->format($table, $this->createDocumentStub());
     }
 
     public function columnsDataProvider()
     {
-        return array(
-            array(
-                array(
-                    array(10, 20, 15),
-                    array(5, 10, 10),
-                ),
-                array(10, 20, 15),
+        return [
+            [
+                [
+                    [10, 20, 15],
+                    [5, 10, 10],
+                ],
+                [10, 20, 15],
                 5,
                 50,
-            ),
-        );
+            ],
+        ];
     }
 }

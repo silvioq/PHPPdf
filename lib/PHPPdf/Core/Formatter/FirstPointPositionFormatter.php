@@ -28,7 +28,11 @@ class FirstPointPositionFormatter extends BaseFormatter
         list($parentX, $parentY) = $parent->getStartDrawingPoint();
 
         $startX = $node->getMarginLeft() + $parentX;
-        $startY = $parentY - $node->getMarginTop();
+        $marginTop = $node->getMarginTop() ?: 0;
+        if(is_string($marginTop)){
+            $marginTop = 0;
+        }
+        $startY = $parentY - $marginTop;
 
         $this->setNodesPosition($node, $startX, $startY);
 

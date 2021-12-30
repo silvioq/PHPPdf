@@ -1,21 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 
 namespace PHPPdf\Test\Issue;
 
 
 use PHPPdf\Core\Document;
 use PHPPdf\Core\Engine\ZF\Engine;
+use PHPPdf\Core\Facade;
+use PHPPdf\Core\FacadeBuilder;
 use PHPPdf\Core\Node\DynamicPage;
 use PHPPdf\PHPUnit\Framework\TestCase;
 use ZendPdf\PdfDocument;
 
 class Issue52Test extends TestCase
 {
-    /**
-     * @test
-     */
-    public function dynamicPageAndDocumentTemplate_setPrototypeSizeFromDocumentTemplate()
+    public function testDynamicPageAndDocumentTemplate_setPrototypeSizeFromDocumentTemplate(): void
     {
         //given
 
@@ -33,10 +34,9 @@ class Issue52Test extends TestCase
     }
 
     /**
-     * @test
      * @dataProvider booleanProvider
      */
-    public function dynamicPageAndDocumentTemplate_placeholdersMissing_useDocumentTemplateNonetheless($placeholdersExists)
+    public function testDynamicPageAndDocumentTemplate_placeholdersMissing_useDocumentTemplateNonetheless($placeholdersExists): void
     {
         //given
 
@@ -62,43 +62,31 @@ XML;
         $this->assertEquals(200, $document->pages[0]->getWidth());
         $this->assertEquals(200, $document->pages[0]->getHeight());
 
-        if($placeholders)
-        {
-            $this->assertContains('placeholders', $pdfContent);
+        if ($placeholders) {
+            $this->assertStringContainsString('placeholders', $pdfContent);
         }
     }
 
-    public function booleanProvider()
+    public function booleanProvider(): array
     {
-        return array(
-            array(true),
-            array(false),
-        );
+        return [
+            [true],
+            [false],
+        ];
     }
 
-    /**
-     * @return Document
-     */
-    private function createDocument()
+    private function createDocument(): Document
     {
         return new Document(new Engine());
     }
 
-    /**
-     * @return string
-     */
-    private function get200x200DocumentTemplate()
+    private function get200x200DocumentTemplate(): string
     {
-        return __DIR__ . '/../../Resources/200x200.pdf';
+        return __DIR__.'/../../Resources/200x200.pdf';
     }
 
-    /**
-     * @return \PHPPdf\Core\Facade
-     */
-    private function createFacade()
+    private function createFacade(): Facade
     {
-        $facade = \PHPPdf\Core\FacadeBuilder::create()
-            ->build();
-        return $facade;
+        return FacadeBuilder::create()->build();
     }
 } 

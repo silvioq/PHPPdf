@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Copyright 2011 Piotr Śliwa <peter.pl7@gmail.com>
  *
@@ -15,18 +17,17 @@ namespace PHPPdf\Util;
  */
 class AbstractStringFilterContainer implements StringFilterContainer
 {
-    protected $stringFilters = array();
-    
+    protected array $stringFilters = [];
+
     public function setStringFilters(array $filters)
     {
-        $this->stringFilters = array();
-        
-        foreach($filters as $filter)
-        {
+        $this->stringFilters = [];
+
+        foreach ($filters as $filter) {
             $this->addStringFilter($filter);
         }
     }
-    
+
     protected function addStringFilter(StringFilter $filter)
     {
         $this->stringFilters[] = $filter;

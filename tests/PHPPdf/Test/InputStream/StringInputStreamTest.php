@@ -7,7 +7,7 @@ use PHPPdf\PHPUnit\Framework\TestCase;
 
 class StringInputStreamTest extends InputStreamTest
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->stream = new StringInputStream(self::EXPECTED_STREAM_CONTENT);
     }

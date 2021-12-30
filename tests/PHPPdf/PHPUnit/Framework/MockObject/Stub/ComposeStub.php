@@ -1,16 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPPdf\PHPUnit\Framework\MockObject\Stub;
 
-class ComposeStub implements \PHPUnit_Framework_MockObject_Stub
+use PHPUnit\Framework\MockObject\Builder\InvocationStubber;
+use PHPUnit\Framework\MockObject\Invocation;
+use PHPUnit\Framework\MockObject\Stub\Stub;
+
+/**
+ * @method InvocationStubber method($constraint)
+ */
+class ComposeStub implements Stub
 {
-    private $stubs;
+    private array $stubs;
     
     public function __construct(array $stubs)
     {
+
         foreach($stubs as $stub)
         {
-            if(!$stub instanceof \PHPUnit_Framework_MockObject_Stub)
+            if(!$stub instanceof Stub)
             {
                 throw new \InvalidArgumentException('Stubs have to implements PHPUnit_Framework_MockObject_Stub interface.');
             }
@@ -19,7 +29,7 @@ class ComposeStub implements \PHPUnit_Framework_MockObject_Stub
         $this->stubs = $stubs;
     }
 
-    public function invoke(\PHPUnit_Framework_MockObject_Invocation $invocation)
+    public function invoke(Invocation $invocation)
     {
         $returnValue = null;
         foreach($this->stubs as $stub)
@@ -35,7 +45,7 @@ class ComposeStub implements \PHPUnit_Framework_MockObject_Stub
         return $returnValue;        
     }
     
-    public function toString()
+    public function toString(): string
     {
         $text = '';
         
@@ -45,5 +55,5 @@ class ComposeStub implements \PHPUnit_Framework_MockObject_Stub
         }
         
         return $text;
-    }    
-} 
+    }
+}

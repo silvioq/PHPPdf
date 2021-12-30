@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPPdf\Test\Core\Node\BasicList;
 
 require_once __DIR__.'/EnumerationStrategyTest.php';
@@ -11,24 +13,24 @@ use PHPPdf\Core\Node\Container;
 use PHPPdf\Core\Node\BasicList\OrderedEnumerationStrategy;
 
 class OrderedEnumerationStrategyTest extends EnumerationStrategyTest
-{   
-    protected function createStrategy()
+{
+    protected function createStrategy(): OrderedEnumerationStrategy
     {
         return new OrderedEnumerationStrategy();
     }
-    
-    protected function getExpectedText($elementIndex, $elementPattern)
+
+    protected function getExpectedText($elementIndex, $elementPattern): string
     {
-        return sprintf($elementPattern, $elementIndex+1);
+        return sprintf($elementPattern, $elementIndex + 1);
     }
-    
-    protected function getElementPattern($index)
+
+    protected function getElementPattern($index): string
     {
-        $patterns = array('%d.');//, '%d)');
-        
+        $patterns = ['%d.'];//, '%d)');
+
         return $patterns[$index % 1];
     }
-    
+
     protected function setElementPattern($list, $pattern)
     {
     }

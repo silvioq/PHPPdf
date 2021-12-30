@@ -89,8 +89,11 @@ class FloatFormatter extends BaseFormatter
             {
                 $child->translate($translateX, $translateY);
             }
-
-            $childBottomYCoord = $child->getDiagonalPoint()->getY() - $child->getMarginBottom();
+            $marginBottom = $child->getMarginBottom() ?: 0;
+            if(is_string($marginBottom)){
+                $marginBottom = 0;
+            }
+            $childBottomYCoord = $child->getDiagonalPoint()->getY() - $marginBottom;
             if($parentBottomYCoord === null || $childBottomYCoord < $parentBottomYCoord)
             {
                 $parentBottomYCoord = $childBottomYCoord;

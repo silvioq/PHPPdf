@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPPdf\Bridge\Markdown;
 
 use PHPPdf\Exception\RuntimeException;
@@ -22,7 +24,7 @@ class MarkdownParser implements Parser
             }
         }
     }
-    
+
     public function parse($markdown)
     {
         return \Markdown($markdown);

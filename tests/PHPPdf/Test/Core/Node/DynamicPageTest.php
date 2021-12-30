@@ -17,7 +17,7 @@ class DynamicPageTest extends \PHPPdf\PHPUnit\Framework\TestCase
 {
     private $page;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->page = new DynamicPage();
     }
@@ -95,7 +95,7 @@ class DynamicPageTest extends \PHPPdf\PHPUnit\Framework\TestCase
     public function delegateMethodInvocationsToPrototype($methodName, $arg1, $arg2)
     {        
         $prototype = $this->getMockBuilder('PHPPdf\Core\Node\Page')
-                          ->setMethods(array($methodName))
+                          ->onlyMethods(array($methodName))
                           ->getMock();
                           
         $prototype->expects($this->once())
@@ -139,14 +139,14 @@ class DynamicPageTest extends \PHPPdf\PHPUnit\Framework\TestCase
         $expectedTasks->insert(new DrawingTask(function(){}));
         
         $page = $this->getMockBuilder('PHPPdf\Core\Node\Page')
-                     ->setMethods(array('copy', 'collectUnorderedDrawingTasks'))
+                     ->onlyMethods(array('copy', 'collectUnorderedDrawingTasks'))
                      ->getMock();
         $page->expects($this->once())
              ->method('copy')
-             ->will($this->returnValue($page));
+             ->willReturn($page);
         $page->expects($this->once())
              ->method('collectUnorderedDrawingTasks')
-             ->will($this->returnValue($expectedTasks));
+             ->willReturn($expectedTasks);
              
         $dynamicPage = new DynamicPage($page);
         

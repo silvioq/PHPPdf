@@ -1,70 +1,63 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPPdf\Test\Core\Node;
 
 use PHPPdf\Core\Node\Table\Cell;
 use PHPPdf\Core\Node\Node;
 use PHPPdf\Core\Node\Table;
+use PHPPdf\Core\Node\Listener;
+use PHPPdf\PHPUnit\Framework\TestCase;
+use PHPPdf\Core\Node\Table\Row;
 
-class CellTest extends \PHPPdf\PHPUnit\Framework\TestCase
+class CellTest extends TestCase
 {
-    private $cell;
+    private Cell $cell;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->cell = new Cell();
     }
 
-    /**
-     * @test
-     */
-    public function unmodifableFloat()
+    public function testUnmodifableFloat(): void
     {
         $this->assertEquals(Node::FLOAT_LEFT, $this->cell->getFloat());
         $this->cell->setFloat(Node::FLOAT_RIGHT);
         $this->assertEquals(Node::FLOAT_LEFT, $this->cell->getFloat());
     }
 
-    /**
-     * @test
-     */
-    public function defaultWidth()
+    public function testDefaultWidth(): void
     {
-        $this->assertTrue($this->cell->getWidth() === 0);
+        $this->assertSame($this->cell->getWidth(), 0);
     }
 
-    /**
-     * @test
-     */
-    public function tableGetter()
+    public function testTableGetter(): void
     {
-        $table = $this->getMock('PHPPdf\Core\Node\Table');
-        $row = $this->getMock('PHPPdf\Core\Node\Table\Row');
+        $table = $this->createMock(Table::class);
+        $row   = $this->createMock(Row::class);
 
         //internally in Node class is used $parent propery (not getParent() method) due to performance
         $this->writeAttribute($row, 'parent', $table);
 
         $this->cell->setParent($row);
 
-        $this->assertTrue($table === $this->cell->getTable());
+        $this->assertSame($table, $this->cell->getTable());
     }
 
-    /**
-     * @test
-     */
-    public function notifyListenersWhenAttributeHasChanged()
+    public function testNotifyListenersWhenAttributeHasChanged(): void
     {
-        $listener = $this->getMock('PHPPdf\Core\Node\Listener', array('attributeChanged', 'parentBind'));
-        
-        $listener->expects($this->at(0))
-                 ->method('attributeChanged')
-                 ->with($this->cell, 'width', null);
+        $listener = $this->createPartialMock(Listener::class, ['attributeChanged', 'parentBind']);
 
-        $listener->expects($this->at(1))
-                 ->method('attributeChanged')
-                 ->with($this->cell, 'width', 100);
 
-        $listener->expects($this->at(2))
+        $listener->expects($this->exactly(2))
+                 ->id('1')
+                 ->method('attributeChanged')
+                 ->withConsecutive([$this->cell, 'width', null], [$this->cell, 'width', 100]);
+
+
+        $listener->expects($this->once())
+                 ->after('1')
                  ->method('parentBind')
                  ->with($this->cell);
 

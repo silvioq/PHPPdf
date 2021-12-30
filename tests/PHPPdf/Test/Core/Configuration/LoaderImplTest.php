@@ -1,28 +1,34 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPPdf\Test\Core\Configuration;
 
+use PHPPdf\Core\ComplexAttribute\ComplexAttributeFactory;
 use PHPPdf\Core\Configuration\LoaderImpl;
+use PHPPdf\Cache\NullCache;
+use PHPPdf\Core\Node\NodeFactory;
+use PHPPdf\PHPUnit\Framework\TestCase;
 
-class LoaderImplTest extends \PHPPdf\PHPUnit\Framework\TestCase
+class LoaderImplTest extends TestCase
 {
-    public function saveCacheIfCacheIsEmpty($file, $loaderMethodName)
+    public function saveCacheIfCacheIsEmpty($file, $loaderMethodName): void
     {
         $loader = new LoaderImpl();
-        
-        $nodeFile = $this->readAttribute($loader, 'nodeFile');
-        $complexAttributeFile = $this->readAttribute($loader, 'complexAttributeFile');
-        $fontFile = $this->readAttribute($loader, 'fontFile');
-        $colorFile = $this->readAttribute($loader, 'colorFile');
- 
-        $cache = $this->getMock('PHPPdf\Cache\NullCache', array('test', 'save'));
 
-        $cacheId = $this->invokeMethod($loader, 'getCacheId', array($$file));
+        $nodeFile             = $this->getAttribute($loader, 'nodeFile');
+        $complexAttributeFile = $this->getAttribute($loader, 'complexAttributeFile');
+        $fontFile             = $this->getAttribute($loader, 'fontFile');
+        $colorFile            = $this->getAttribute($loader, 'colorFile');
+
+        $cache = $this->createMock(NullCache::class, ['test', 'save']);
+
+        $cacheId = $this->invokeMethod($loader, 'getCacheId', [$$file]);
 
         $cache->expects($this->once())
               ->method('test')
               ->with($cacheId)
-              ->will($this->returnValue(false));
+              ->willReturn(false);
 
         $cache->expects($this->once())
               ->method('save');
@@ -32,42 +38,42 @@ class LoaderImplTest extends \PHPPdf\PHPUnit\Framework\TestCase
         $this->invokeMethod($loader, $loaderMethodName);
     }
 
-    public function configFileGetterProvider()
+    public function configFileGetterProvider(): array
     {
-        return array(
-            array('nodeFile', 'createNodeFactory', new \PHPPdf\Core\Node\NodeFactory()),
-            array('complexAttributeFile', 'createComplexAttributeFactory', new \PHPPdf\Core\ComplexAttribute\ComplexAttributeFactory()),
-            array('fontFiles', 'createFontRegistry', array()),
-            array('colorFile', 'createColorPalette', array()),
-        );
+        return [
+            ['nodeFile', 'createNodeFactory', new NodeFactory()],
+            ['complexAttributeFile', 'createComplexAttributeFactory', new ComplexAttributeFactory()],
+            ['fontFiles', 'createFontRegistry', []],
+            ['colorFile', 'createColorPalette', []],
+        ];
     }
 
     /**
      * @test
      * @dataProvider configFileGetterProvider
      */
-    public function loadCacheIfCacheIsntEmpty($file, $loaderMethodName, $cacheContent)
+    public function loadCacheIfCacheIsntEmpty($file, $loaderMethodName, $cacheContent): void
     {
         $loader = new LoaderImpl();
-        
-        $nodeFile = $this->readAttribute($loader, 'nodeFile');
-        $complexAttributeFile = $this->readAttribute($loader, 'complexAttributeFile');
-        $fontFiles = $this->readAttribute($loader, 'fontFiles');
-        $colorFile = $this->readAttribute($loader, 'colorFile');
 
-        $cache = $this->getMock('PHPPdf\Cache\NullCache', array('test', 'save', 'load'));
+        $nodeFile             = $this->getAttribute($loader, 'nodeFile');
+        $complexAttributeFile = $this->getAttribute($loader, 'complexAttributeFile');
+        $fontFiles            = $this->getAttribute($loader, 'fontFiles');
+        $colorFile            = $this->getAttribute($loader, 'colorFile');
 
-        $cacheId = $this->invokeMethod($loader, 'getCacheId', array(is_array($$file) ? current($$file) : $$file));
+        $cache = $this->createPartialMock(NullCache::class, ['test', 'save', 'load']);
+
+        $cacheId = $this->invokeMethod($loader, 'getCacheId', [is_array($$file) ? current($$file) : $$file]);
 
         $cache->expects($this->once())
               ->method('test')
               ->with($cacheId)
-              ->will($this->returnValue(true));
+              ->willReturn(true);
 
         $cache->expects($this->once())
               ->method('load')
               ->with($cacheId)
-              ->will($this->returnValue($cacheContent));
+              ->willReturn($cacheContent);
 
         $loader->setCache($cache);
 

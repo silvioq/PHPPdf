@@ -18,14 +18,16 @@ use PHPPdf\Core\Formatter\Formatter,
  *
  * @author Piotr Śliwa <peter.pl7@gmail.com>
  */
-abstract class BaseFormatter implements Formatter, \Serializable
+abstract class BaseFormatter implements Formatter
 {
-    public function serialize()
+    public function __serialize(): array
     {
-        return '';
+        return [];
     }
 
-    public function unserialize($serialized)
+    public function __unserialize($serialized): void
     {
+
     }
+
 }

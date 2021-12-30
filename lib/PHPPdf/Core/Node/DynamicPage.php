@@ -240,7 +240,7 @@ class DynamicPage extends Page
         $this->prototype = $data['prototype'];
     }
 
-    public function flush()
+    public function flush(): void
     {
         foreach($this->pages as $page)
         {

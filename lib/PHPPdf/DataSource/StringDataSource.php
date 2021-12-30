@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Copyright 2011 Piotr Śliwa <peter.pl7@gmail.com>
  *
@@ -10,25 +12,25 @@ namespace PHPPdf\DataSource;
 
 /**
  * String data source class
- * 
+ *
  * @author Piotr Śliwa <peter.pl7@gmail.com>
  */
 class StringDataSource extends DataSource
 {
-    private $content;
+    private string $content;
 
-    public function __construct($content)
+    public function __construct(string $content)
     {
-        $this->content = (string) $content;
+        $this->content = $content;
     }
 
-    public function read()
+    public function read(): string
     {
         return $this->content;
     }
 
-    public function getId()
+    public function getId(): string
     {
-        return str_replace('-', '_', crc32($this->content));
+        return str_replace('-', '_', (string) crc32($this->content));
     }
 }

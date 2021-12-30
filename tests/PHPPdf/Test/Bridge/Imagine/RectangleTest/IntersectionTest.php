@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace PHPPdf\Test\Bridge\Imagine\RectangleTest;
 
@@ -13,7 +14,7 @@ class IntersectionTest extends TestCase
     /**
      * @test
      */
-    public function secondRectIsInsideFirstOne_returnSecondRect()
+    public function secondRectIsInsideFirstOne_returnSecondRect(): void
     {
         $rect1 = Rectangle::create(new Point(0, 0), new Box(100, 100));
         $rect2 = Rectangle::create(new Point(20, 20), new Box(30, 30));
@@ -21,26 +22,26 @@ class IntersectionTest extends TestCase
         $this->assertIntersection($rect2, $rect1, $rect2);
     }
 
-    private function assertIntersection(Rectangle $expected, Rectangle $rect1, Rectangle $rect2)
+    private function assertIntersection(Rectangle $expected, Rectangle $rect1, Rectangle $rect2): void
     {
         $this->assertEquals(self::rectToArray($expected), self::rectToArray($rect1->intersection($rect2)));
         $this->assertEquals(self::rectToArray($expected), self::rectToArray($rect2->intersection($rect1)));
     }
 
-    private static function rectToArray(Rectangle $rect)
+    private static function rectToArray(Rectangle $rect): array
     {
-        return array(
+        return [
             $rect->getStartingPoint()->getX(),
             $rect->getStartingPoint()->getY(),
             $rect->getSize()->getWidth(),
-            $rect->getSize()->getHeight()
-        );
+            $rect->getSize()->getHeight(),
+        ];
     }
 
     /**
      * @test
      */
-    public function rectanglesAreDisjoint_returnNull()
+    public function rectanglesAreDisjoint_returnNull(): void
     {
         $rect1 = Rectangle::create(new Point(0, 0), new Box(100, 100));
         $rect2 = Rectangle::create(new Point(200, 200), new Box(100, 100));
@@ -51,7 +52,7 @@ class IntersectionTest extends TestCase
     /**
      * @test
      */
-    public function verticesOfRectsAreOutsideRects_returnIntersection()
+    public function verticesOfRectsAreOutsideRects_returnIntersection(): void
     {
         $rect1 = Rectangle::create(new Point(50, 50), new Box(100, 100));
         $rect2 = Rectangle::create(new Point(60, 0), new Box(30, 500));
@@ -66,7 +67,7 @@ class IntersectionTest extends TestCase
     /**
      * @test
      */
-    public function verticesOfOneRectArePartiallyInSecondRect_returnIntersection()
+    public function verticesOfOneRectArePartiallyInSecondRect_returnIntersection(): void
     {
         $rect1 = Rectangle::create(new Point(50, 50), new Box(100, 100));
         $rect2 = Rectangle::create(new Point(40, 40), new Box(50, 50));

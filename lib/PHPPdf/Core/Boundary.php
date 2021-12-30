@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Copyright 2011 Piotr Śliwa <peter.pl7@gmail.com>
  *
@@ -18,55 +20,47 @@ use PHPPdf\Exception\LogicException;
  *
  * @author Piotr Śliwa <peter.pl7@gmail.com>
  */
-class Boundary implements \Countable, \Iterator, \ArrayAccess, \Serializable
+class Boundary implements \Countable, \Iterator, \ArrayAccess
 {
-    private $points = array();
-    private $numberOfPoints = 0;
-    private $closed = false;
-    private $current = 0;
-    private $diagonalPointXIndex = null;
-    private $diagonalPointYIndex = null;
+    private array $points              = [];
+    private int   $numberOfPoints      = 0;
+    private bool  $closed              = false;
+    private int   $current             = 0;
+    private ?int  $diagonalPointXIndex = null;
+    private ?int  $diagonalPointYIndex = null;
 
     /**
      * Add next point to boundary
-     * 
+     *
      * @return Boundary Self
      */
-    public function setNext($param1, $param2 = null)
+    public function setNext($param1, $param2 = null): static
     {
-        if($this->closed)
-        {
+        if ($this->closed) {
             throw new LogicException('Boundary has been already closed.');
         }
 
         $numberOfArgs = func_num_args();
-        
-        if($numberOfArgs === 2)
-        {
+
+        if ($numberOfArgs === 2) {
             $point = Point::getInstance($param1, $param2);
-        }
-        elseif($param1 instanceof Point)
-        {
+        } elseif ($param1 instanceof Point) {
             $point = $param1;
-        }
-        else
-        {
+        } else {
             throw new InvalidArgumentException('Passed argument(s) should be coordinations or Point object.');
         }
 
-        $oldNumberOfPoints = $this->numberOfPoints;
+        $oldNumberOfPoints                = $this->numberOfPoints;
         $this->points[$oldNumberOfPoints] = $point;
         $this->numberOfPoints++;
 
         $diagonalPoint = $this->getDiagonalPoint();
 
-        if(!$diagonalPoint || $diagonalPoint->compareYCoord($point) >= 0)
-        {
+        if (!$diagonalPoint || $diagonalPoint->compareYCoord($point) >= 0) {
             $this->diagonalPointYIndex = $oldNumberOfPoints;
         }
-        
-        if(!$diagonalPoint || $diagonalPoint->compareXCoord($point) <= 0)
-        {
+
+        if (!$diagonalPoint || $diagonalPoint->compareXCoord($point) <= 0) {
             $this->diagonalPointXIndex = $oldNumberOfPoints;
         }
 
@@ -76,10 +70,9 @@ class Boundary implements \Countable, \Iterator, \ArrayAccess, \Serializable
     /**
      * Close boundary. Adding next points occurs LogicException
      */
-    public function close()
+    public function close(): void
     {
-        if($this->numberOfPoints <= 2)
-        {
+        if ($this->numberOfPoints <= 2) {
             throw new LogicException('Boundary must have at last three points.');
         }
 
@@ -91,68 +84,61 @@ class Boundary implements \Countable, \Iterator, \ArrayAccess, \Serializable
 
     /**
      * Checks if boundaries have common points
-     * 
+     *
      * @param Boundary $boundary
+     *
      * @return boolean
      */
-    public function intersects(Boundary $boundary)
+    public function intersects(Boundary $boundary): bool
     {
-        $firstPoint = $this->getFirstPoint();
+        $firstPoint    = $this->getFirstPoint();
         $diagonalPoint = $this->getDiagonalPoint();
 
-        $compareFirstPoint = $boundary->getFirstPoint();
+        $compareFirstPoint    = $boundary->getFirstPoint();
         $compareDiagonalPoint = $boundary->getDiagonalPoint();
 
-        foreach($boundary->points as $point)
-        {
-            if($this->contains($point))
-            {
+        foreach ($boundary->points as $point) {
+            if ($this->contains($point)) {
                 return true;
             }
         }
-        
-        foreach($this->points as $point)
-        {
-            if($boundary->contains($point))
-            {
+
+        foreach ($this->points as $point) {
+            if ($boundary->contains($point)) {
                 return true;
             }
         }
 
         $centerPoint = $this->getPointBetween($firstPoint, $diagonalPoint);
 
-        if($boundary->contains($centerPoint))
-        {
+        if ($boundary->contains($centerPoint)) {
             return true;
         }
 
         $centerPoint = $this->getPointBetween($compareFirstPoint, $compareDiagonalPoint);
 
-        if($this->contains($centerPoint))
-        {
+        if ($this->contains($centerPoint)) {
             return true;
         }
 
         $centerPoint = $this->getPointBetween($firstPoint, $compareDiagonalPoint);
 
-        if($this->contains($centerPoint) && $boundary->contains($centerPoint))
-        {
+        if ($this->contains($centerPoint) && $boundary->contains($centerPoint)) {
             return true;
         }
-        
+
         $centerPoint = $this->getPointBetween($compareFirstPoint, $diagonalPoint);
 
-        if($this->contains($centerPoint) && $boundary->contains($centerPoint))
-        {
+        if ($this->contains($centerPoint) && $boundary->contains($centerPoint)) {
             return true;
         }
 
         return false;
     }
 
-    private function contains(Point $point, $include = false)
+    private function contains(Point $point, $include = false): bool
     {
-        $firstPoint = $this->getFirstPoint();
+        $firstPoint    = $this->getFirstPoint();
         $diagonalPoint = $this->getDiagonalPoint();
 
         return ($firstPoint->getX() < $point->getX() && $firstPoint->getY() > $point->getY() && $diagonalPoint->getX() > $point->getX() && $diagonalPoint->getY() < $point->getY() || $include && $point);
@@ -160,8 +146,8 @@ class Boundary implements \Countable, \Iterator, \ArrayAccess, \Serializable
 
     private function getPointBetween(Point $point1, Point $point2)
     {
-        $x = $point1->getX() + ($point2->getX() - $point1->getX())/2;
-        $y = $point2->getY() + ($point1->getY() - $point2->getY())/2;
+        $x = $point1->getX() + ($point2->getX() - $point1->getX()) / 2;
+        $y = $point2->getY() + ($point1->getY() - $point2->getY()) / 2;
 
         return Point::getInstance($x, $y);
     }
@@ -169,66 +155,66 @@ class Boundary implements \Countable, \Iterator, \ArrayAccess, \Serializable
     /**
      * @return integer Number of points in boundary
      */
-    public function count()
+    public function count(): int
     {
         return $this->numberOfPoints;
     }
 
-    public function current()
+    public function current(): mixed
     {
         $points = $this->getPoints();
+
         return $this->valid() ? $points[$this->current] : null;
     }
 
     /**
      * @return array Array of Point objects
      */
-    public function getPoints()
+    public function getPoints(): array
     {
         return $this->points;
     }
-    
+
     public function getPoint($i)
     {
         return $this->offsetGet($i);
     }
 
-    public function key()
+    public function key(): mixed
     {
         return $this->current;
     }
 
-    public function next()
+    public function next(): void
     {
         $this->current++;
     }
 
-    public function rewind()
+    public function rewind(): void
     {
         $this->current = 0;
     }
 
-    public function valid()
+    public function valid(): bool
     {
         $points = $this->getPoints();
+
         return isset($points[$this->current]);
     }
 
     /**
      * Translate boundary by vector ($x, $y)
-     * 
+     *
      * @param integer $x First vector's coordinate
      * @param integer $y Second vector's coordinate
      */
-    public function translate($x, $y)
+    public function translate($x, $y): static
     {
-        if(!$x && !$y)
-        {
+        if (!$x && !$y) {
             return $this;
         }
-        
-        for($i=0; $i<$this->numberOfPoints; $i++)
-        {
+
+        for ($i = 0; $i < $this->numberOfPoints; $i++) {
             $this->points[$i] = $this->points[$i]->translate($x, $y);
         }
 
@@ -236,16 +222,17 @@ class Boundary implements \Countable, \Iterator, \ArrayAccess, \Serializable
     }
 
     /**
-     * Translate and replace Point within boundary (@see translate())
+     * Translate and replace Point within boundary (@param integer $pointIndex Index of the point
      *
-     * @param integer $pointIndex Index of the point
      * @param integer $x First vector's coordinate
      * @param integer $y Second vector's coordinate
+     *
+     * @see translate())
+     *
      */
     public function pointTranslate($pointIndex, $x, $y)
     {
-        if($x || $y)
-        {
+        if ($x || $y) {
             $this->points[$pointIndex] = $this->points[$pointIndex]->translate($x, $y);
         }
 
@@ -253,88 +240,80 @@ class Boundary implements \Countable, \Iterator, \ArrayAccess, \Serializable
     }
 
     /**
-     * @return Point First added point or null if boundary is empty
+     * @return Point|null First added point or null if boundary is empty
      */
-    public function getFirstPoint()
+    public function getFirstPoint(): ?Point
     {
-        if(isset($this->points[0]))
-        {
-            return $this->points[0];
-        }
-
-        return null;
+        return $this->points[0] ?? null;
     }
 
     /**
-     * @return Point Point diagonally to first point (@see getFirstPoint()) or null if boundary is empty
+     * @return Point|null Point diagonally to first point (@see getFirstPoint()) or null if boundary is empty
      */
-    public function getDiagonalPoint()
+    public function getDiagonalPoint(): ?Point
     {
-        if($this->diagonalPointXIndex !== null && $this->diagonalPointYIndex !== null)
-        {
+        if ($this->diagonalPointXIndex !== null && $this->diagonalPointYIndex !== null) {
             return Point::getInstance($this->points[$this->diagonalPointXIndex]->getX(), $this->points[$this->diagonalPointYIndex]->getY());
         }
 
         return null;
     }
-    
+
     /**
-     * @return PHPPdf\Core\Point Point that divides line between first and diagonal points on half
+     * @return Point|null Point that divides line between first and diagonal points on half
      */
-    public function getMiddlePoint()
+    public function getMiddlePoint(): ?Point
     {
         $diagonalPoint = $this->getDiagonalPoint();
-        
-        if($diagonalPoint === null)
-        {
+
+        if ($diagonalPoint === null) {
             return null;
         }
-        
-        $x = $this->getFirstPoint()->getX() + ($diagonalPoint->getX() - $this->getFirstPoint()->getX())/2;
-        $y = $diagonalPoint->getY() + ($this->getFirstPoint()->getY() - $diagonalPoint->getY())/2;
-        
+
+        $x = $this->getFirstPoint()->getX() + ($diagonalPoint->getX() - $this->getFirstPoint()->getX()) / 2;
+        $y = $diagonalPoint->getY() + ($this->getFirstPoint()->getY() - $diagonalPoint->getY()) / 2;
+
         return Point::getInstance($x, $y);
     }
 
     /**
      * Clears points and status of the object
      */
-    public function reset()
+    public function reset(): void
     {
         $this->closed = false;
-        $this->points = array();
+        $this->points = [];
         $this->rewind();
-        $this->numberOfPoints = 0;
+        $this->numberOfPoints      = 0;
         $this->diagonalPointXIndex = null;
         $this->diagonalPointYIndex = null;
     }
 
-    public function isClosed()
+    public function isClosed(): bool
     {
         return $this->closed;
     }
 
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return (is_int($offset) && $offset < $this->numberOfPoints);
     }
 
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
-        if(!$this->offsetExists($offset))
-        {
+        if (!$this->offsetExists($offset)) {
             throw new OutOfBoundsException(sprintf('Point of index "%s" dosn\'t exist. Index should be in range 0-%d.', $offset, $this->numberOfPoints - 1));
         }
 
         return $this->points[$offset];
     }
 
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         throw new BadMethodCallException('You can not set point directly.');
     }
 
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         throw new BadMethodCallException('You can not unset point directly.');
     }
@@ -343,30 +322,27 @@ class Boundary implements \Countable, \Iterator, \ArrayAccess, \Serializable
     {
     }
 
-    public function serialize()
+    public function __serialize(): array
     {
-        $points = array();
-        foreach($this->getPoints() as $point)
-        {
+        $points = [];
+        foreach ($this->getPoints() as $point) {
             $points[] = $point->toArray();
         }
 
-        return serialize(array(
+        return [
             'closed' => $this->closed,
             'points' => $points,
-        ));
+        ];
     }
 
-    public function unserialize($serialized)
+    public function __unserialize($serialized): void
     {
-        $data = unserialize($serialized);
-        $points = $data['points'];
+        $points = $serialized['points'];
 
-        foreach($points as $point)
-        {
+        foreach ($points as $point) {
             $this->setNext($point[0], $point[1]);
         }
 
-        $this->closed = (bool) $data['closed'];
+        $this->closed = (bool) $serialized['closed'];
     }
 }

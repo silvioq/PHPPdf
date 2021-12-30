@@ -1,16 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPPdf\Test\Core\Formatter;
 
 use PHPPdf\Core\Formatter\CellFirstPointPositionFormatter,
     PHPPdf\Core\Document,
     PHPPdf\Core\Point;
+use PHPPdf\PHPUnit\Framework\TestCase;
+use PHPPdf\Core\Node\Container;
+use PHPPdf\Core\Boundary;
 
-class CellFirstPointPositionFormatterTest extends \PHPPdf\PHPUnit\Framework\TestCase
+class CellFirstPointPositionFormatterTest extends TestCase
 {
-    private $formatter;
+    private CellFirstPointPositionFormatter $formatter;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->formatter = new CellFirstPointPositionFormatter();
     }
@@ -18,27 +23,27 @@ class CellFirstPointPositionFormatterTest extends \PHPPdf\PHPUnit\Framework\Test
     /**
      * @test
      */
-    public function setFirstPointAsFirstPointOfParent()
+    public function setFirstPointAsFirstPointOfParent(): void
     {
         $firstPoint = Point::getInstance(0, 500);
 
-        $parent = $this->getMock('PHPPdf\Core\Node\Container', array('getFirstPoint'));
+        $parent = $this->createPartialMock(Container::class, ['getFirstPoint']);
         $parent->expects($this->atLeastOnce())
                ->method('getFirstPoint')
-               ->will($this->returnValue($firstPoint));
+               ->willReturn($firstPoint);
 
-        $boundary = $this->getMock('PHPPdf\Core\Boundary', array('setNext'));
+        $boundary = $this->createPartialMock(Boundary::class, ['setNext']);
         $boundary->expects($this->once())
                  ->method('setNext')
                  ->with($firstPoint);
 
-        $node = $this->getMock('PHPPdf\Core\Node\Container', array('getParent', 'getBoundary'));
+        $node = $this->createPartialMock(Container::class, ['getParent', 'getBoundary']);
         $node->expects($this->atLeastOnce())
-              ->method('getParent')
-              ->will($this->returnValue($parent));
+             ->method('getParent')
+             ->willReturn($parent);
         $node->expects($this->atLeastOnce())
-              ->method('getBoundary')
-              ->will($this->returnValue($boundary));
+             ->method('getBoundary')
+             ->willReturn($boundary);
 
         $this->formatter->format($node, $this->createDocumentStub());
     }

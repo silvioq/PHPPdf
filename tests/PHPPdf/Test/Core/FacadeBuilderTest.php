@@ -11,17 +11,17 @@ class FacadeBuilderTest extends \PHPPdf\PHPUnit\Framework\TestCase
     private $builder;
     private $configurationLoader;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->configurationLoader = $this->getMockBuilder('PHPPdf\Core\Configuration\Loader')
                                           ->getMock();
         $this->builder = FacadeBuilder::create($this->configurationLoader);
         
-        $complexAttributeFactory = $this->getMock('PHPPdf\Core\ComplexAttribute\ComplexAttributeFactory');
+        $complexAttributeFactory = $this->createMock('PHPPdf\Core\ComplexAttribute\ComplexAttributeFactory');
         
         $this->configurationLoader->expects($this->any())
                                   ->method('createComplexAttributeFactory')
-                                  ->will($this->returnValue($complexAttributeFactory));
+                                  ->willReturn($complexAttributeFactory);
     }
 
     /**
@@ -31,7 +31,7 @@ class FacadeBuilderTest extends \PHPPdf\PHPUnit\Framework\TestCase
     {        
         $facade = $this->builder->build();
         $this->assertInstanceOf('PHPPdf\Core\Facade', $facade);
-        $configurationLoader = $this->readAttribute($facade, 'configurationLoader');
+        $configurationLoader = $this->getAttribute($facade, 'configurationLoader');
         $this->assertTrue($configurationLoader === $this->configurationLoader);
     }
 
@@ -42,7 +42,7 @@ class FacadeBuilderTest extends \PHPPdf\PHPUnit\Framework\TestCase
     {
         $facade = $this->builder->build();
 
-        $this->assertInstanceOf('PHPPdf\Cache\NullCache', $this->readAttribute($facade, 'cache'));
+        $this->assertInstanceOf('PHPPdf\Cache\NullCache', $this->getAttribute($facade, 'cache'));
     }
 
     /**
@@ -54,7 +54,7 @@ class FacadeBuilderTest extends \PHPPdf\PHPUnit\Framework\TestCase
                                   ->method('setCache');
         $facade = $this->builder->setCache(CacheImpl::ENGINE_FILE, array())->build();
 
-        $this->assertInstanceOf('PHPPdf\Cache\CacheImpl', $this->readAttribute($facade, 'cache'));
+        $this->assertInstanceOf('PHPPdf\Cache\CacheImpl', $this->getAttribute($facade, 'cache'));
     }
 
     /**
@@ -65,7 +65,7 @@ class FacadeBuilderTest extends \PHPPdf\PHPUnit\Framework\TestCase
     {
         $facade = $this->builder->setUseCacheForStylesheetConstraint($useCache)->build();
 
-        $this->assertEquals($useCache, $this->readAttribute($facade, 'useCacheForStylesheetConstraint'));
+        $this->assertEquals($useCache, $this->getAttribute($facade, 'useCacheForStylesheetConstraint'));
     }
 
     public function booleanProvider()
@@ -124,19 +124,19 @@ class FacadeBuilderTest extends \PHPPdf\PHPUnit\Framework\TestCase
      */
     public function createParameterizeDocumentUsingEngineFromEngineFactory($type, $options)
     {
-        $engineFactory = $this->getMock('PHPPdf\Core\Engine\EngineFactory');
+        $engineFactory = $this->createMock('PHPPdf\Core\Engine\EngineFactory');
         
         $builder = FacadeBuilder::create(null, $engineFactory);
         
         $builder->setEngineType($type)
                 ->setEngineOptions($options);
 
-        $engine = $this->getMock('PHPPdf\Core\Engine\Engine');
+        $engine = $this->createMock('PHPPdf\Core\Engine\Engine');
                 
         $engineFactory->expects($this->once())
                       ->method('createEngine')
                       ->with($type, $options)
-                      ->will($this->returnValue($engine));
+                      ->willReturn($engine);
                       
         $facade = $builder->build();
         
@@ -155,7 +155,7 @@ class FacadeBuilderTest extends \PHPPdf\PHPUnit\Framework\TestCase
      */
     public function addStringFilter()
     {
-        $filter = $this->getMock('PHPPdf\Util\StringFilter');
+        $filter = $this->createMock('PHPPdf\Util\StringFilter');
         
         $this->builder->addStringFilter($filter);
         
@@ -163,9 +163,9 @@ class FacadeBuilderTest extends \PHPPdf\PHPUnit\Framework\TestCase
         
         $document = $facade->getDocument();
         
-        $builderStringFilters = $this->readAttribute($this->builder, 'stringFilters');
-        $documentStringFilters = $this->readAttribute($document, 'stringFilters');
-        $facadeStringFilters = $this->readAttribute($facade, 'stringFilters');
+        $builderStringFilters = $this->getAttribute($this->builder, 'stringFilters');
+        $documentStringFilters = $this->getAttribute($document, 'stringFilters');
+        $facadeStringFilters = $this->getAttribute($facade, 'stringFilters');
         
         $this->assertEquals(2, count($builderStringFilters));
         $this->assertEquals($builderStringFilters, $documentStringFilters);

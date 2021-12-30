@@ -22,7 +22,7 @@ if(!isset($_GET['name']))
     exit();
 }
 
-$engine = isset($_GET['engine']) ? $_GET['engine'] : 'pdf';
+$engine = $_GET['engine'] ?? 'pdf';
 
 // set different way of configuration
 //$facade = PHPPdf\Core\FacadeBuilder::create(new PHPPdf\Core\Configuration\DependencyInjection\LoaderImpl())//->setCache('File', array('cache_dir' => __DIR__.'/cache/'))
@@ -65,7 +65,7 @@ if(isset($_GET['t']))
 }
 else
 {
-    if($engine == 'pdf')
+    if($engine === 'pdf')
     {
         header('Content-Type: application/pdf');
         echo $content;

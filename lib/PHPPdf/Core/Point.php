@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /*
  * Copyright 2011 Piotr Śliwa <peter.pl7@gmail.com>
@@ -20,23 +22,21 @@ use PHPPdf\Exception\OutOfBoundsException;
  */
 final class Point implements \ArrayAccess
 {
-    private static $zero;
+    private static ?Point $zero = null;
     
-    private ?float $x;
-    private ?float $y;
+    private $x;
+    private $y;
 
     private function __construct($x, $y)
     {
-        $this->x = (float)$x;
-        $this->y = (float)$y;
+        $this->x = $x;
+        $this->y = $y;
     }
 
     /**
      * Factory method
-     * 
-     * @return Point
      */
-    public static function getInstance($x, $y)
+    public static function getInstance($x, $y): ?Point
     {
         if($x === 0 && $y === 0)
         {
@@ -51,7 +51,7 @@ final class Point implements \ArrayAccess
         return new self($x, $y);
     }
     
-    public function isZero()
+    public function isZero(): bool
     {
         return $this === self::$zero;
     }
@@ -74,12 +74,12 @@ final class Point implements \ArrayAccess
      * 
      * @return integer Positive number if y coord of owner is greater, 0 if values are equal or negative integer if owner is less
      */
-    public function compareYCoord(Point $point, $precision = 1000)
+    public function compareYCoord(Point $point, $precision = 1000): int
     {
         return $this->compare($this->y, $point->y, $precision);
     }
     
-    private function compare($firstNumber, $secondNumber, $precision)
+    private function compare($firstNumber, $secondNumber, $precision): int
     {
         if($firstNumber === $secondNumber)
         {
@@ -89,20 +89,20 @@ final class Point implements \ArrayAccess
         $firstNumberAsInteger = $this->convertToInteger($firstNumber, $precision);
         $secondNumberAsInteger = $this->convertToInteger($secondNumber, $precision);
 
-        if($firstNumberAsInteger > $secondNumberAsInteger)
-        {
+        if ($firstNumberAsInteger > $secondNumberAsInteger) {
             return 1;
         }
-        elseif($firstNumberAsInteger === $secondNumberAsInteger)
-        {
+
+        if($firstNumberAsInteger === $secondNumberAsInteger) {
             return 0;
         }
-        
+
         return -1;
     }
     
-    private function convertToInteger($double, $precision)
+    private function convertToInteger($double, $precision): int
     {
+        $double = (float) $double;
         return (int) ($double * $precision);
     }
     
@@ -114,7 +114,7 @@ final class Point implements \ArrayAccess
      * 
      * @return integer Positive number if x coord of owner is greater, 0 if values are equal or negative integer if owner is less
      */
-    public function compareXCoord(Point $point, $precision = 1000)
+    public function compareXCoord(Point $point, $precision = 1000): int
     {
         return $this->compare($this->x, $point->x, $precision);
     }
@@ -132,9 +132,9 @@ final class Point implements \ArrayAccess
     /**
      * @param integer $x First coordinate of vector
      * @param integer $y Second coordinate of vector
-     * @return PHPPdf\Core\Point Translated point by given vector
+     * @return \PHPPdf\Core\Point Translated point by given vector
      */
-    public function translate($x, $y)
+    public function translate($x, $y): Point
     {
         if(!$x && !$y)
         {
@@ -144,30 +144,26 @@ final class Point implements \ArrayAccess
         return self::getInstance($this->x + $x, $this->y - $y);
     }
 
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return ($offset == 1 || $offset == 0);
     }
 
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
-        switch($offset)
-        {
-            case 0:
-                return $this->x;
-            case 1:
-                return $this->y;
-            default:
-                throw new OutOfBoundsException(sprintf('Point implementation of ArrayAccess interface accept only "0" and "1" key, "%s" given.', $offset));
-        }
+        return match ($offset) {
+            0 => $this->x,
+            1 => $this->y,
+            default => throw new OutOfBoundsException(sprintf('Point implementation of ArrayAccess interface accept only "0" and "1" key, "%s" given.', $offset)),
+        };
     }
 
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         throw new BadMethodCallException(sprintf('%s class is inmutable.', __CLASS__));
     }
 
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         throw new BadMethodCallException(sprintf('%s class is inmutable.', __CLASS__));
     }

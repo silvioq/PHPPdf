@@ -8,6 +8,7 @@
 
 namespace PHPPdf\Core\Engine\ZF;
 
+use PHPPdf\Bridge\Imagine\Image\Point;
 use PHPPdf\Exception\RuntimeException;
 use PHPPdf\Exception\InvalidArgumentException;
 use PHPPdf\Bridge\Zend\Pdf\Page;
@@ -70,7 +71,7 @@ class GraphicsContext extends AbstractGraphicsContext
         }
         else
         {
-            list($this->width, $this->height) = explode(':', $pageOrPageSize);
+            [$this->width, $this->height] = explode(':', $pageOrPageSize);
         }
         
         $this->encoding = (string) $encoding;
@@ -167,7 +168,8 @@ class GraphicsContext extends AbstractGraphicsContext
 
     protected function doDrawText($text, $x, $y, $encoding, $wordSpacing = 0, $fillType = self::SHAPE_DRAW_FILL)
     {
-        try 
+
+        try
         {
             if($wordSpacing === 0 && $fillType === self::SHAPE_DRAW_FILL)
             {

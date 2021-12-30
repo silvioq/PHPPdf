@@ -16,7 +16,7 @@ use PHPPdf\Core\AttributeBag;
  *
  * @author Piotr Śliwa <peter.pl7@gmail.com>
  */
-class BagContainer implements \Serializable
+class BagContainer
 {
     protected $attributeBag;
     protected $weight;
@@ -73,9 +73,9 @@ class BagContainer implements \Serializable
         $this->weight += $weight;
     }
 
-    public function serialize()
+    public function __serialize(): array
     {
-        return serialize($this->getDataToSerialize());
+        return $this->getDataToSerialize();
     }
 
     protected function getDataToSerialize()
@@ -86,11 +86,9 @@ class BagContainer implements \Serializable
         );
     }
 
-    public function unserialize($serialized)
+    public function __unserialize($serialized): void
     {
-        $data = unserialize($serialized);
-
-        $this->restoreDataAfterUnserialize($data);
+        $this->restoreDataAfterUnserialize($serialized);
     }
 
     protected function restoreDataAfterUnserialize($data)

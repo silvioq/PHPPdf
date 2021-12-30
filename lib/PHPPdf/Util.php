@@ -43,7 +43,6 @@ final class Util
             $value = (float) $value;
             $value = deg2rad($value);
         }
-        
         return $value !== null ? ((float) $value) : null;
     }
     

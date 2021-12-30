@@ -8,7 +8,7 @@ class NullCacheTest extends \PHPPdf\PHPUnit\Framework\TestCase
 {
     private $cache;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->cache = new NullCache();
     }

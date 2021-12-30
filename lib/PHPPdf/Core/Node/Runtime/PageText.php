@@ -39,7 +39,7 @@ abstract class PageText extends Text implements Runtime
         static::addAttribute('offset', 0);
     }
     
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
 

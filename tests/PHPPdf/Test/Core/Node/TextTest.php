@@ -20,7 +20,7 @@ class TextTest extends \PHPPdf\PHPUnit\Framework\TestCase
     const PAGE_WIDTH = 700;
     const PAGE_HEIGHT = 700;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->text = new Text('some text');
         $this->page = new Page(array(
@@ -107,10 +107,10 @@ class TextTest extends \PHPPdf\PHPUnit\Framework\TestCase
     {
         $textStub = 'some text';
         
-        $transformator = $this->getMock('PHPPdf\Core\Node\TextTransformator', array('transform'));
+        $transformator = $this->createPartialMock('PHPPdf\Core\Node\TextTransformator', array('transform'));
         $transformator->expects($this->once())
                       ->method('transform')
-                      ->will($this->returnValue($textStub));
+                      ->willReturn($textStub);
         
         $this->text->setTextTransformator($transformator);
         
@@ -144,6 +144,7 @@ class TextTest extends \PHPPdf\PHPUnit\Framework\TestCase
                 $this->fail('unexpected exception');
             }
         }
+        $this->assertTrue(true);
     }
     
     public function wordsSizesProvider()
@@ -192,7 +193,7 @@ class TextTest extends \PHPPdf\PHPUnit\Framework\TestCase
         for($i=0; $i<3; $i++)
         {
             $linePart = $this->getMockBuilder('PHPPdf\Core\Node\Paragraph\LinePart')
-                             ->setMethods(array('collectOrderedDrawingTasks'))
+                             ->onlyMethods(array('collectOrderedDrawingTasks'))
                              ->disableOriginalConstructor()
                              ->getMock();
                              

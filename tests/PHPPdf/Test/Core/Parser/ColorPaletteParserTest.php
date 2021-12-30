@@ -10,7 +10,7 @@ class ColorPaletteParserTest extends TestCase
 {
     private $parser;
     
-    public function setUp()
+    public function setUp(): void
     {
         $this->parser = new ColorPaletteParser();
     }
@@ -40,10 +40,11 @@ XML;
     /**
      * @test
      * @dataProvider invalidXmlProvider
-     * @expectedException PHPPdf\Parser\Exception\ParseException
+     *
      */
     public function throwExceptionIfRequiredAttributesAreMissing($xml)
     {
+        $this->expectException(\PHPPdf\Parser\Exception\ParseException::class);
         $this->parser->parse($xml);
     }
     

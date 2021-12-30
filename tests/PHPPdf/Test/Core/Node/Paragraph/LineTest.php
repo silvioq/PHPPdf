@@ -24,13 +24,13 @@ class LineTest extends \PHPPdf\PHPUnit\Framework\TestCase
         foreach($widthOfParts as $widthOfPart)
         {
             $linePart = $this->getMockBuilder('PHPPdf\Core\Node\Paragraph\LinePart')
-                             ->setMethods(array('getWidth'))
+                             ->onlyMethods(array('getWidth'))
                              ->disableOriginalConstructor()
                              ->getMock();
 
             $linePart->expects($this->any())
                      ->method('getWidth')
-                     ->will($this->returnValue($widthOfPart));
+                     ->willReturn($widthOfPart);
                      
             $line->addPart($linePart);
         }
@@ -45,22 +45,22 @@ class LineTest extends \PHPPdf\PHPUnit\Framework\TestCase
     private function createParagraph($firstPoint, $width, $paddingLeft, $paddingRight, $align)
     {
         $paragraph = $this->getMockBuilder('PHPPdf\Core\Node\Paragraph')
-                          ->setMethods(array('getWidth', 'getParentPaddingLeft', 'getParentPaddingRight'))
+                          ->onlyMethods(array('getWidth', 'getParentPaddingLeft', 'getParentPaddingRight'))
                           ->getMock();
         $paragraph->getBoundary()->setNext($firstPoint)
                                  ->setNext($firstPoint->translate($width, 0));
         $paragraph->expects($this->any())
                   ->method('getWidth')
-                  ->will($this->returnValue($width));
+                  ->willReturn($width);
         $paragraph->setAttribute('text-align', $align);
         
         $paragraph->expects($this->any())
                   ->method('getParentPaddingLeft')
-                  ->will($this->returnValue($paddingLeft));
+                  ->willReturn($paddingLeft);
 
         $paragraph->expects($this->any())
                   ->method('getParentPaddingRight')
-                  ->will($this->returnValue($paddingRight));
+                  ->willReturn($paddingRight);
                   
         return $paragraph;
     }
@@ -82,14 +82,14 @@ class LineTest extends \PHPPdf\PHPUnit\Framework\TestCase
         $yTranslation = 21;
         $xTranslation = 10;
         $paragraph = $this->getMockBuilder('PHPPdf\Core\Node\Paragraph')
-                          ->setMethods(array('getFirstPoint'))
+                          ->onlyMethods(array('getFirstPoint'))
                           ->getMock();
                           
         $firstPoint = Point::getInstance(100, 100);
                           
         $paragraph->expects($this->once())
                   ->method('getFirstPoint')
-                  ->will($this->returnValue($firstPoint));
+                  ->willReturn($firstPoint);
                   
         $line = new Line($paragraph, $xTranslation, $yTranslation);
         
@@ -104,24 +104,24 @@ class LineTest extends \PHPPdf\PHPUnit\Framework\TestCase
         $paragraphWidth = 100;
 
         $paragraph = $this->getMockBuilder('PHPPdf\Core\Node\Paragraph')
-                          ->setMethods(array('getWidth', 'getRecurseAttribute', 'getParentPaddingLeft', 'getParentPaddingRight'))
+                          ->onlyMethods(array('getWidth', 'getRecurseAttribute', 'getParentPaddingLeft', 'getParentPaddingRight'))
                           ->getMock();
         $paragraph->expects($this->atLeastOnce())
                   ->method('getWidth')
-                  ->will($this->returnValue($paragraphWidth));
+                  ->willReturn($paragraphWidth);
         $paragraph->expects($this->atLeastOnce())
                   ->method('getParentPaddingLeft')
-                  ->will($this->returnValue(0));
+                  ->willReturn(0);
         $paragraph->expects($this->atLeastOnce())
                   ->method('getParentPaddingRight')
-                  ->will($this->returnValue(0));
+                  ->willReturn(0);
         $paragraph->expects($this->atLeastOnce())
                   ->method('getWidth')
-                  ->will($this->returnValue($paragraphWidth));
+                  ->willReturn($paragraphWidth);
         $paragraph->expects($this->atLeastOnce())
                   ->method('getRecurseAttribute')
                   ->with('text-align')
-                  ->will($this->returnValue(Node::ALIGN_JUSTIFY));
+                  ->willReturn(Node::ALIGN_JUSTIFY);
                           
         $line = new Line($paragraph, 0, 0);
         
@@ -135,12 +135,12 @@ class LineTest extends \PHPPdf\PHPUnit\Framework\TestCase
         foreach($linePartSizes as $width)
         {
             $linePart = $this->getMockBuilder('PHPPdf\Core\Node\Paragraph\LinePart')
-                             ->setMethods(array('setWordSpacing', 'getWidth', 'getNumberOfWords'))
+                             ->onlyMethods(array('setWordSpacing', 'getWidth', 'getNumberOfWords'))
                              ->disableOriginalConstructor()
                              ->getMock();
             $linePart->expects($this->atLeastOnce())
                      ->method('getWidth')
-                     ->will($this->returnValue($width));
+                     ->willReturn($width);
                      
             $linePart->expects($this->once())
                      ->method('setWordSpacing')
@@ -148,7 +148,7 @@ class LineTest extends \PHPPdf\PHPUnit\Framework\TestCase
                      
             $linePart->expects($this->atLeastOnce())
                      ->method('getNumberOfWords')
-                     ->will($this->returnValue($numberOfWordsPerPart));
+                     ->willReturn($numberOfWordsPerPart);
             $line->addPart($linePart);
         }
         

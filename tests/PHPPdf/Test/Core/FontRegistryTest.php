@@ -10,10 +10,10 @@ class FontRegistryTest extends \PHPPdf\PHPUnit\Framework\TestCase
     private $registry;
     private $document;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->document = $this->getMockBuilder('PHPPdf\Core\Document')
-                               ->setMethods(array('createFont'))
+                               ->onlyMethods(array('createFont'))
                                ->disableOriginalConstructor()
                                ->getMock();
         $this->registry = new FontRegistry($this->document);
@@ -38,7 +38,7 @@ class FontRegistryTest extends \PHPPdf\PHPUnit\Framework\TestCase
         $this->document->expects($this->once())
                        ->method('createFont')
                        ->with($definition)
-                       ->will($this->returnValue($fontStub));
+                       ->willReturn($fontStub);
         
         $this->registry->register('font', $definition);
 
@@ -49,10 +49,11 @@ class FontRegistryTest extends \PHPPdf\PHPUnit\Framework\TestCase
 
     /**
      * @test
-     * @expectedException PHPPdf\Exception\InvalidArgumentException
+     *
      */
     public function throwExceptionIfFontDosntExist()
     {
+        $this->expectException(\PHPPdf\Exception\InvalidArgumentException::class);
         $this->registry->get('font');
     }
 }

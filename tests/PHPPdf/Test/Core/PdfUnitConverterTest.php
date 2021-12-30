@@ -3,6 +3,7 @@
 namespace PHPPdf\Test\Core;
 
 use PHPPdf\Core\PdfUnitConverter;
+use PHPPdf\Exception\InvalidArgumentException;
 use PHPPdf\PHPUnit\Framework\TestCase;
 
 class PdfUnitConverterTest extends TestCase
@@ -34,7 +35,7 @@ class PdfUnitConverterTest extends TestCase
     {
         $converter = new PdfUnitConverter($dpi);
         
-        $this->assertEquals($expected, $converter->convertUnit($value, $unit), 'invalid unit conversion', 0.001);
+        $this->assertEqualsWithDelta($expected, $converter->convertUnit($value, $unit), 0.001, 'invalid unit conversion');
     }
 
     public function unitProvider()
@@ -63,10 +64,12 @@ class PdfUnitConverterTest extends TestCase
     {
         if($expectedException)
         {
-            $this->setExpectedException('InvalidArgumentException');
+            $this->expectException(InvalidArgumentException::class);
         }
         
         $converter = new PdfUnitConverter($dpi);
+
+        $this->assertTrue(true);
     }
     
     public function dpiProvider()

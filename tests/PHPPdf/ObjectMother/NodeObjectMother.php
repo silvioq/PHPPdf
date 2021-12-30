@@ -1,39 +1,46 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPPdf\ObjectMother;
 
+use PHPPdf\Core\Boundary;
 use PHPPdf\Core\Node\Container;
 use PHPPdf\Core\Engine\GraphicsContext;
+use PHPUnit\Framework\TestCase;
+use PHPPdf\Core\Node\Page;
+use PHPPdf\Core\Node\Node;
 
 class NodeObjectMother
 {
-    private $test;
+    private TestCase $test;
 
-    public function __construct(\PHPUnit_Framework_TestCase $test)
+    public function __construct(TestCase $test)
     {
         $this->test = $test;
     }
 
     public function getPageMock($x, $y)
     {
-        $gcMock = $this->getMockBuilder('PHPPdf\Core\Engine\GraphicsContext')
-        			   ->getMock();
+        $gcMock = $this->test->getMockBuilder(GraphicsContext::class)
+                             ->getMock();
         $gcMock->expects($this->test->once())
-                 ->method('drawPolygon')
-                 ->with($x, $y, GraphicsContext::SHAPE_DRAW_STROKE);
+               ->method('drawPolygon')
+               ->with($x, $y, GraphicsContext::SHAPE_DRAW_STROKE);
 
-        $pageMock = $this->getEmptyPageMock($gcMock);
-
-        return $pageMock;
+        return $this->getEmptyPageMock($gcMock);
     }
 
     public function getEmptyPageMock($graphicsContext)
     {
-        $pageMock = $this->test->getMock('PHPPdf\Core\Node\Page', array('getGraphicsContext'));
+        $pageMock = $this->test->getMockBuilder(Page::class)
+                               ->disableOriginalConstructor()
+                               ->onlyMethods(['getGraphicsContext'])
+                               ->getMock();
 
         $pageMock->expects($this->test->atLeastOnce())
                  ->method('getGraphicsContext')
-                 ->will($this->test->returnValue($graphicsContext));
+                 ->willReturn($graphicsContext);
 
         return $pageMock;
     }
@@ -42,53 +49,55 @@ class NodeObjectMother
     {
         $boundaryMock = $this->getBoundaryStub($x, $y, $width, $height);
 
-        $nodeMock = $this->test->getMock('PHPPdf\Core\Node\Node', array('getBoundary', 'getWidth', 'getHeight', 'getGraphicsContext'));
+        $nodeMock = $this->test->getMockBuilder(Node::class)
+                               ->enableOriginalConstructor()
+                               ->onlyMethods(['getBoundary', 'getWidth', 'getHeight', 'getGraphicsContext'])
+                               ->getMock();
 
         $nodeMock->expects($this->test->atLeastOnce())
-                  ->method('getBoundary')
-                  ->will($this->test->returnValue($boundaryMock));
+                 ->method('getBoundary')
+                 ->willReturn($boundaryMock);
 
-        $nodeMock->expects($this->test->any())
-                  ->method('getWidth')
-                  ->will($this->test->returnValue($width));
+        $nodeMock
+            ->method('getWidth')
+            ->willReturn($width);
 
-        $nodeMock->expects($this->test->any())
-                  ->method('getHeight')
-                  ->will($this->test->returnValue($height));
-                  
-        if($gc)
-        {
+        $nodeMock
+            ->method('getHeight')
+            ->willReturn($height);
+
+        if ($gc) {
             $nodeMock->expects($this->test->atLeastOnce())
-                      ->method('getGraphicsContext')
-                      ->will($this->test->returnValue($gc));
+                     ->method('getGraphicsContext')
+                     ->willReturn($gc);
         }
 
         return $nodeMock;
     }
 
-    public function getBoundaryStub($x, $y, $width, $height)
+    public function getBoundaryStub($x, $y, $width, $height): Boundary
     {
-        $boundary = new \PHPPdf\Core\Boundary();
+        $boundary = new Boundary();
 
         $boundary->setNext($x, $y)
-                 ->setNext($x+$width, $y)
-                 ->setNext($x+$width, $y-$height)
-                 ->setNext($x, $y-$height)
+                 ->setNext($x + $width, $y)
+                 ->setNext($x + $width, $y - $height)
+                 ->setNext($x, $y - $height)
                  ->close();
 
         return $boundary;
     }
-    
-    public function getNodeStub($x, $y, $width, $height)
+
+    public function getNodeStub($x, $y, $width, $height): Container
     {
         $boundary = $this->getBoundaryStub($x, $y, $width, $height);
-        $node = new Container();
-        
-        $this->test->invokeMethod($node, 'setBoundary', array($boundary));
-        
+        $node     = new Container();
+
+        $this->test->invokeMethod($node, 'setBoundary', [$boundary]);
+
         $node->setWidth($width);
         $node->setHeight($height);
-        
+
         return $node;
     }
 }

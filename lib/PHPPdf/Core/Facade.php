@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Copyright 2011 Piotr Śliwa <peter.pl7@gmail.com>
  *
@@ -33,92 +35,85 @@ use PHPPdf\Core\Parser\NodeFactoryParser;
  */
 class Facade extends AbstractStringFilterContainer
 {
-    private $documentParser;
-    private $stylesheetParser;
-    private $document;
-    private $cache;
-    private $loaded = false;
-    private $useCacheForStylesheetConstraint = false;
-    private $configurationLoader;
-    private $colorPaletteParser;
-    private $engineType = 'pdf';
+    private DocumentParser   $documentParser;
+    private StylesheetParser $stylesheetParser;
+    private Document         $document;
+    private Cache            $cache;
+    private bool             $loaded                          = false;
+    private bool             $useCacheForStylesheetConstraint = false;
+    private Loader           $configurationLoader;
+    private ?Parser          $colorPaletteParser              = null;
+    private string           $engineType                      = 'pdf';
 
     public function __construct(Loader $configurationLoader, Document $document, DocumentParser $documentParser, StylesheetParser $stylesheetParser)
     {
         $this->configurationLoader = $configurationLoader;
         $this->configurationLoader->setUnitConverter($document);
-        
+
         $this->setCache(NullCache::getInstance());
         $documentParser->setDocument($document);
         $nodeManager = $documentParser->getNodeManager();
-        if($nodeManager)
-        {
+        if ($nodeManager) {
             $documentParser->addListener($nodeManager);
         }
         $this->setDocumentParser($documentParser);
         $this->setStylesheetParser($stylesheetParser);
         $this->setDocument($document);
     }
-    
-    public function setEngineType($engineType)
-	{
-		$this->engineType = $engineType;
-	}
 
-	public function setCache(Cache $cache)
+    public function setEngineType($engineType): void
+    {
+        $this->engineType = $engineType;
+    }
+
+    public function setCache(Cache $cache): void
     {
         $this->cache = $cache;
     }
 
-    /**
-     * @return DocumentParser
-     */
-    public function getDocumentParser()
+    public function getDocumentParser(): DocumentParser
     {
         return $this->documentParser;
     }
 
-    public function getStylesheetParser()
+    public function getStylesheetParser(): StylesheetParser
     {
         return $this->stylesheetParser;
     }
 
-    public function setDocumentParser(DocumentParser $documentParser)
+    public function setDocumentParser(DocumentParser $documentParser): void
     {
         $this->documentParser = $documentParser;
     }
 
-    public function setStylesheetParser(StylesheetParser $stylesheetParser)
+    public function setStylesheetParser(StylesheetParser $stylesheetParser): void
     {
         $this->stylesheetParser = $stylesheetParser;
     }
-    
-    public function setColorPaletteParser(Parser $colorPaletteParser)
-	{
-		$this->colorPaletteParser = $colorPaletteParser;
-	}
-	
-	protected function getColorPaletteParser()
-	{
-	    if(!$this->colorPaletteParser)
-	    {
-	        $this->colorPaletteParser = new ColorPaletteParser();
-	    }
-	    
-	    return $this->colorPaletteParser;
-	}
 
-	/**
+    public function setColorPaletteParser(Parser $colorPaletteParser): void
+    {
+        $this->colorPaletteParser = $colorPaletteParser;
+    }
+
+    protected function getColorPaletteParser(): ColorPaletteParser|Parser
+    {
+        if ($this->colorPaletteParser === null) {
+            $this->colorPaletteParser = new ColorPaletteParser();
+        }
+
+        return $this->colorPaletteParser;
+    }
+
+    /**
      * Returns pdf document object
-     * 
-     * @return PHPPdf\Core\Document
      */
-    public function getDocument()
+    public function getDocument(): Document
     {
         return $this->document;
     }
 
-    private function setDocument(Document $document)
+    private function setDocument(Document $document): void
     {
         $this->document = $document;
     }
@@ -131,35 +126,34 @@ class Facade extends AbstractStringFilterContainer
     /**
      * @param boolean $useCache Stylsheet constraints should be cached?
      */
-    public function setUseCacheForStylesheetConstraint($useCache)
+    public function setUseCacheForStylesheetConstraint(bool $useCache): void
     {
-        $this->useCacheForStylesheetConstraint = (bool) $useCache;
+        $this->useCacheForStylesheetConstraint = $useCache;
     }
 
     /**
      * Convert text document to pdf document
-     * 
-     * @param string|DataSource $documentContent Source document content
-     * @param DataSource[]|string[]|DataSource|string $stylesheetContents Stylesheet source(s)
-     * @param string|DataSource $colorPaletteContent Palette of colors source
-     * 
-     * @return string Content of pdf document
-     * 
-     * @throws PHPPdf\Exception\Exception
+     *
+     * @param string|DataSource                       $documentContent     Source document content
+     * @param string|DataSource|DataSource[]|string[] $stylesheetContents  Stylesheet source(s)
+     * @param string|DataSource|null                  $colorPaletteContent Palette of colors source
+     *
+     * @return string|null Content of pdf document
+     *
+     * @throws \PHPPdf\Exception\Exception
      */
-    public function render($documentContent, $stylesheetContents = array(), $colorPaletteContent = null)
+    public function render(DataSource|string $documentContent, array|string|DataSource|null $stylesheetContents = [], string|DataSource $colorPaletteContent = null): ?string
     {
         $colorPalette = new ColorPalette((array) $this->configurationLoader->createColorPalette());
-        
-        if($colorPaletteContent)
-        {
+
+        if ($colorPaletteContent) {
             $colorPalette->merge($this->parseColorPalette($colorPaletteContent));
         }
-        
+
         $this->document->setColorPalette($colorPalette);
-        
+
         $complexAttributeFactory = $this->configurationLoader->createComplexAttributeFactory();
-        
+
         $this->getDocument()->setComplexAttributeFactory($complexAttributeFactory);
         $fontDefinitions = $this->configurationLoader->createFontRegistry($this->engineType);
         $this->getDocument()->addFontDefinitions($fontDefinitions);
@@ -168,8 +162,7 @@ class Facade extends AbstractStringFilterContainer
 
         $stylesheetConstraint = $this->retrieveStylesheetConstraint($stylesheetContents);
 
-        foreach($this->stringFilters as $filter)
-        {
+        foreach ($this->stringFilters as $filter) {
             $documentContent = $filter->filter($documentContent);
         }
 
@@ -179,22 +172,18 @@ class Facade extends AbstractStringFilterContainer
 
         return $this->doRender($pageCollection);
     }
-    
-    private function parseColorPalette($colorPaletteContent)
-    {        
-        if(!$colorPaletteContent instanceof DataSource)
-        {
+
+    private function parseColorPalette(DataSource|string $colorPaletteContent): array
+    {
+        if (!$colorPaletteContent instanceof DataSource) {
             $colorPaletteContent = DataSource::fromString($colorPaletteContent);
         }
-        
+
         $id = $colorPaletteContent->getId();
-        
-        if($this->cache->test($id))
-        {
+
+        if ($this->cache->test($id)) {
             $colors = (array) $this->cache->load($id);
-        }
-        else
-        {
+        } else {
             $colors = (array) $this->getColorPaletteParser()->parse($colorPaletteContent->read());
             $this->cache->save($colors, $id);
         }
@@ -202,12 +191,12 @@ class Facade extends AbstractStringFilterContainer
         return $colors;
     }
 
-    private function doRender($pageCollection)
+    private function doRender($pageCollection): ?string
     {
         $this->getDocument()->draw($pageCollection);
         $pageCollection->flush();
         unset($pageCollection);
-        
+
         $content = $this->getDocument()->render();
         $this->getDocument()->initialize();
 
@@ -216,58 +205,40 @@ class Facade extends AbstractStringFilterContainer
 
     public function retrieveStylesheetConstraint($stylesheetContents)
     {
-        if($stylesheetContents === null)
-        {
+        if ($stylesheetContents === null) {
             return null;
-        }
-        elseif(is_string($stylesheetContents))
-        {
-            $stylesheetContents = array(DataSource::fromString($stylesheetContents));
-        }
-        elseif($stylesheetContents instanceof DataSource)
-        {
-            $stylesheetContents = array($stylesheetContents);
-        }
-        elseif(!is_array($stylesheetContents))
-        {
+        } elseif (is_string($stylesheetContents)) {
+            $stylesheetContents = [DataSource::fromString($stylesheetContents)];
+        } elseif ($stylesheetContents instanceof DataSource) {
+            $stylesheetContents = [$stylesheetContents];
+        } elseif (!is_array($stylesheetContents)) {
             throw new InvalidArgumentException('$stylesheetContents must be an array, null or DataSource object.');
         }
-        
-        $constraints = array();
-        
-        foreach($stylesheetContents as $stylesheetContent)
-        {
-            if(!$stylesheetContent instanceof DataSource)
-            {
+
+        $constraints = [];
+
+        foreach ($stylesheetContents as $stylesheetContent) {
+            if (!$stylesheetContent instanceof DataSource) {
                 $stylesheetContent = DataSource::fromString($stylesheetContent);
             }
 
-            if(!$this->useCacheForStylesheetConstraint)
-            {
+            if (!$this->useCacheForStylesheetConstraint) {
                 $constraints[] = $this->parseStylesheet($stylesheetContent);
-            }
-            else
-            {
+            } else {
                 $constraints[] = $this->loadStylesheetConstraintFromCache($stylesheetContent);
             }
         }
-        
-        if(!$constraints)
-        {
+
+        if (!$constraints) {
             return null;
-        }
-        elseif(count($constraints) === 1)
-        {
+        } elseif (count($constraints) === 1) {
             return current($constraints);
         }
 
         return $constraints[0]->merge($constraints);
     }
 
-    /**
-     * @return StylesheetConstraint
-     */
-    private function parseStylesheet(DataSource $ds)
+    private function parseStylesheet(DataSource $ds): StylesheetConstraint
     {
         return $this->getStylesheetParser()->parse($ds->read());
     }
@@ -275,16 +246,13 @@ class Facade extends AbstractStringFilterContainer
     private function loadStylesheetConstraintFromCache(DataSource $ds)
     {
         $id = $ds->getId();
-        if($this->cache->test($id))
-        {
+        if ($this->cache->test($id)) {
             $stylesheetConstraint = $this->cache->load($id);
-        }
-        else
-        {
+        } else {
             $csc = new CachingStylesheetConstraint();
             $csc->setCacheId($id);
             $this->getStylesheetParser()->setRoot($csc);
-            
+
             $stylesheetConstraint = $this->parseStylesheet($ds);
             $this->cache->save($stylesheetConstraint, $id);
         }
@@ -292,10 +260,9 @@ class Facade extends AbstractStringFilterContainer
         return $stylesheetConstraint;
     }
 
-    private function updateStylesheetConstraintCacheIfNecessary(StylesheetConstraint $constraint = null)
+    private function updateStylesheetConstraintCacheIfNecessary(StylesheetConstraint $constraint = null): void
     {
-        if($constraint && $this->useCacheForStylesheetConstraint && $constraint->isResultMapModified())
-        {
+        if ($constraint && $this->useCacheForStylesheetConstraint && $constraint->isResultMapModified()) {
             $this->cache->save($constraint, $constraint->getCacheId());
         }
     }

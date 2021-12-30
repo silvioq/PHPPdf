@@ -10,7 +10,7 @@ class NodeFactoryParserTest extends \PHPPdf\PHPUnit\Framework\TestCase
 {
     private $parser;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->parser = new NodeFactoryParser();
     }
@@ -29,10 +29,11 @@ class NodeFactoryParserTest extends \PHPPdf\PHPUnit\Framework\TestCase
 
     /**
      * @test
-     * @expectedException PHPPdf\Parser\Exception\ParseException
+     *
      */
     public function throwExceptionIfDocumentHasInvalidRoot()
     {
+        $this->expectException(\PHPPdf\Parser\Exception\ParseException::class);
         $xml = '<invalid-root></invalid-root>';
 
         $this->parser->parse($xml);
@@ -97,7 +98,7 @@ XML;
         $unitConverter->expects($this->once())
                       ->method('convertUnit')
                       ->with('12px')
-                      ->will($this->returnValue($expected));
+                      ->willReturn($expected);
 
         $this->parser->setUnitConverter($unitConverter);
         
@@ -111,10 +112,11 @@ XML;
 
     /**
      * @test
-     * @expectedException PHPPdf\Parser\Exception\ParseException
+     *
      */
     public function throwExceptionIfRequiredAttributesAreMissing()
     {
+        $this->expectException(\PHPPdf\Parser\Exception\ParseException::class);
         $xml = <<<XML
 <factory>
     <nodes>
@@ -142,15 +144,15 @@ XML;
 </factory>
 XML;
 
-        $bagContainerMock = $this->getMock('PHPPdf\Core\Parser\BagContainer', array('apply'));
+        $bagContainerMock = $this->createPartialMock('PHPPdf\Core\Parser\BagContainer', array('apply'));
         $bagContainerMock->expects($this->once())
                          ->method('apply')
                          ->with($this->isInstanceOf('PHPPdf\Core\Node\Container'));
 
-        $stylesheetParserMock = $this->getMock('PHPPdf\Core\Parser\StylesheetParser', array('parse'));
+        $stylesheetParserMock = $this->createPartialMock('PHPPdf\Core\Parser\StylesheetParser', array('parse'));
         $stylesheetParserMock->expects($this->once())
                              ->method('parse')
-                             ->will($this->returnValue($bagContainerMock));
+                             ->willReturn($bagContainerMock);
 
         $this->parser->setStylesheetParser($stylesheetParserMock);
         

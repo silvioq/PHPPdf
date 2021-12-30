@@ -1,10 +1,6 @@
 <!ELEMENT pdf ANY>
-<!ENTITY apos '"'>
-<!ENTITY amp "&#38;">
 <!ENTITY percent "&#37;">
 <!ENTITY nbsp "&#160;">
-<!ENTITY lt "<">
-<!ENTITY gt ">">
 <!ENTITY iexcl "¡">
 <!ENTITY cent "¢">
 <!ENTITY pound "£">

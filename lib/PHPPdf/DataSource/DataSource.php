@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Copyright 2011 Piotr Śliwa <peter.pl7@gmail.com>
  *
@@ -15,12 +17,12 @@ namespace PHPPdf\DataSource;
  */
 abstract class DataSource
 {
-    public static function fromFile($filePath)
+    public static function fromFile($filePath): FileDataSource
     {
         return new FileDataSource($filePath);
     }
 
-    public static function fromString($content)
+    public static function fromString($content): StringDataSource
     {
         return new StringDataSource($content);
     }
@@ -30,10 +32,10 @@ abstract class DataSource
      * 
      * @return string Data from source
      */
-    abstract public function read();
+    abstract public function read(): string;
 
     /**
      * @return string Identifier of data source
      */
-    abstract public function getId();
+    abstract public function getId(): string;
 }

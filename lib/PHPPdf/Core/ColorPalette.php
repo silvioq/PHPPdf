@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Copyright 2011 Piotr Śliwa <peter.pl7@gmail.com>
  *
@@ -16,25 +18,30 @@ namespace PHPPdf\Core;
  */
 class ColorPalette
 {
-    private $colors;
-    
-    public function __construct(array $colors = array())
+    private array $colors;
+
+    public function __construct(array $colors = [])
     {
         $this->colors = $colors;
     }
-    
-    public function get($name)
+
+    public function get(?string $name = '')
     {
-        $name = strtolower($name);
-        return isset($this->colors[$name]) ? $this->colors[$name] : $name;
+        if ($name !== null) {
+            $name = strtolower($name);
+
+            return $this->colors[$name] ?? $name;
+        }
+
+        return null;
     }
-    
-    public function merge(array $colors)
+
+    public function merge(array $colors): void
     {
         $this->colors = $colors + $this->colors;
     }
-    
-    public function getAll()
+
+    public function getAll(): array
     {
         return $this->colors;
     }

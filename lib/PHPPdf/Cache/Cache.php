@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Copyright 2011 Piotr Śliwa <peter.pl7@gmail.com>
  *
@@ -20,7 +22,7 @@ interface Cache
      *
      * @param mixed $data Cached data
      * @param string $id Cache id
-     * @return boolean True if cache has been succesfully saved, otherwise false
+     * @return boolean True if cache has been successfully saved, otherwise false
      */
     public function save($data, $id);
     

@@ -1,17 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPPdf\Test\Core\Formatter;
 
 use PHPPdf\Core\Document,
     PHPPdf\Core\Point,
     PHPPdf\Core\Boundary,
     PHPPdf\Core\Formatter\TextResetPositionFormatter;
+use PHPPdf\Core\Node\Text;
+use PHPPdf\PHPUnit\Framework\TestCase;
 
-class TextResetPositionFormatterTest extends \PHPPdf\PHPUnit\Framework\TestCase
+class TextResetPositionFormatterTest extends TestCase
 {
-    private $formatter;
+    private TextResetPositionFormatter $formatter;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->formatter = new TextResetPositionFormatter();
     }
@@ -19,9 +23,9 @@ class TextResetPositionFormatterTest extends \PHPPdf\PHPUnit\Framework\TestCase
     /**
      * @test
      */
-    public function clearBoundaryAndAddOldFirstPoint()
+    public function clearBoundaryAndAddOldFirstPoint(): void
     {
-        $nodeMock = $this->getMock('\PHPPdf\Core\Node\Text', array('getBoundary'));
+        $nodeMock = $this->createPartialMock(Text::class, array('getBoundary'));
 
         $boundary = new Boundary();
         $boundary->setNext(0, 100)
@@ -34,12 +38,12 @@ class TextResetPositionFormatterTest extends \PHPPdf\PHPUnit\Framework\TestCase
 
         $nodeMock->expects($this->atLeastOnce())
                   ->method('getBoundary')
-                  ->will($this->returnValue($boundary));
+                  ->willReturn($boundary);
 
         $this->formatter->format($nodeMock, $this->createDocumentStub());
 
         $this->assertFalse($boundary->isClosed());
         $this->assertEquals($firstPoint, $boundary->getFirstPoint());
-        $this->assertEquals(1, count($boundary));
+        $this->assertCount(1, $boundary);
     }
 }

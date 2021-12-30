@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPPdf\Test\Core\Formatter;
 
 use PHPPdf\Core\Document,
@@ -8,12 +10,13 @@ use PHPPdf\Core\Document,
     PHPPdf\Core\Node\Container,
     PHPPdf\Core\Node\Page,
     PHPPdf\Core\Formatter\StandardPositionFormatter;
+use PHPPdf\PHPUnit\Framework\TestCase;
 
-class StandardPositionFormatterTest extends \PHPPdf\PHPUnit\Framework\TestCase
+class StandardPositionFormatterTest extends TestCase
 {
-    private $formatter;
+    private StandardPositionFormatter $formatter;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->formatter = new StandardPositionFormatter();
     }
@@ -21,14 +24,14 @@ class StandardPositionFormatterTest extends \PHPPdf\PHPUnit\Framework\TestCase
     /**
      * @test
      */
-    public function nodeWithAutoMarginPositioning()
+    public function nodeWithAutoMarginPositioning(): void
     {
-        $node = new Container(array('width' => 100, 'height' => 100));
+        $node = new Container(['width' => 100, 'height' => 100]);
         $node->hadAutoMargins(true);
         $node->makeAttributesSnapshot();
         $node->setWidth(110);
 
-        $child = new Container(array('width' => 50, 'height' => 50));
+        $child = new Container(['width' => 50, 'height' => 50]);
         $node->add($child);
         $page = new Page();
         $page->add($node);
@@ -36,14 +39,13 @@ class StandardPositionFormatterTest extends \PHPPdf\PHPUnit\Framework\TestCase
         $node->getBoundary()->setNext($page->getFirstPoint());
         $child->getBoundary()->setNext($page->getFirstPoint());
 
-        foreach(array($node, $child) as $g)
-        {
+        foreach ([$node, $child] as $g) {
             $this->formatter->format($g, $this->createDocumentStub());
         }
 
-        $nodeBoundary = $node->getBoundary();
+        $nodeBoundary  = $node->getBoundary();
         $childBoundary = $child->getBoundary();
-        $pageBoundary = $page->getBoundary();
+        $pageBoundary  = $page->getBoundary();
 
 
         $this->assertEquals($pageBoundary[0]->translate(-5, 0), $nodeBoundary[0]);

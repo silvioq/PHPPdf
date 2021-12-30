@@ -16,7 +16,7 @@ use PHPPdf\Core\Exception\UnregisteredNodeException;
  *
  * @author Piotr Śliwa <peter.pl7@gmail.com>
  */
-class NodeFactory implements \Serializable
+class NodeFactory
 {
     private $prototypes = array();
     private $invocationsMethodsOnCreate = array();
@@ -159,23 +159,21 @@ class NodeFactory implements \Serializable
         return isset($this->prototypes[$name]) || isset($this->aliases[$name]);
     }
 
-    public function serialize()
+    public function __serialize(): array
     {
-        return serialize(array(
+        return array(
             'prototypes' => $this->prototypes,
             'invocationsMethodsOnCreate' => $this->invocationsMethodsOnCreate,
             'invokeArgs' => $this->invokeArgs,
             'aliases' => $this->aliases,
-        ));
+        );
     }
 
-    public function unserialize($serialized)
+    public function __unserialize($serialized): void
     {
-        $data = unserialize($serialized);
-        
-        $prototypes = $data['prototypes'];
-        $invocationsMethodsOnCreate = $data['invocationsMethodsOnCreate'];
-        $invokeArgs = $data['invokeArgs'];
+        $prototypes = $serialized['prototypes'];
+        $invocationsMethodsOnCreate = $serialized['invocationsMethodsOnCreate'];
+        $invokeArgs = $serialized['invokeArgs'];
 
         foreach($prototypes as $name => $prototype)
         {
@@ -188,6 +186,6 @@ class NodeFactory implements \Serializable
             $this->addInvokeArg($tag, $value);
         }
         
-        $this->aliases = (array) $data['aliases'];
+        $this->aliases = (array) $serialized['aliases'];
     }
 }

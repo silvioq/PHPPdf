@@ -14,6 +14,7 @@ use PHPPdf\Core\Node\Page,
     PHPPdf\Stub\Node\StubComposeNode,
     PHPPdf\ObjectMother\NodeObjectMother,
     PHPPdf\Core\Node\Container;
+use PHPPdf\Core\UnitConverter;
 
 
 class NodeTest extends \PHPPdf\PHPUnit\Framework\TestCase
@@ -23,22 +24,23 @@ class NodeTest extends \PHPPdf\PHPUnit\Framework\TestCase
     private $node;
     private $objectMother;
 
-    protected function init()
+    protected function init(): void
     {
         $this->objectMother = new NodeObjectMother($this);
     }
     
-    public function setUp()
+    public function setUp(): void
     {
         $this->node = new StubNode();
     }
 
     /**
      * @test
-     * @expectedException PHPPdf\Core\Exception\InvalidAttributeException
+     *
      */
     public function failureSettingAttribute()
     {
+        $this->expectException(\PHPPdf\Core\Exception\InvalidAttributeException::class);
         $this->node->setAttribute('someName', 'someValue');
     }
 
@@ -312,11 +314,12 @@ class NodeTest extends \PHPPdf\PHPUnit\Framework\TestCase
 
     /**
      * @test
-     * @expectedException \InvalidArgumentException
+     *
      */
     public function throwExceptionIfNotExistedPlaceholderIsSet()
     {
-        $this->node->setPlaceholder('name', $this->getMock('PHPPdf\Core\Node\Container'));
+        $this->expectException(\InvalidArgumentException::class);
+        $this->node->setPlaceholder('name', $this->createMock('PHPPdf\Core\Node\Container'));
     }
 
     /**
@@ -324,16 +327,16 @@ class NodeTest extends \PHPPdf\PHPUnit\Framework\TestCase
      */
     public function gettingBoundaryPoints()
     {
-        $boundary = $this->getMock('PHPPdf\Core\Boundary', array('getFirstPoint', 'getDiagonalPoint'));
+        $boundary = $this->createPartialMock('PHPPdf\Core\Boundary', array('getFirstPoint', 'getDiagonalPoint'));
         $boundary->expects($this->once())
                  ->id('first-point')
                  ->method('getFirstPoint')
-                 ->will($this->returnValue(Point::getInstance(10, 10)));
+                 ->willReturn(Point::getInstance(10, 10));
 
         $boundary->expects($this->once())
                  ->after('first-point')
                  ->method('getDiagonalPoint')
-                 ->will($this->returnValue(Point::getInstance(20, 20)));
+                 ->willReturn(Point::getInstance(20, 20));
 
         $this->invokeMethod($this->node, 'setBoundary', array($boundary));
 
@@ -382,11 +385,11 @@ class NodeTest extends \PHPPdf\PHPUnit\Framework\TestCase
         $formatterName = 'someFormatter';
 
         $documentMock = $this->getMockBuilder('PHPPdf\Core\Document')
-                             ->setMethods(array('getFormatter'))
+                             ->onlyMethods(array('getFormatter'))
                              ->disableOriginalConstructor()
                              ->getMock();
 
-        $formatterMock = $this->getMock('PHPPdf\Core\Formatter\Formatter', array('format'));
+        $formatterMock = $this->createPartialMock('PHPPdf\Core\Formatter\Formatter', array('format'));
         $formatterMock->expects($this->once())
                       ->method('format')
                       ->with($this->node, $documentMock);
@@ -395,7 +398,7 @@ class NodeTest extends \PHPPdf\PHPUnit\Framework\TestCase
         $documentMock->expects($this->once())
                      ->method('getFormatter')
                      ->with($formatterName)
-                     ->will($this->returnValue($formatterMock));
+                     ->willReturn($formatterMock);
 
         $this->node->setFormattersNames('pre', array($formatterName));
         $this->node->format($documentMock);
@@ -443,7 +446,7 @@ class NodeTest extends \PHPPdf\PHPUnit\Framework\TestCase
         
         foreach($testData as $data)
         {
-            list($attributeName, $attributeValue, $expectedValue) = $data;
+            [$attributeName, $attributeValue, $expectedValue] = $data;
             
             $this->node->setAttribute($attributeName, $attributeValue);
         
@@ -457,10 +460,10 @@ class NodeTest extends \PHPPdf\PHPUnit\Framework\TestCase
     public function getEncodingIsDelegatedToPage()
     {
         $encoding = 'some-encoding';
-        $page = $this->getMock('PHPPdf\Core\Node\Page', array('getAttributeDirectly'));
+        $page = $this->createPartialMock('PHPPdf\Core\Node\Page', array('getAttributeDirectly'));
         $page->expects($this->once())
              ->method('getAttributeDirectly')
-             ->will($this->returnValue($encoding));
+             ->willReturn($encoding);
         
         $this->node->setParent($page);
 
@@ -474,12 +477,12 @@ class NodeTest extends \PHPPdf\PHPUnit\Framework\TestCase
     public function nodeIsBreakableIfBreakableAttributeIsSetOrNodeIsHigherThanPage($breakable, $pageHeight, $nodeHeight, $expectedBreakable)
     {
         $page = $this->getMockBuilder('PHPPdf\Core\Node\Page')
-                     ->setMethods(array('getHeight'))
+                     ->onlyMethods(array('getHeight'))
                      ->getMock();
 
         $page->expects($this->atLeastOnce())
              ->method('getHeight')
-             ->will($this->returnValue($pageHeight));
+             ->willReturn($pageHeight);
              
         $this->node->setParent($page);
         $this->node->setBreakable($breakable);
@@ -512,7 +515,7 @@ class NodeTest extends \PHPPdf\PHPUnit\Framework\TestCase
         $page->add($this->node);
         
         $document = $this->getMockBuilder('PHPPdf\Core\Document')
-                         ->setMethods(array('getComplexAttributes'))
+                         ->onlyMethods(array('getComplexAttributes'))
                          ->disableOriginalConstructor()
                          ->getMock();
         $bag = $this->getMockBuilder('PHPPdf\Core\AttributeBag')
@@ -524,7 +527,7 @@ class NodeTest extends \PHPPdf\PHPUnit\Framework\TestCase
         $document->expects($this->once())
                  ->method('getComplexAttributes')
                  ->with($bag)
-                 ->will($this->returnValue($complexAttributeStubs));
+                 ->willReturn($complexAttributeStubs);
 
         $drawingTasks = new DrawingTaskHeap();
         $this->node->collectOrderedDrawingTasks($document, $drawingTasks);
@@ -559,7 +562,7 @@ class NodeTest extends \PHPPdf\PHPUnit\Framework\TestCase
         for($i=0; $i<2; $i++)
         {
             $behaviour = $this->getMockBuilder('PHPPdf\Core\Node\Behaviour\Behaviour')
-                              ->setMethods(array('doAttach', 'attach'))
+                              ->onlyMethods(array('doAttach', 'attach'))
                               ->getMock();
             $behaviour->expects($this->once())
                       ->method('attach')
@@ -602,7 +605,7 @@ class NodeTest extends \PHPPdf\PHPUnit\Framework\TestCase
         
         $actualNode = $this->node->getAncestorWithRotation();
         
-        $this->assertTrue($expectedNode === $actualNode);
+        $this->assertSame($expectedNode, $actualNode);
     }
     
     public function rotationProvider()
@@ -626,7 +629,7 @@ class NodeTest extends \PHPPdf\PHPUnit\Framework\TestCase
         
         $this->node->setAttribute('rotate', $rotate);
         
-        $this->assertEquals($expectedRadians, $this->node->getRotate(), 'diagonally rotate dosn\'t match', 0.001);
+        $this->assertEqualsWithDelta($expectedRadians, $this->node->getRotate(), 0.001, 'diagonally rotate dosn\'t match');
     }
     
     public function calculateDiagonallyRotationProvider()
@@ -643,19 +646,16 @@ class NodeTest extends \PHPPdf\PHPUnit\Framework\TestCase
      */
     public function useUnitConverterToSetAttributes()
     {
-        $converter = $this->getMockBuilder('PHPPdf\Core\UnitConverter')
+        $converter = $this->getMockBuilder(UnitConverter::class)
                          ->getMock();
         $actual = '12px';
         $expected = 123;
 
-        $converter->expects($this->at(0))
-                  ->method('convertUnit')
-                  ->with($actual)
-                  ->will($this->returnValue($expected));
-        $converter->expects($this->at(1))
-                  ->method('convertUnit')
-                  ->with($actual)
-                  ->will($this->returnValue($expected));
+        $converter->expects($this->exactly(2))
+                 ->method('convertUnit')
+                 ->withConsecutive([$actual], [$actual])
+                 ->willReturnOnConsecutiveCalls($this->returnValue($expected), $this->returnValue($expected));
+
                          
         $this->node->setUnitConverter($converter);
         
@@ -721,12 +721,12 @@ class NodeTest extends \PHPPdf\PHPUnit\Framework\TestCase
         $this->writeAttribute($this->node, 'boundary', $boundary);
         
         $parent = $this->getMockBuilder('PHPPdf\Core\Node\Container')
-                       ->setMethods(array('getPositionTranslation'))
+                       ->onlyMethods(array('getPositionTranslation'))
                        ->getMock();
         $parent->setAttribute('position', $parentPosition);
         $parent->expects($this->any())
                ->method('getPositionTranslation')
-               ->will($this->returnValue(Point::getInstance($parentPositionTranslation[0], $parentPositionTranslation[1])));
+               ->willReturn(Point::getInstance($parentPositionTranslation[0], $parentPositionTranslation[1]));
                
         $parentBoundary = $this->objectMother->getBoundaryStub($parentFirstPoint[0], $parentFirstPoint[1], 100, 100);
         $this->writeAttribute($parent, 'boundary', $parentBoundary);
