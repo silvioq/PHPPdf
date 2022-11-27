@@ -209,14 +209,14 @@ class GraphicsContext extends AbstractGraphicsContext
                     $rectangle->getStartingPoint()->getY() - $pastePoint->getY()
                 );
 
-                $imageToPaste->crop($croppingPoint, $rectangle->getSize());
+                $imageToPaste->crop($this->ensureIntPoint($croppingPoint), $rectangle->getSize());
 
-                $image->paste($imageToPaste, $this->ensureNonNegativePoint($pastePoint));
+                $image->paste($imageToPaste, $this->ensureIntPoint($this->ensureNonNegativePoint($pastePoint)));
             }
         }
         else
         {
-            $image->paste($imageToPaste, $pastePoint);
+            $image->paste($imageToPaste, $this->ensureIntPoint($pastePoint));
         }
     }
 
@@ -236,6 +236,11 @@ class GraphicsContext extends AbstractGraphicsContext
         }
 
         return $point;
+    }
+
+    private function ensureIntPoint(PointInterface $point) : PointInterface
+    {
+        return new Point((int)$point->getX(), (int) $point->getY());
     }
     
     private function translatePoint(PointInterface $point, $x, $y)

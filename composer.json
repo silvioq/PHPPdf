@@ -26,15 +26,15 @@
   "require-dev": {
     "ext-imagick": "*",
     "ext-iconv": "*",
-    "laminas/laminas-barcode": "~2.8.0",
-    "laminas/laminas-validator": "~2.10.0",
+    "laminas/laminas-barcode": "^2.8.0",
+    "laminas/laminas-validator": "^2.10.0",
     "imagine/imagine": "^1.2.4",
     "phpunit/phpunit": "9.*"
   },
   "suggest": {
     "laminas/laminas-barcode": "If you want to use barcodes",
     "laminas/laminas-validator": "If you want to use barcodes (required by zend-barcode)",
-    "imagine/Imagine": "If you want to use image generating (required version: >=v0.2.6)"
+    "imagine/imagine": "If you want to use image generating (required version: >=v0.2.6)"
   },
   "repositories": [
     {

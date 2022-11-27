@@ -64,7 +64,7 @@ class AbstractGraphicsContextTest_ImageAssert
 
     public function colorAt($x, $y, $expectedColor): static
     {
-        $actualColor = (string) $this->image->getColorAt(new Point($x, $y));
+        $actualColor = (string) $this->image->getColorAt(new Point((int)$x, (int)$y));
 
         $actualRgb   = $this->rgb($actualColor);
         $expectedRgb = $this->rgb($expectedColor);
