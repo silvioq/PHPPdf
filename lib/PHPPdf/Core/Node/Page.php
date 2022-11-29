@@ -609,9 +609,9 @@ class Page extends Container
         return in_array($name, ['footer', 'header', 'watermark']);
     }
 
-    public function unserialize($serialized)
+    public function __unserialize($serialized)
     {
-        parent::unserialize($serialized);
+        parent::__unserialize($serialized);
         $this->initializePlaceholders();
     }
 
